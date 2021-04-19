@@ -1,0 +1,1 @@
+/media/Ext4/JoseLuis/Proyectos/3_SistemaConduccion/Componentes/Actuadores/GoBilda_ServoCity_LinearActuator/Piezas/PotenciometroPrecision_Feedback/Potenciómetros de precisión/Potenciómetros de precisión Bourns.md
