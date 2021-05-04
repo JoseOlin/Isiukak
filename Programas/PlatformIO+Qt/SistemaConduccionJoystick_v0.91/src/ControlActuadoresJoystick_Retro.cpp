@@ -4,28 +4,31 @@ La configuración general del sistema puede consultarse en README.md
 
 ******************************************************************************/
 
-#include "Seguridad.hpp"
+//#include "Seguridad.hpp"
 #include "Testing.hpp"
 
-//*** Variables de programa***************************************************
+//****************************** Variables de programa *************************//
 int pinJoystickY = A0;
 int pinJoystickX = A1;
 int pinActFreno  = A2;
 int pinActAcel   = A3;
 
-int pinRetroPalanca = A4;
-int pin_encendido = A5;
+// Estos pines se usan para el bus i2c.
+//int pinRetroPalanca = A4;
+//int pin_encendido = A5;
 
 //int potenciometros[4] = {A0, A1, A2, A3};
 int pinParoManualEmergencia = 9;
 
 boolean posibleFalsoCorriente = false;
 
-//Variables para la medición del periodo del sistema
+//Variables para la medición del periodo del sistema.
 long tiempoAnterior = 0, tiempoActual = 0;
 
 boolean actualizacionExitosa = false;
-//***************************************************************************
+//******************************************************************************//
+
+
 void puestaACeroEncoder();
 void puestaACeroEncoder();
 void desplegarInfoJoystick();
@@ -34,11 +37,21 @@ void desplegarInfoPedales();
 void desplegarInfoVolante();
 void desplegarInfoPalanca();
 void verificacionSeguridadPeriodica();
+void verificarModoCarretera();
+void pullupsInternos_i2c(boolean habilitar);
 
 void setup()
 {
     /// TODO: Portar a ST NUCLEO.
     Wire.begin(); // Inicializar la comunicación i2c (para usar el extensor PCF).
+    Wire.setTimeout(5); // En ms. Para evitar que se quede colgado cuando no hay respuesta.
+    // Sólo aplica para ciertas funciones, aparentemente .read() no es una de ellas.
+
+    //Wire.setWireTimeout(500, true); // En us
+    // Disabel internal pull ups
+    bool habilitarPullups = false;
+    pullupsInternos_i2c(habilitarPullups);
+
 
     //Serial.begin(19200);
     //Serial.begin(38400);
@@ -49,10 +62,10 @@ void setup()
 
     //analogReference(DEFAULT); //the default analog reference of 5 volts (on 5V Arduino boards) or 3.3 volts (on 3.3V Arduino boards).
 
-    pinMode(pin_encendido, INPUT_PULLUP); //Por defecto en alto
-    pinMode(pinParoManualEmergencia, INPUT_PULLUP); //Configurar el pin por defecto en alto.
-    pinMode(pinRefPotsAlto, OUTPUT);
-    pinMode(pinRefPotsBajo, OUTPUT);
+    //pinMode(pin_encendido, INPUT_PULLUP); //Por defecto en alto
+    //pinMode(pinParoManualEmergencia, INPUT_PULLUP); //Configurar el pin por defecto en alto.
+    pinMode(pin5VVirtual, OUTPUT);
+    pinMode(pinGNDVirtual, OUTPUT);
 
     // Verificación de seguridad al arranque. Si alguna no pasa NO activar el sistema.
     errorConexionesArranque = verificacionSeguridadArranque();
@@ -76,22 +89,20 @@ void setup()
         //tipoC = MODO_POSICION_LOG;
         //tipoC =  MODO_VELOCIDAD; //Modo de control del volante con retroalimentación del encoder.
         //tipoC = MODO_VELOCIDAD_OPENLOOP; //Modo de control por velocidad sin retroalimentación del encoder.
-        tipoC = TiposConduccion::MODO_OPENLOOP_PORPARTES;
+        tipoControlVolante = TiposControlVolante::MODO_OPENLOOP_PORPARTES;
     #endif
 
     //smcSerial.begin(19200);
-    smcSerial.begin(9600);//Se probo con 19200 y funciona.
+    smcSerial.begin(9600);//Se probó con 19200 y funciona.
 
     delay(1000);
     tiempoAnterior = millis();
-
-
 
     desplegarInfoArranque();
 
     delay(1500);
 
-    #if DEBUG_JOYSTICK
+    #if INFO_JOYSTICK
     delay(1000);
     #endif
 }
@@ -109,17 +120,17 @@ void loop()
         } else
     #else
         if(errorConexionesArranque) {
-            desplegarPatronErrores();
-            if(!mensajeErrorArranqueDesplegado) {
+            //desplegarPatronErrores();
+            if(!mensajeErrorArranque_Registrado) {
                 Serial.println("Error en la verificación de arranque.");
-                mensajeErrorArranqueDesplegado = true;
+                mensajeErrorArranque_Registrado = true;
             }
         }
         else {
-            if(!potenciometrosConectados) //Si alguno de los componentes se desconectó.
+            if(!Potenciometros_Conectados) //Si alguno de los componentes se desconectó.
             {
-                ParoDeEmergencia(); //Aquí se siguen leyendo los sensores, en caso de que se reconecten.
-                delay(delayParoEmergencia);
+                aplicarRutinasSeguridad(); //Aquí se siguen leyendo los sensores, en caso de que se reconecten.
+                //delay(delayParoEmergencia);
             }
             else
 	#endif
@@ -127,14 +138,17 @@ void loop()
                 // Si no hay paro de emergencia y todos los componentes están conectados. Funcionamiento normal del sistema.
                 tiempoActual = millis();
 
-                //Leer_Feedback(); //¿Aquí?
+                //Leer_Feedback(); // ¿Aquí?
                 mensajesEmergenciaDesplegados = false;
 
-                if( (tiempoActual - tiempoAnterior) >= periodoDeseado )
+                if ( (tiempoActual - tiempoAnterior) >= periodoDeseado )
                 {
-                    LeerEscribirExtensorPCF(&fijarPosicionFreno, &modoCarreteraActivado, &subirPalanca, &bajarPalanca,
-                                            !LEDJoystickDesconectado, !LEDEncoderDesconectado, !LEDActuadoresDesconectados);
-                                            //Se usan las variables _Desconectado porque esas quedan encendidas durante algunos ciclos (6).
+#if PCF_ACTIVADO
+                   ExtensorPCF_LeerEscribir();
+#endif
+                    verificarModoCarretera();
+
+                    // Se usan las variables _Desconectado porque esas quedan encendidas durante algunos ciclos (6).
                     Leer_Joystick();
                     Leer_Feedback();
                     desplegarInfoJoystick();
@@ -149,15 +163,17 @@ void loop()
                     desplegarInfoVolante();
                 #endif
 
-                     //ControlPalanca();
+                #if PALANCA_ACTIVADA
+                    ControlPalanca(Joystick_Y);
                     desplegarInfoPalanca();
+                #endif
 
                     verificacionSeguridadPeriodica();
 
-                    #if DEBUG_TIME
-                        long diferencia = tiempoActual - tiempoAnterior;
-                        Serial.print(",\tT:"); Serial.println(diferencia);
-                    #endif
+                #if INFO_TIME
+                    long diferencia = tiempoActual - tiempoAnterior;
+                    Serial.print(",\tT:"); Serial.print(diferencia);
+                #endif
 
                     Serial.println("");
                     tiempoAnterior = tiempoActual;
@@ -170,18 +186,32 @@ void loop()
     }
 }
 
+
+void verificarModoCarretera()
+{
+    if(modoCarreteraActivado == 1)
+    {
+        actAcel_valorExtendido = ACELERADOR_MAPEO_COMPLETO;
+    }
+    else
+    {
+        actAcel_valorExtendido = ACELERADOR_MAPEO_MEDIO;
+    }
+
+}
+
 void desplegarInfoArranque()
 {
 #if FRENO_ACTIVADO //Usar ! para negar la constante no funciona como con una variable normal.
     Serial.println("El freno está activado.");
 #else
-    Serial.println("¡EL FRENO NO ESTÁ ACTIVADO!.");
+    Serial.println("¡EL FRENO NO ESTÁ ACTIVADO!");
     delay(1500);
 #endif
 #if ACELERADOR_ACTIVADO
     Serial.println("El Acelerador está activado.");
 #else
-    Serial.println("¡EL ACELERADOR NO ESTÁ ACTIVADO!.");
+    Serial.println("¡EL ACELERADOR NO ESTÁ ACTIVADO!");
     delay(1500);
 #endif
 #if DEBUG_CONTROL_VOLANTE_UMBRALES
@@ -215,23 +245,26 @@ void desplegarInfoArranque()
 
 void desplegarInfoJoystick()
 {
-#if DEBUG_BOTONES
-    Serial.print(", FixFrenoPos: "); Serial.print(fijarPosicionFreno);
-    Serial.print(", ModoCarr:"); Serial.print(modoCarreteraActivado);
-#endif
-
-#if DEBUG_JOYSTICK
+#if INFO_JOYSTICK
     Serial.print(", J_Y: ");  Serial.print(Joystick_Y);
     Serial.print(",\tJ_X: "); Serial.print(Joystick_X);
 #endif
+
+#if INFO_BOTONES
+    Serial.print(", btnFixFreno: "); Serial.print(fijarPosicionFreno);
+    Serial.print(", btnModoCarr:"); Serial.print(modoCarreteraActivado);
+    Serial.print(", Palanca_Up:"); Serial.print(subirPalanca);
+    Serial.print(", Palanca_Down:"); Serial.print(bajarPalanca);
+#endif
+
 }
 
 void desplegarInfoPedales()
 {
-#if DEBUG_ACTUADORES_POS
+#if INFO_ACTUADORES_POS
     Serial.print(",\tB_pos: "); Serial.print(ActuadorFreno_Posicion);
     Serial.print(",   B_tgt: ");     Serial.print(ActuadorFreno_PosDeseada); //Serial.print(")");
-    #if DEBUG_ACTUADORES_CONTROL
+    #if INFO_ACTUADORES_CONTROL
         Serial.print(",   B_err: "); Serial.print(ActuadorFreno_ErrorPosicion); //posDeseada - posActual
         Serial.print(",   B_ctrl: "); Serial.print(ActuadorFreno_Control);
     #endif
@@ -239,7 +272,7 @@ void desplegarInfoPedales()
         Serial.print(",\tA_pos: "); Serial.print(ActuadorAcelerador_Posicion); //Valor del pot del act2 (Acelerador)
         Serial.print(",   A_tgt: "); Serial.print(ActuadorAcelerador_PosDeseada); //Serial.print(")");
 
-        #if DEBUG_ACTUADORES_CONTROL
+        #if INFO_ACTUADORES_CONTROL
         Serial.print(",   A_err: "); Serial.print(ActuadorAcelerador_ErrorPosicion);
         Serial.print(",   A_ctrl: "); Serial.print(ActuadorAcelerador_Control); //Valor de control aplicado al actuador de acelerador.
         #endif
@@ -249,7 +282,7 @@ void desplegarInfoPedales()
 
 void desplegarInfoVolante()
 {
-#if DEBUG_VOLANTE
+#if INFO_VOLANTE
     Serial.print(",\tCtrl_Vol: ");
     Serial.print(velocidad_volante);
     //Serial.print(valorControlVolante); //Esta activarla con el modo exponencial.
@@ -258,7 +291,7 @@ void desplegarInfoVolante()
 
 void desplegarInfoPalanca()
 {
-#if DEBUG_PALANCA
+#if INFO_PALANCA
     Serial.print(", btn_PalUp: "); Serial.print(subirPalanca);
     Serial.print(", btn_PalDw: "); Serial.print(bajarPalanca);
 #endif
@@ -398,8 +431,10 @@ void puestaACeroEncoder()
 void verificacionSeguridadPeriodica()
 {
     contadorIteraciones++;
-    if(contadorIteraciones >= cantIteracionesParaVerificacion) { //Definida en las variables de config en Seguridad.hpp.
-        verificarConexionesYActualizarLEDs();
+    if(contadorIteraciones >= cantIteracionesParaVerificacion)
+    {
+        Potenciometros_Conectados = VerificarConexionPotenciometros(cantidadPots);
+        //aplicarRutinasSeguridad();
         contadorIteraciones = 0;
     }
 }

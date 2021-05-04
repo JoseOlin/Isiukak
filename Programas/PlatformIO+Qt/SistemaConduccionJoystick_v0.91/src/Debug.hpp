@@ -9,25 +9,20 @@
  */
 
 // Constantes para Debugueo de funciones
-#define DEBUG_JOYSTICK 1
+
 #define DEBUG_POTS 0
 #define DEBUG_POTS_ERROR 1
 
-#define DEBUG_TIME 1
 #define DEBUG_CONTROL 0
 
-#define DEBUG_ACTUADORES_POS 1
-#define DEBUG_ACTUADORES_CONTROL 1
 #define DEBUG_ACTUADORES_BLOQUEOFRENO 1
-#define DEBUG_BOTONES 0
 
 #define DEBUG_COMUNICACION_NANO 0
+#define DEBUG_WIRE 0 // Para el i2c
 
-#define DEBUG_VOLANTE 1
-#define DEBUG_POS_VOLANTE 0
+
+#define DEBUG_POS_VINFO_VOLANTE
 #define DEBUG_CONTROL_VOLANTE 0
-
-#define DEBUG_PALANCA 1
 
 #define DEBUG_CONTROL_VOLANTE_UMBRALES 0
 

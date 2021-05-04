@@ -133,8 +133,10 @@ void ControlarPedales(uint8_t fijarPosicionFreno)
     }
 
     //Calcular valores de control con retroalimentacion
+#if FRENO_ACTIVADO
     ActuadorFreno_ErrorPosicion = ActuadorFreno_PosDeseada - ActuadorFreno_Posicion; //
     moverActuador(TipoActuador::Freno, ActuadorFreno_ErrorPosicion);
+#endif
 
   //Controlar el acelerador.
 #if ACELERADOR_ACTIVADO
@@ -143,8 +145,13 @@ void ControlarPedales(uint8_t fijarPosicionFreno)
 #endif
 }
 
+
 void moverActuador(TipoActuador tipoActuador, int ErrorPosicion)
 {
+    /* tipoActuador: Acelerador o Freno
+     * ErrorPosicion: ActuadorFreno_PosDeseada - ActuadorFreno_PosicionActual;
+     */
+
     bool ComportamientoDirecto; //Este comportamiento tiene que ver con la posición de los engranes del motor.
     int address;
 
@@ -183,6 +190,18 @@ void moverActuador(TipoActuador tipoActuador, int ErrorPosicion)
     } else{
         setMotorSpeed_Protocol(address, 0);
     }
+}
+
+void retraerAcelerador()
+{
+    int errorPosicion = actAcel_valorExtendido - actAcel_valorRetraido; // Se asume el mayor error, para que se retraiga lo antes posible.
+    moverActuador(TipoActuador::Acelerador, errorPosicion);
+}
+
+void extenderFreno()
+{
+    int errorPosicionFreno = actFreno_valorRetraido - actFreno_valorExtendido; // Se asume el mayor error, para que se extienda lo antes posible.
+    moverActuador(TipoActuador::Freno, errorPosicionFreno);
 }
 
 

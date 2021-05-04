@@ -1,1 +1,0 @@
-De este no se puede hacer liga simbólica porque el compilador de arduino no lo soporta.

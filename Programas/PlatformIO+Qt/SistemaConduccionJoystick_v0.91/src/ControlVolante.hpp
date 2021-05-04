@@ -70,14 +70,16 @@ int8_t vueltas = 0;
 
 //boolean vueltasGuardadas = false; //Para saber si en esta sesion el numero de vueltas ya fue almacenado y no volver a guardar.
 
-enum TiposConduccion {  MODO_POSICION_LINEAL,       //Relación lineal entre la posición del joystick y la posición del volante.
-                        MODO_POSICION_LOGARITMICO,       //Relación logarítmica entre posición del joystick y la posición del volante (menos sensible al centro).
-                        MODO_VELOCIDAD_CLOSEDLOOP,  //Controla la velocidad de giro en función de la posición del joystick (Relación lineal, con retroalimentación).
-                        MODO_OPENLOOP_LINEAL, //Relación lineal entre la posición del joystick y el voltaje aplicado al motor del volante.
-                        MODO_OPENLOOP_PORPARTES, //Dos segmentos, Menos sensible al centro, más sensible al extremo.
-                        MODO_OPENLOOP_EXPONENCIAL
-                     };
-TiposConduccion tipoC;
+enum TiposControlVolante {
+    MODO_OPENLOOP_LINEAL, //Relación lineal entre la posición del joystick y el voltaje aplicado al motor del volante.
+    MODO_OPENLOOP_PORPARTES, //Dos segmentos, Menos sensible al centro, más sensible al extremo.
+    MODO_OPENLOOP_EXPONENCIAL,
+    MODO_CLOSEDLOOP_POSICION_LINEAL,       //Relación lineal entre la posición del joystick y la posición del volante.
+    MODO_CLOSEDLOOP_POSICION_LOGARITMICO,       //Relación logarítmica entre posición del joystick y la posición del volante (menos sensible al centro).
+    MODO_CLOSEDLOOP_VELOCIDAD,  //Controla la velocidad de giro en función de la posición del joystick (Relación lineal, con retroalimentación).
+    MODO_INHIBIDO // Si se detecta el Joystick desconectado, dejar de aplicar control al volante.
+};
+TiposControlVolante tipoControlVolante;
 
 float Volante_PosicionActual;
 float Volante_PosicionDeseada;
@@ -162,7 +164,12 @@ void ControlarVolante()
     posVolante_actual = PosMotorDeg_actual / relacionSprockets;
 #endif
 
-    if(tipoC == MODO_OPENLOOP_PORPARTES)
+    if(tipoControlVolante == TiposControlVolante::MODO_INHIBIDO)
+    {
+        velocidad_volante = 0;
+        setMotorSpeed_Protocol(ActuadorVolante_Address, velocidad_volante);
+    }
+    else if(tipoControlVolante == TiposControlVolante::MODO_OPENLOOP_PORPARTES)
     {
 /*                             Joystick X
        387               60%          512       60%       . 40%    643
@@ -198,7 +205,7 @@ void ControlarVolante()
         }
         setMotorSpeed_Protocol(ActuadorVolante_Address, velocidad_volante);
     }
-    else if(tipoC == MODO_OPENLOOP_EXPONENCIAL)
+    else if(tipoControlVolante == TiposControlVolante::MODO_OPENLOOP_EXPONENCIAL)
     {
         //int umbralLecturaIzq = joyDirectionCenter-umbral_lectura_joystick;
         //int umbralLecturaDer = joyDirectionCenter+umbral_lectura_joystick;
@@ -247,7 +254,7 @@ void ControlarVolante()
         setMotorSpeed_Protocol(ActuadorVolante_Address, valorControlVolante); //Dentro de esta función se acotan los valores de -3200 a 3200.
 
     }
-    else if(tipoC == MODO_OPENLOOP_LINEAL)
+    else if(tipoControlVolante == TiposControlVolante::MODO_OPENLOOP_LINEAL)
     {
         if(   Joystick_X < (joyX_Center - umbral_lectura_joystick)
            || Joystick_X > (joyX_Center + umbral_lectura_joystick))
@@ -265,8 +272,8 @@ void ControlarVolante()
         {
             setMotorSpeed_Protocol(ActuadorVolante_Address, 0);
         }
-  }
-    else if(tipoC == MODO_VELOCIDAD_CLOSEDLOOP)
+    }
+    else if(tipoControlVolante == TiposControlVolante::MODO_CLOSEDLOOP_VELOCIDAD)
     {
         //El volante está dentro de los límites.
         if( Volante_PosicionActual > (gradosVolanteIzq + anguloSeguridadVueltaIzq)
@@ -300,7 +307,7 @@ void ControlarVolante()
         }
         setMotorSpeed_Protocol(ActuadorVolante_Address, velocidad_volante);
     }
-    else if(tipoC == MODO_POSICION_LINEAL)
+    else if(tipoControlVolante == TiposControlVolante::MODO_CLOSEDLOOP_POSICION_LINEAL)
     {
         //Para mejorar la controlabilidad hacer mapeo por secciones, para ser más preciso
         //con los primeros 210 grados del volante (lo más usual para vueltas de hasta 90° -esquinas- )
@@ -377,7 +384,7 @@ void ControlarVolante()
 
     setMotorSpeed_Protocol(ActuadorVolante_Address, ActuadorVolante_Control);
   }
-    else if(tipoC == MODO_POSICION_LOGARITMICO)
+    else if(tipoControlVolante == TiposControlVolante::MODO_CLOSEDLOOP_POSICION_LOGARITMICO)
     {
 
     }

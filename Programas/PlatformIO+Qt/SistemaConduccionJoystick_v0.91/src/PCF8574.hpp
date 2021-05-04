@@ -15,9 +15,13 @@
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
+
 #else
 #include "WProgram.h"
 #endif
+
+//#include <Wire.h>
+#include <WireNoFreeze.h>
 
 #define PCF8574_LIB_VERSION "0.1.9"
 
@@ -102,7 +106,7 @@ private:
 
 //#include "PCF8574.hpp"
 
-#include <Wire.h>
+
 
 PCF8574::PCF8574(const uint8_t deviceAddress)
 {
@@ -126,14 +130,24 @@ void PCF8574::begin(uint8_t val)
 // TODO @800KHz -> ??
 uint8_t PCF8574::read8()
 {
+#if DEBUG_WIRE
+    Serial.println("PCF8574::read8()");
+#endif
     if (Wire.requestFrom(_address, (uint8_t)1) != 1)
     {
+        #if DEBUG_WIRE
+        Serial.println("Entré a Wire.requestFrom");
+#endif
         _error = PCF8574_I2C_ERROR;
         return _dataIn; // last value
     }
 #if (ARDUINO <  100)
     _dataIn = Wire.receive();
 #else
+     //Wire.setTimeout(10);
+#if DEBUG_WIRE
+    Serial.println("Llegué a _dataIn = Wire.read();");
+#endif
     _dataIn = Wire.read();
 #endif
     return _dataIn;
@@ -149,6 +163,9 @@ void PCF8574::write8(const uint8_t value)
 
 uint8_t PCF8574::read(const uint8_t pin)
 {
+#if DEBUG_WIRE
+    Serial.println("Entré a PCF.read(uint8)");
+#endif
     if (pin > 7)
     {
         _error = PCF8574_PIN_ERROR;

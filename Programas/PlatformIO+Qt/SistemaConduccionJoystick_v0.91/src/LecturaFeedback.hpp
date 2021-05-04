@@ -1,11 +1,15 @@
-#ifndef LECTURAPOTS
-#define LECTURAPOTS
+#ifndef LECTURAFEEDBACK
+#define LECTURAFEEDBACK
 
 #include <Arduino.h>
 #include "DigitalFilter.hpp"
-#include "Config.hpp"
-#include "Debug.hpp"
+//#include "Config.hpp"
+//#include "Debug.hpp"
 #include "ComunicacionSerial.hpp"
+
+#include "Seguridad.hpp"
+#include "Testing.hpp"
+//
 
 ///************************Variables configuración********************///
 /// Rango del joystick (Valores experimentales)
@@ -33,6 +37,7 @@ int joyDerechaMedio = (joyMaximoDerecha - joyDirectionCenter)/2 + joyDirectionCe
 int joyY_MaxVal = 647;
 int joyY_Center = 514;
 int joyY_MinVal = 384;
+int joyY_FrenoCambios = 450;
 
 // ** Eje X (Volante)
 int joyX_MinVal = 387;  // Izquierda
@@ -114,7 +119,7 @@ void Leer_Joystick()
 
 void Leer_Feedback()
 {
-    //#if FRENO_ACTIVADO  //Para hacer pruebas del Joystick puede no conectarse el freno.
+    #if FRENO_ACTIVADO
     if(ActuadorFreno_TipoFeedback == TipoFeedback::ResistenciaVariable)
     {
         int act1_PosRaw = analogRead(A2); //Freno
@@ -133,7 +138,7 @@ void Leer_Feedback()
         Serial.println("Se definirá Resistencia varible por defecto.");
         ActuadorFreno_TipoFeedback = TipoFeedback::ResistenciaVariable;
     }
-    //#endif
+    #endif
 
     //#if ACELERADOR_ACTIVADO
     int act2_PosRaw = analogRead(A3); //Acelerador

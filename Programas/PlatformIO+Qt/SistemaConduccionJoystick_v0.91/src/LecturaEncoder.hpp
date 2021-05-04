@@ -65,7 +65,7 @@ uint16_t contadorNoRespuesta = 0;
 
 uint8_t temp[2];
 
-
+#if ENCODER_ACTIVADO
 uint8_t  SPI_T(uint8_t msg)    //Repetive SPI transmit sequence
 {
    uint8_t msg_temp = 0;  //vairable to hold received data
@@ -145,3 +145,4 @@ boolean ponerACero()
   }
   return true;
 }
+#endif

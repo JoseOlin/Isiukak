@@ -2,7 +2,6 @@
 #define TESTING_HPP
 
 #include "Seguridad.hpp"
-#include "LecturaFeedback.hpp"
 
 // Definir una secuencia de control.
 
