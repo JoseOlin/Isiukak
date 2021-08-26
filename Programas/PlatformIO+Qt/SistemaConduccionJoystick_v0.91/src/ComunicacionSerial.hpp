@@ -13,7 +13,7 @@
 
 SoftwareSerial smcSerial = SoftwareSerial (rxPin, txPin);
 
-
+/*
 // Variables para lectura de enteros en el puerto Serial.
 const byte numChars = 32;
 char receivedChars[numChars];
@@ -24,8 +24,7 @@ char receivedChars[numChars];
 
 bool newData = false;
 int dataNumber = 0;
-//*********************************************************//
-
+// ********************************************************* //
 
 void recvWithEndMarker()
 {
@@ -91,7 +90,8 @@ void recvCharsWithStartEndMarkers()
         }
     }
 }
-
+*/
+/*
 void recuperarValorNumerico(int* variablePorAsignar)
 {
     if(newData)
@@ -126,5 +126,6 @@ void showNewNumber()
     }
 }
 
+*/
 
 #endif // COMUNICACIONSERIAL_HPP

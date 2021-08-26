@@ -1,1 +1,0 @@
-/media/Ext4/Recursos/Electronica/Plataformas/PlatformIO/ConfigQt+PlatformIO.md

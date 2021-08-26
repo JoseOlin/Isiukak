@@ -1,25 +1,25 @@
-/*****************************************************************************
+﻿/*****************************************************************************
 
 La configuración general del sistema puede consultarse en README.md
 
 ******************************************************************************/
 
-//#include "Seguridad.hpp"
-#include "Testing.hpp"
+#include "Seguridad.hpp"
+//#include "Testing.hpp"
 
 //****************************** Variables de programa *************************//
-int pinJoystickY = A0;
+/*int pinJoystickY = A0;
 int pinJoystickX = A1;
 int pinActFreno  = A2;
 int pinActAcel   = A3;
 
-// Estos pines se usan para el bus i2c.
-//int pinRetroPalanca = A4;
-//int pin_encendido = A5;
+int pinFijarPosicionFreno = A4;
+int pinSubirPalanca = A5;
+int pinBajarPalanca = 10;
+int pinModoCarretera = 11;
 
-//int potenciometros[4] = {A0, A1, A2, A3};
 int pinParoManualEmergencia = 9;
-
+*/
 boolean posibleFalsoCorriente = false;
 
 //Variables para la medición del periodo del sistema.
@@ -28,30 +28,43 @@ long tiempoAnterior = 0, tiempoActual = 0;
 boolean actualizacionExitosa = false;
 //******************************************************************************//
 
-
-void puestaACeroEncoder();
-void puestaACeroEncoder();
-void desplegarInfoJoystick();
+void feedbackOnly();
+void feedbackAndControl();
 void desplegarInfoArranque();
+
+void desplegarInfoJoystick();
+void desplegarInfoBotones();
 void desplegarInfoPedales();
 void desplegarInfoVolante();
-void desplegarInfoPalanca();
+void desplegarInfoPalanca(int joystick_Y);
 void verificacionSeguridadPeriodica();
 void verificarModoCarretera();
-void pullupsInternos_i2c(boolean habilitar);
+
+//void pullupsInternos_i2c(boolean habilitar);
+//void puestaACeroEncoder();
+
+void configurarPines()
+{
+    pinMode(pinParoManualEmergencia, INPUT_PULLUP); //Configurar el pin por defecto en alto.
+
+    pinMode(pin5VVirtual, OUTPUT);
+    pinMode(pinGNDVirtual, OUTPUT);
+
+    pinMode(pinOutput_PalancaBajar, OUTPUT);
+    pinMode(pinOutput_PalancaSubir, OUTPUT);
+
+    pinMode(pinFijarPosicionFreno, INPUT);
+    pinMode(pinSubirPalanca, INPUT);
+    pinMode(pinBajarPalanca, INPUT);
+    pinMode(pinModoCarretera, INPUT);
+
+    //pinMode(pin_encendido, INPUT_PULLUP); //Por defecto en alto
+}
+
 
 void setup()
 {
     /// TODO: Portar a ST NUCLEO.
-    Wire.begin(); // Inicializar la comunicación i2c (para usar el extensor PCF).
-    Wire.setTimeout(5); // En ms. Para evitar que se quede colgado cuando no hay respuesta.
-    // Sólo aplica para ciertas funciones, aparentemente .read() no es una de ellas.
-
-    //Wire.setWireTimeout(500, true); // En us
-    // Disabel internal pull ups
-    bool habilitarPullups = false;
-    pullupsInternos_i2c(habilitarPullups);
-
 
     //Serial.begin(19200);
     //Serial.begin(38400);
@@ -60,160 +73,213 @@ void setup()
 
     /// TODO: Investigar si menor velocidad Serial es menos exigente para el micro.
 
-    //analogReference(DEFAULT); //the default analog reference of 5 volts (on 5V Arduino boards) or 3.3 volts (on 3.3V Arduino boards).
+    configurarPines();
 
-    //pinMode(pin_encendido, INPUT_PULLUP); //Por defecto en alto
-    //pinMode(pinParoManualEmergencia, INPUT_PULLUP); //Configurar el pin por defecto en alto.
-    pinMode(pin5VVirtual, OUTPUT);
-    pinMode(pinGNDVirtual, OUTPUT);
+    digitalWrite(pinOutput_PalancaBajar, LOW);
+    digitalWrite(pinOutput_PalancaSubir, LOW);
 
-    // Verificación de seguridad al arranque. Si alguna no pasa NO activar el sistema.
-    errorConexionesArranque = verificacionSeguridadArranque();
-    if(errorConexionesArranque)
-    {
-        Serial.println("Se detectaron errores durante el arranque.");
-        Serial.println("Por seguridad el sistema no se activará.");
-    }
+    // Encender todos los LEDS del Joystick para indicar que está encendido.
+
+    verificacionPots_activarVoltajeVirtual();
 
     // Para llenar el arreglo que se utiliza para filtrar la señal y evitar el
     // movimiento brusco de los actuadores al arranque.
-    for(int ii = 0; ii < filterSamples; ii++)
+    for(int ii = 0; ii < filterSamples + 1; ii++)
     {
         Leer_Joystick();
         Leer_Feedback();
     }
 
+    // Verificación de seguridad al arranque. Si alguna no pasa NO activar el sistema.
+    errorConexionesArranque = verificacionSeguridadArranque();
+    if(errorConexionesArranque)
+    {
+        Serial.println("**Se detectaron errores durante el arranque.\nPor seguridad el sistema NO se activará.**");
+        //Serial.println("**Por seguridad el sistema NO se activará.**");
+    }
+
     // ***Seleccionar el modo de operación del volante.***********
-    #if VOLANTE_ACTIVADO           //Definido en Seguridad.hpp
-        //tipoC = MODO_POSICION_LIN;
-        //tipoC = MODO_POSICION_LOG;
-        //tipoC =  MODO_VELOCIDAD; //Modo de control del volante con retroalimentación del encoder.
-        //tipoC = MODO_VELOCIDAD_OPENLOOP; //Modo de control por velocidad sin retroalimentación del encoder.
-        tipoControlVolante = TiposControlVolante::MODO_OPENLOOP_PORPARTES;
+    #if VOLANTE_ACTIVADO           // Definido en Seguridad.hpp
+        volante_Desinhibir();
     #endif
 
     //smcSerial.begin(19200);
-    smcSerial.begin(9600);//Se probó con 19200 y funciona.
+    smcSerial.begin(9600); // Se probó con 19200 y funciona.
 
+/*#if DEBUG_BOOT
     delay(1000);
+#endif*/
     tiempoAnterior = millis();
 
     desplegarInfoArranque();
-
-    delay(1500);
-
-    #if INFO_JOYSTICK
-    delay(1000);
-    #endif
 }
-
 
 void loop()
 {
-    //NoParoManualEmergencia = digitalRead(pinParoManualEmergencia); //Normalmente alto.
+    NoParoManualEmergencia = digitalRead(pinParoManualEmergencia); //Normalmente alto.
 
     if(NoParoManualEmergencia)
     {
     #if ENCODER_ACTIVADO
-        if( !EncoderConectado || !errorConexionesArranque)  {
+        if( !EncoderConectado || errorConexionesArranque)  {
             AlertaDeEmergencia();
-        } else
+        }
+        else
     #else
-        if(errorConexionesArranque) {
-            //desplegarPatronErrores();
+        if(errorConexionesArranque)
+    #endif
+        {
+            //desplegarPatronErroresArranque();
             if(!mensajeErrorArranque_Registrado) {
-                Serial.println("Error en la verificación de arranque.");
+                Serial.println("**Error en la verificación de arranque**");
                 mensajeErrorArranque_Registrado = true;
             }
+            feedbackOnly();
         }
-        else {
-            if(!Potenciometros_Conectados) //Si alguno de los componentes se desconectó.
-            {
-                aplicarRutinasSeguridad(); //Aquí se siguen leyendo los sensores, en caso de que se reconecten.
-                //delay(delayParoEmergencia);
-            }
-            else
-	#endif
-            {
-                // Si no hay paro de emergencia y todos los componentes están conectados. Funcionamiento normal del sistema.
-                tiempoActual = millis();
+        else
+        {
 
-                //Leer_Feedback(); // ¿Aquí?
-                mensajesEmergenciaDesplegados = false;
-
-                if ( (tiempoActual - tiempoAnterior) >= periodoDeseado )
-                {
-#if PCF_ACTIVADO
-                   ExtensorPCF_LeerEscribir();
-#endif
-                    verificarModoCarretera();
-
-                    // Se usan las variables _Desconectado porque esas quedan encendidas durante algunos ciclos (6).
-                    Leer_Joystick();
-                    Leer_Feedback();
-                    desplegarInfoJoystick();
-
-                    //*****************************//
-                    ControlarPedales(fijarPosicionFreno);
-                    desplegarInfoPedales();
-                    //*****************************//
-
-                #if VOLANTE_ACTIVADO
-                    ControlarVolante();
-                    desplegarInfoVolante();
-                #endif
-
-                #if PALANCA_ACTIVADA
-                    ControlPalanca(Joystick_Y);
-                    desplegarInfoPalanca();
-                #endif
-
-                    verificacionSeguridadPeriodica();
-
-                #if INFO_TIME
-                    long diferencia = tiempoActual - tiempoAnterior;
-                    Serial.print(",\tT:"); Serial.print(diferencia);
-                #endif
-
-                    Serial.println("");
-                    tiempoAnterior = tiempoActual;
-                }
-            } //endif(EncoderConectado && potenciometrosConectados)
-        }//endif(errorConexionesArranque)
-    }//endif(NoParoManualEmergencia)
+            feedbackAndControl();
+        }
+    }
     else {
         ParoManualEmergencia();
     }
 }
 
 
+void feedbackAndControl()
+{
+
+    if(!Potenciometros_Conectados) //Si alguno de los componentes se desconectó.
+    {
+        aplicarRutinasSeguridad(); //Aquí se siguen leyendo los sensores, en caso de que se reconecten.
+        feedbackOnly();
+        //delay(delayParoEmergencia);
+    }
+    else
+    {
+        // Si no hay paro de emergencia y todos los componentes están conectados. Funcionamiento normal del sistema.
+        tiempoActual = millis();
+
+        //Leer_Feedback(); // ¿Aquí o dentro del periodo de ejecución?
+        mensajesEmergenciaDesplegados = false;
+
+        if ( (tiempoActual - tiempoAnterior) >= periodoDeseado )
+        {
+        #if PCF_ACTIVADO
+           ExtensorPCF_LeerEscribir();
+           verificarModoCarretera();
+        #endif
+            volante_Desinhibir();
+
+            Leer_Joystick();
+            Leer_Feedback();
+            desplegarInfoJoystick();
+
+            Leer_Botones();
+            desplegarInfoBotones();
+            verificarModoCarretera();
+
+            //*****************************//
+            ControlarPedales(Joystick_Y, fijarPosicionFreno, ControlPedales_comportamientoDirecto);
+            desplegarInfoPedales();
+            //*****************************//
+
+            ControlarVolante();
+            desplegarInfoVolante();
+
+
+            ControlPalanca(ActuadorFreno_Posicion);
+            desplegarInfoPalanca(Joystick_Y);
+
+            verificacionSeguridadPeriodica();
+
+        #if INFO_TIME
+            long diferencia = tiempoActual - tiempoAnterior;
+            Serial.print(",\tT:"); Serial.print(diferencia);
+        #endif
+
+            Serial.println("");
+            tiempoAnterior = tiempoActual;
+        }
+    }
+}
+
+void feedbackOnly()
+{
+    tiempoActual = millis();
+
+    if ( (tiempoActual - tiempoAnterior) >= periodoDeseado )
+    {
+        Leer_Joystick();
+        desplegarInfoJoystick();
+
+        Leer_Feedback();
+        desplegarInfoPedales();
+
+        Leer_Botones();
+        desplegarInfoBotones();
+
+        desplegarInfoVolante();
+
+    #if INFO_TIME
+        long diferencia = tiempoActual - tiempoAnterior;
+        Serial.print(",\tT:"); Serial.print(diferencia);
+    #endif
+
+        Serial.println("");
+        tiempoAnterior = tiempoActual;
+    }
+}
+
+void verificacionSeguridadPeriodica()
+{
+    contadorIteraciones++;
+    if(contadorIteraciones >= cantIteracionesParaVerificacion)
+    {
+        Potenciometros_Conectados = VerificarConexionPotenciometros(cantidadPots);
+        //aplicarRutinasSeguridad();
+        contadorIteraciones = 0;
+    }
+}
+
 void verificarModoCarretera()
 {
     if(modoCarreteraActivado == 1)
     {
-        actAcel_valorExtendido = ACELERADOR_MAPEO_COMPLETO;
+        ActuadorAcelerador_valorExtendido = ACELERADOR_MAPEO_COMPLETO;
     }
     else
     {
-        actAcel_valorExtendido = ACELERADOR_MAPEO_MEDIO;
+        ActuadorAcelerador_valorExtendido = ACELERADOR_MAPEO_MEDIO;
     }
-
 }
+
 
 void desplegarInfoArranque()
 {
 #if FRENO_ACTIVADO //Usar ! para negar la constante no funciona como con una variable normal.
     Serial.println("El freno está activado.");
+    Serial.print("Modo operación pedales: ");
+    if(ControlPedales_comportamientoDirecto)
+    {
+        Serial.println("Directo. ");
+    }
+    else
+    {
+        Serial.println("Inverso. ");
+    }
 #else
-    Serial.println("¡EL FRENO NO ESTÁ ACTIVADO!");
-    delay(1500);
+    Serial.println("**¡EL FRENO NO ESTÁ ACTIVADO!**");
 #endif
+
 #if ACELERADOR_ACTIVADO
     Serial.println("El Acelerador está activado.");
 #else
-    Serial.println("¡EL ACELERADOR NO ESTÁ ACTIVADO!");
-    delay(1500);
+    Serial.println("**¡EL ACELERADOR NO ESTÁ ACTIVADO!**");
 #endif
+
 #if DEBUG_CONTROL_VOLANTE_UMBRALES
     //Serial.print("JoyIzq_Medio: "); Serial.println(joyIzquierdaMedio);
     //Serial.print("JoyDer_Medio: "); Serial.println(joyDerechaMedio);
@@ -239,66 +305,68 @@ void desplegarInfoArranque()
     delay(2000);
 #endif
 
-    Serial.print("Periodo verificación: "); Serial.println(periodoVerificacion);
-    Serial.print("Cantidad de iteraciones para verificación: "); Serial.println(cantIteracionesParaVerificacion);
+    Serial.print("**Periodo verificación: "); Serial.println(periodoVerificacion);
+    Serial.print("**Cantidad de iteraciones para verificación: "); Serial.println(cantIteracionesParaVerificacion);
 }
-
 void desplegarInfoJoystick()
 {
 #if INFO_JOYSTICK
-    Serial.print(", J_Y: ");  Serial.print(Joystick_Y);
+    Serial.print("J_Y: ");  Serial.print(Joystick_Y);
     Serial.print(",\tJ_X: "); Serial.print(Joystick_X);
 #endif
 
+}
+void desplegarInfoBotones()
+{
 #if INFO_BOTONES
-    Serial.print(", btnFixFreno: "); Serial.print(fijarPosicionFreno);
-    Serial.print(", btnModoCarr:"); Serial.print(modoCarreteraActivado);
-    Serial.print(", Palanca_Up:"); Serial.print(subirPalanca);
-    Serial.print(", Palanca_Down:"); Serial.print(bajarPalanca);
+    Serial.print(",\tbFB: "); Serial.print(fijarPosicionFreno); //button Fix Brake
+    Serial.print(", bPU: "); Serial.print(subirPalanca); // button Palanca Up
+    Serial.print(", bPD: "); Serial.print(bajarPalanca);// button Palanca Down
+    Serial.print(", bMC: "); Serial.print(modoCarreteraActivado); //button Modo Carretera
 #endif
-
 }
 
 void desplegarInfoPedales()
 {
 #if INFO_ACTUADORES_POS
-    Serial.print(",\tB_pos: "); Serial.print(ActuadorFreno_Posicion);
-    Serial.print(",   B_tgt: ");     Serial.print(ActuadorFreno_PosDeseada); //Serial.print(")");
-    #if INFO_ACTUADORES_CONTROL
-        Serial.print(",   B_err: "); Serial.print(ActuadorFreno_ErrorPosicion); //posDeseada - posActual
-        Serial.print(",   B_ctrl: "); Serial.print(ActuadorFreno_Control);
-    #endif
-    #if ACELERADOR_ACTIVADO
-        Serial.print(",\tA_pos: "); Serial.print(ActuadorAcelerador_Posicion); //Valor del pot del act2 (Acelerador)
-        Serial.print(",   A_tgt: "); Serial.print(ActuadorAcelerador_PosDeseada); //Serial.print(")");
+    // Brake information
+    Serial.print(",\tB_p: "); Serial.print(ActuadorFreno_Posicion);
+    Serial.print(",   B_t: ");     Serial.print(ActuadorFreno_PosDeseada); //Serial.print(")");
 
-        #if INFO_ACTUADORES_CONTROL
-        Serial.print(",   A_err: "); Serial.print(ActuadorAcelerador_ErrorPosicion);
-        Serial.print(",   A_ctrl: "); Serial.print(ActuadorAcelerador_Control); //Valor de control aplicado al actuador de acelerador.
-        #endif
+    #if INFO_ACTUADORES_CONTROL
+        Serial.print(",   B_e: "); Serial.print(ActuadorFreno_ErrorPosicion); //posDeseada - posActual
+        Serial.print(",   B_c: "); Serial.print(ActuadorFreno_Control);
     #endif
+
+    // Gas information
+    Serial.print(",\tA_p: "); Serial.print(ActuadorAcelerador_Posicion); //Valor del pot del act2 (Acelerador)
+    Serial.print(",   A_t: "); Serial.print(ActuadorAcelerador_PosDeseada); //Serial.print(")");
+
+    #if INFO_ACTUADORES_CONTROL
+        Serial.print(",   A_e: "); Serial.print(ActuadorAcelerador_ErrorPosicion);
+        Serial.print(",   A_c: "); Serial.print(ActuadorAcelerador_Control); //Valor de control aplicado al actuador de acelerador.
+    #endif
+
 #endif
 }
-
 void desplegarInfoVolante()
 {
-#if INFO_VOLANTE
-    Serial.print(",\tCtrl_Vol: ");
-    Serial.print(velocidad_volante);
+    #if INFO_VOLANTE
+    Serial.print(",\tCtrl_Vol: "); Serial.print(velocidad_volante);
     //Serial.print(valorControlVolante); //Esta activarla con el modo exponencial.
-#endif
+    #endif
 }
 
-void desplegarInfoPalanca()
+
+void desplegarInfoPalanca(int joystick_Y)
 {
-#if INFO_PALANCA
-    Serial.print(", btn_PalUp: "); Serial.print(subirPalanca);
-    Serial.print(", btn_PalDw: "); Serial.print(bajarPalanca);
-#endif
+
 }
+
 
 void puestaACeroEncoder()
 {
+    #if ENCODER_ACTIVADO
     /* Debido a que en la puesta a cero la posición se interpreta como 360°, además
     el setPoint son 180° así que debe seguirse un procedimiento específico.
 
@@ -313,7 +381,7 @@ void puestaACeroEncoder()
 
         5. Devuelva la bandera PUESTAACERO a 0 (falso).
     */
-    #if ENCODER_ACTIVADO
+
 
     //posicion_volante_actual = PosMotorDeg_actual / relacionSprockets;
 
@@ -425,16 +493,6 @@ void puestaACeroEncoder()
         Serial.println("5 segundos...");
         delay(5000);
     }
-    #endif
+#endif
 }
 
-void verificacionSeguridadPeriodica()
-{
-    contadorIteraciones++;
-    if(contadorIteraciones >= cantIteracionesParaVerificacion)
-    {
-        Potenciometros_Conectados = VerificarConexionPotenciometros(cantidadPots);
-        //aplicarRutinasSeguridad();
-        contadorIteraciones = 0;
-    }
-}

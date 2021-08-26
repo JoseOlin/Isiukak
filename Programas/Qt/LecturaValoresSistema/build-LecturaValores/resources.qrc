@@ -1,9 +1,9 @@
 <RCC>
     <qresource prefix="/">
-        <file>../images/clear.png</file>
-        <file>../images/application-exit.png</file>
-        <file>../images/connect.png</file>
-        <file>../images/disconnect.png</file>
-        <file>../images/settings.png</file>
+        <file>../application-exit.png</file>
+        <file>../clear.png</file>
+        <file>../connect.png</file>
+        <file>../disconnect.png</file>
+        <file>../settings.png</file>
     </qresource>
 </RCC>
