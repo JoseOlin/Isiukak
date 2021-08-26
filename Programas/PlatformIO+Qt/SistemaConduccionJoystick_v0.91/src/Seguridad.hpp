@@ -1,9 +1,7 @@
-#ifndef SEGURIDAD
+﻿#ifndef SEGURIDAD
 #define SEGURIDAD
 
 ///********************** Seguridad.hpp ***************************************///
-
-
 
 #include "ComunicacionSerial.hpp"
 #include "Config.hpp"
@@ -11,16 +9,10 @@
 #include "ControlPedales.hpp"
 #include "ControlVolante.hpp"
 #include "ControlPalanca.hpp"
-#include "ExtensorPCF.hpp"
+//#include "ExtensorPCF.hpp"
 
 ///**************************************************************************///
 ///********************* Variables configuración ****************************///
-///**************************************************************************///
-#define PUESTACERO 0
-
-
-//o se enviará la señal directamente a la ECM (La computadora del carro)
-#define ENCODER_ACTIVADO 0 //Para tener retroalimentación de posición del volante.
 
 unsigned int miliSegundos_ActuadorFrenoParo_LazoAbierto = 1500; // Tiempo de actuación del freno para el paro de emergencia.
 
@@ -40,8 +32,6 @@ unsigned int umbralPotActuadores_Inferior = 185;
 //unsigned int umbralActuadoresInferior = 300;
 
 
-
-uint8_t periodoDeseado = 25; //ms Periodo de funcionamiento del sistema en ms.
 //unsigned int cantIteracionesParaVerificacion = 25;
 //25; //Aprox. cada 500 ms
 //100; Cada 2 s
@@ -51,15 +41,14 @@ unsigned int periodoVerificacion = 2000; // Periodo de verificación en ms.
 
 unsigned int cantIteracionesParaVerificacion = periodoVerificacion / periodoDeseado;
 
-///**************************************************************************///
 ///********************* Fin Variables configuración ************************///
 ///**************************************************************************///
 
 
 ///****************************************************************************///
 ///********************Variables de programa***********************************///
-///****************************************************************************///
-/// TODO: Cambiar el orden de los pines para dejar el 2 para Serial y que sea compatible con ST NUCLEO.
+
+/// TODO: Cambiar el orden de los pines para dejar el 2 para Serial y que sea compatible con ST NUCLEO (Rx:, Tx: ).
 int pinGNDVirtual = 2;
 int pin5VVirtual = 3;
 
@@ -75,9 +64,13 @@ uint8_t Freno_Conectado = true;
 uint8_t Acelerador_Conectado = true;
 uint8_t Actuadores_Conectados = true;
 uint8_t Potenciometros_Conectados = true;
+uint8_t ActuadoresRangoValidoBoot = false;
+uint8_t JoystickCentrado = false;
+uint8_t ActuadoresMoving = false;
 
 uint8_t errorConexionesArranque = false;
 
+/// Las variables LED_* se actualizan en aplicarRutinasSeguridad.
 uint8_t LED_JoystickVerDesconectado = false;
 uint8_t LED_JoystickHorDesconectado = false;
 uint8_t LED_ActuadorFrenoDesconectado = false;
@@ -97,6 +90,10 @@ uint16_t delayParoEmergencia = 100;
 
 boolean mensajesEmergenciaDesplegados = false;
 boolean protocoloFrenadoImplementado = false;
+
+unsigned int contadorPatronErroresArranque = 0;
+
+
 
 bool arduinoNanoConectado = false;
 
@@ -121,72 +118,312 @@ enum ErrorCodes { OK,
 ErrorCodes estadoDelSistema;
 
 enum NivelesDigitales {ALTO, BAJO};
-///******************************************************************************/
 ///******************** Fin Variables de programa******************************///
 ///******************************************************************************/
 
-
-//*************************** Prototipos de funciones ************************//
+///******************************************************************************/
+///*************************** Prototipos de funciones ************************//
+boolean verificarConexionPotenciometro(unsigned int indicePot, NivelesDigitales nivel, unsigned int umbral);
 boolean VerificarConexionPotenciometros(unsigned int cantPots);
-
 void ExtensorPCF_LeerEscribir();
-//*************************** Fin Prototipos *********************************//
+void ExtensorPCF_ErroresArranque_LeerEscribir(uint8_t salida1, uint8_t salida2, uint8_t salida3, uint8_t salida4);
+void volante_Inhibir();
+void volante_Desinhibir();
 
+boolean evaluarConexionesActuadores(uint8_t Freno_Conectado, uint8_t Acelerador_Conectado);
+///*************************** Fin Prototipos *********************************//
+///******************************************************************************/
+///
+boolean joytickBootCentered(int joy_X, int joy_Y)
+{
+    int errorJoyX = abs(joy_X - joyX_Center);
+    boolean joystickIsCentered = true;
 
+    #if JOYSTICK_ACTIVADO
+    if(errorJoyX > joystickUmbralErrorCentrado)
+    {
+        joystickIsCentered = false;
+    }
+
+    int errorJoyY = abs(joy_Y - joyY_Center);
+    if(errorJoyY > joystickUmbralErrorCentrado)
+    {
+        joystickIsCentered = false;
+    }
+    #endif
+
+    return joystickIsCentered;
+}
+
+boolean actuatorsNormalPositionBoot(int posFreno, int posAcelerador)
+{
+    boolean frenoRangoValido = true; // El freno podría haberse dejado extendido al apagar
+        // Ese comportamiento es aceptable, siempre que la lectura esté dentro del rango
+        // de extensión y retracción del actuador.
+    boolean aceleradorRetraido = true; // El acelerador siempre debe estar retraído al arranque.
+    boolean ActuadoresRangoValido;
+
+#if ACELERADOR_ACTIVADO
+    int errorAceleradorRetraido = posAcelerador - ActuadorAcelerador_valorRetraido;
+    if(errorAceleradorRetraido > ActuadorAcelerador_umbralErrorArranque)
+    {
+        aceleradorRetraido = false;
+        Serial.print("**El Acelerador no está retraído. Pos: ");
+        Serial.println(posAcelerador);
+    }
+#endif
+
+#if FRENO_ACTIVADO
+    if(posFreno < (ActuadorFreno_valorRetraido - ActuadorFreno_umbralErrorArranque))
+    {
+        frenoRangoValido = false;
+        Serial.println("**El Freno está por debajo del rango de retracción válido.**");
+    }
+    if(posFreno > (ActuadorFreno_valorExtendido + ActuadorFreno_umbralErrorArranque))
+    {
+        frenoRangoValido = false;
+        Serial.println("**El Freno está por encima del rango de extensión válido.**");
+    }
+#endif
+    ActuadoresRangoValido = aceleradorRetraido && frenoRangoValido;
+
+    return ActuadoresRangoValido;
+}
+
+boolean actuatorsAreMoving()
+{
+    /*
+     *
+     *
+     */
+    //boolean actuatorsWorking = true;
+    //boolean brakeWorking = true;
+    //boolean gasWorking = true;
+
+    boolean comportamientoDirecto = false;
+    uint8_t fijarPosicionFreno = false;
+
+    int joystick_Y = joyY_Center;
+
+#if FRENO_ACTIVADO
+
+    // Validar que el freno se puede retraer.
+    int contadorLlegadaFreno = 0;
+
+    ControlarPedales(joystick_Y , fijarPosicionFreno, comportamientoDirecto);
+    while(ActuadorFreno_ErrorPosicion > ActuadorFreno_umbralError)
+    {
+        ControlarPedales(joystick_Y, fijarPosicionFreno, comportamientoDirecto);
+        delay(1);
+        contadorLlegadaFreno++;
+        if(contadorLlegadaFreno > ActuadorFreno_tiempoLlegada)
+        {
+            //brakeWorking = false;
+            Serial.println("**El freno no llegó al setpoint.");
+            Serial.print("ContadorFreno: "); Serial.println(contadorLlegadaFreno);
+            //break;
+            return false;
+        }
+    }
+
+    joystick_Y = joyY_MaxVal;
+    contadorLlegadaFreno = 0;
+
+    ControlarPedales(joystick_Y, fijarPosicionFreno, comportamientoDirecto);
+    while(ActuadorFreno_ErrorPosicion > ActuadorFreno_umbralError)
+    {
+        ControlarPedales(joystick_Y, fijarPosicionFreno, comportamientoDirecto);
+        delay(1);
+        contadorLlegadaFreno++;
+        if(contadorLlegadaFreno > ActuadorFreno_tiempoLlegada)
+        {
+            //brakeWorking = false;
+            Serial.println("**El freno no llegó al setpoint.");
+            Serial.print("ContadorFreno: "); Serial.println(contadorLlegadaFreno);
+            //break;
+            return false;
+        }
+    }
+
+    joystick_Y = joyY_Center;
+    contadorLlegadaFreno = 0;
+
+    ControlarPedales(joystick_Y, fijarPosicionFreno, comportamientoDirecto);
+    while(ActuadorFreno_ErrorPosicion > ActuadorFreno_umbralError)
+    {
+        ControlarPedales(joystick_Y, fijarPosicionFreno, comportamientoDirecto);
+        delay(1);
+        contadorLlegadaFreno++;
+        if(contadorLlegadaFreno > ActuadorFreno_tiempoLlegada)
+        {
+            //brakeWorking = false;
+            Serial.println("**El freno no llegó al setpoint.**");
+            //break;
+            return false;
+        }
+    }
+#endif
+
+#if ACELERADOR_ACTIVADO
+    joystick_Y = joyY_Center - 30;
+    int contadorTiempoLlegada = 0;
+
+    ControlarPedales(joystick_Y, fijarPosicionFreno, comportamientoDirecto);
+    while(ActuadorAcelerador_ErrorPosicion > ActuadorAcelerador_umbralError)
+    {
+        ControlarPedales(joystick_Y, fijarPosicionFreno, comportamientoDirecto);
+        delay(1);
+        contadorTiempoLlegada++;
+        if(contadorTiempoLlegada > ActuadorAcelerador_tiempoLlegada)
+        {
+            //gasWorking = false;
+            Serial.println("**El Acelerador no llegó al setpoint.");
+            //break;
+            return false;
+        }
+    }
+
+    joystick_Y = joyY_Center;
+    contadorTiempoLlegada = 0;
+
+    ControlarPedales(joystick_Y, fijarPosicionFreno, comportamientoDirecto);
+    while(ActuadorAcelerador_ErrorPosicion > ActuadorAcelerador_umbralError)
+    {
+        ControlarPedales(joystick_Y, fijarPosicionFreno, comportamientoDirecto);
+        delay(1);
+        contadorTiempoLlegada++;
+        if(contadorTiempoLlegada > ActuadorAcelerador_tiempoLlegada)
+        {
+            //gasWorking = false;
+            Serial.println("**El Acelerador no llegó al setpoint.**");
+            //break;
+            return false;
+        }
+    }
+#endif
+
+    return true;
+}
 
 boolean verificacionSeguridadArranque()
 {
-    // Al arranque se verifica que los potenciómetros de actuadores y Joystick estén
-    // conectados.
-    // Si la verificación al arranque es satisfactoria el sistema inicia, aunque
+    // Al arranque se verifica:
+    // - Que los potenciómetros de los Actuadores y Joystick estén conectados.
+    // - Que el joystick esté centrado en ambos ejes.
+    // - Que la posición de los actuadores se retraída.
+    // - Que ambos actuadores puedan moverse.
+
+    // Si la verificación al arranque es satisfactoria el sistema inicia, y
     // cada determinado número de ciclos (cantIteracionesParaVerificacion) se vuelve a
-    // realizar una verificación.
-    // De momento se usan funciones distintas porque la del arranque además de definir
-    // si algún elemento está desconectado envía un patrón de encendido a los LED's
+    // realizar una verificación de conexión de potenciómetros.
+
     boolean errorConexionesStart = false;
 
     Potenciometros_Conectados = VerificarConexionPotenciometros(cantidadPots);
-
-    Serial.print("Pots Conectados: ");
-    Potenciometros_Conectados ? Serial.println("SI.") : Serial.println("NO.");
+    //Serial.print("Pots Conectados: ");
 
     if(Potenciometros_Conectados)
     {
-        Serial.println("Sistema activado.");
         estadoDelSistema = ErrorCodes::OK;
     }
     else
     {
-        Serial.println("Sistema NO activado. La revisión de potenciómetros devolvió errores");
+        estadoDelSistema = ErrorCodes::EmergencyBraking;
+        Serial.println("**La revisión de potenciómetros devolvió errores.**");
     }
-    errorConexionesStart = !Potenciometros_Conectados;
+
+
+#if VALIDAR_RANGO
+    retraerAcelerador();
+
+    delay(500);
+    ActuadoresRangoValidoBoot = actuatorsNormalPositionBoot(ActuadorFreno_Posicion, ActuadorAcelerador_Posicion);
+    if(!ActuadoresRangoValidoBoot)
+    {
+        estadoDelSistema = ErrorCodes::ImmediateStop;
+        Serial.println("**Los actuadores no están en su rango válido.**");
+    }
+#else
+    ActuadoresRangoValidoBoot = true;
+#endif
+
+
+    JoystickCentrado = joytickBootCentered(Joystick_X, Joystick_Y);
+    if(!JoystickCentrado)
+    {
+        estadoDelSistema = ErrorCodes::EmergencyBraking;
+        Serial.print("**El Joystick no está centrado. X: "); Serial.print(Joystick_X);
+        Serial.print(", Y: "); Serial.println(Joystick_Y);
+    }
+#if VALIDAR_MOVING
+    ActuadoresMoving = actuatorsAreMoving();
+#else
+    ActuadoresMoving = true;
+#endif
+
+    errorConexionesStart = !Potenciometros_Conectados || !JoystickCentrado || !ActuadoresRangoValidoBoot || !ActuadoresMoving;
 
     return errorConexionesStart;
-    //desplegarPatronErrores();
+}
+
+void verificacionPots_ponerExtremosEnAlto()
+{
+    // Conexión directa a las salidas digitales.
+    digitalWrite(pinGNDVirtual, HIGH);
+    digitalWrite(pin5VVirtual, HIGH);
+
+    /* Las salidas del arduino controlan dos transistores, cuando la salida del arduino están
+    en bajo, la salida del transistor está en alto. */
+    //digitalWrite(pinGNDVirtual, LOW);
+    //digitalWrite(pin5VVirtual, LOW);
+}
+
+void verificacionPots_ponerExtremosEnBajo()
+{
+    // Conexión directa a las salidas digitales.
+    digitalWrite(pinGNDVirtual, LOW);
+    digitalWrite(pin5VVirtual, LOW);
+
+    // Salidas del Arduino en Alto -> Salidas del Transistor en Bajo.
+    //digitalWrite(pinGNDVirtual, HIGH);
+    //digitalWrite(pin5VVirtual, HIGH);
+}
+
+void verificacionPots_activarVoltajeVirtual()
+{
+    // Conexión directa a las salidas digitales.
+    digitalWrite(pinGNDVirtual, LOW);
+    digitalWrite(pin5VVirtual, HIGH);
+
+    // Voltaje virtual con transistores
+    //digitalWrite(pinGNDVirtual, HIGH);
+    //digitalWrite(pin5VVirtual, LOW);
 }
 
 boolean VerificarConexionPotenciometros(unsigned int cantPots)
 {
 /* Función para verificar que los potenciómetros estén conectados.
- * Para hacer la verificación los potenciómetros se conectan a pines digitales.
+ * Para hacer la verificación los potenciómetros se conectan a pines digitales (GND Virtual y 5V Virtual.
  * Al poner los extremos en LOW el wiper deberá medir 0V o muy cercano,
  * Al poner los extremos en HIGH el wiper deberá medir 5V o muy cercano.
+ * Si las dos validaciones anteriores no se cumplen se asume desconexión.
  *
  * PARÁMETROS:
   cantPots: Cantidad de potenciómetros a verificar
 */
+
     /* Los potenciómetros son la retroalimentacion de los actuadores y los dos ejes
     del Joystick.  */
     if(cantPots < 4)
     {
-        // TODO: Enviar patrón de alerta a los LEDs.
-        Serial.print("ADVERTENCIA: NO SE ESTÁN VERIFICANDO TODOS LOS POTS. ");
-        Serial.print("ESTA CONFIGURACIÓN SÓLO DEBERÍA ACTIVARSE PARA EFECTOS DE PRUEBAS");
+        Serial.print("**ADVERTENCIA: No se están verificando todos los Potenciómetros. **");
+        //Serial.print("**ESTA CONFIGURACIÓN SÓLO DEBERÍA ACTIVARSE PARA EFECTOS DE PRUEBAS**");
     }
 
-    unsigned int valorPot;
+    //unsigned int valorPot;
     boolean potsAltos = false;
     boolean potsBajos = false;
+
     boolean potsConectados = true;
 
     //Inicializacion de variables en caso de que se hayan vuelto a conectar.
@@ -201,278 +438,88 @@ boolean VerificarConexionPotenciometros(unsigned int cantPots)
     /// se hace de manera automática en cada lectura.
 
 
-    digitalWrite(pinGNDVirtual, HIGH);
-    digitalWrite(pin5VVirtual, HIGH);
+    ///*****************************************************///
+    ///***************** Validación en ALTO.****************///
+    verificacionPots_ponerExtremosEnAlto();
     delay(1);
-    // TODO: Verificar si el delay dentro de VerificarConexionPotenciometros es necesario.
 
-    /// Validación en ALTO.
     // Validar que al poner los dos extremos del potenciómetro en ALTO
     // el valor del wiper esté arriba del umbral umbralPotJoy_Superior.
 
-    /*
 #if JOYSTICK_ACTIVADO
-    JoystickPotVertical_Conectado = verificarConexionPotenciometro(0, NivelesDigitales::ALTO, umbralPotJoy_Superior);
+    JoystickPotVertical_Conectado = verificarConexionPotenciometro(0, NivelesDigitales::ALTO, umbralPotJoy_Superior); // 0 -> Joystick vertical
     JoystickPotHorizontal_Conectado = verificarConexionPotenciometro(1, NivelesDigitales::ALTO, umbralPotJoy_Superior);
     Joystick_Conectado = JoystickPotHorizontal_Conectado && JoystickPotVertical_Conectado;
-#else
-    Joystick_Conectado = true;
 #endif
 
 #if FRENO_ACTIVADO
-    if(ActuadorFreno_TipoFeedback == TipoFeedback::ResistenciaVariable) {
+    //if(ActuadorFreno_TipoFeedback == TipoFeedback::ResistenciaVariable) {
         Freno_Conectado = verificarConexionPotenciometro(2, NivelesDigitales::ALTO, umbralPotActuadores_Superior);
-    }
+    //}
+    /*
+    else if(ActuadorFreno_TipoFeedback == TipoFeedback::EncoderIncremental)
+    {
+        // Implementar función para validar que el encoder del freno esté conectado.
+    }*/
 #endif
+
 #if ACELERADOR_ACTIVADO
     Acelerador_Conectado = verificarConexionPotenciometro(3, NivelesDigitales::ALTO, umbralPotActuadores_Superior);
 #endif
-    evaluarConexionesActuadores();
-*/
-    /////ActuadoresDesconectados = !ActuadoresConectados; //Para retro en los LEDs
 
-
-
-    for(unsigned int ii = 0;   ii<cantPots;     ii++)
-    {
-        valorPot = analogRead(potenciometros[ii]);
-
-        #if DEBUG_POTS
-        Serial.print("\tii: "); Serial.print(ii);
-        Serial.print(",\tvalorPot: "); Serial.println(valorPot);
-        #endif
-
-        //delay(1);
-        // TODO: Verificar si el delay de VerificarConexionPotenciometros DENTRO DEL FOR es necesario.
-#if JOYSTICK_ACTIVADO
-        if(ii == 0) //Joystick vertical
-        {
-            if(valorPot < umbralPotJoy_Superior)
-            {
-            #if DEBUG_POTS_ERROR
-                if(!mensajesEmergenciaDesplegados)
-                {
-                    Serial.print(",  **Joy_V** ");
-                    Serial.print(",\tHighVal: "); Serial.println(valorPot);
-                }
-            #endif
-                JoystickPotVertical_Conectado = false;
-            }
-        }
-        if(ii == 1) //Joystick Horizontal.
-        {
-            if(valorPot < umbralPotJoy_Superior)
-            {
-            #if DEBUG_POTS_ERROR
-                if(!mensajesEmergenciaDesplegados)
-                {
-                    Serial.print(", **Joy_H**");
-                    Serial.print(",\tHighVal: "); Serial.println(valorPot);
-                }
-            #endif
-                JoystickPotHorizontal_Conectado = false;
-            }
-        }
-
-
-        Joystick_Conectado = JoystickPotHorizontal_Conectado && JoystickPotVertical_Conectado;
-#else
-        Joystick_Conectado = true;
-#endif
-        //JoystickDesconectado = !JoystickConectado; //No aquí, este valor
-        //se actualiza en el ciclo principal después de que el contadorLED__Desconectados  llega a 0.
-    #if FRENO_ACTIVADO
-        if(ActuadorFreno_TipoFeedback == TipoFeedback::ResistenciaVariable)
-        {
-            if(ii == 2) //Freno
-            {
-                if(valorPot < umbralPotActuadores_Superior)
-                {
-                #if DEBUG_POTS_ERROR
-                    if(!mensajesEmergenciaDesplegados)
-                    {
-                        Serial.print(", **Freno** ");
-                        Serial.print(",\tHighVal: "); Serial.println(valorPot);
-                    }
-                #endif
-                    Freno_Conectado = false;
-                }
-            }
-        }
-    #endif
-
-    #if ACELERADOR_ACTIVADO
-        if(ii == 3)  //Acelerador.
-        {
-            if(valorPot < umbralPotActuadores_Superior)
-            {
-                #if DEBUG_POTS_ERROR
-                if(!mensajesEmergenciaDesplegados)
-                {
-                    Serial.print(", **Accel** ");
-                    Serial.print(",\tHighVal: "); Serial.println(valorPot);
-                }
-                #endif
-                Acelerador_Conectado = false;
-            }
-        }
-    #endif
-
-    #if ACELERADOR_ACTIVADO
-        Actuadores_Conectados = Freno_Conectado && Acelerador_Conectado;
-    #else
-        #if FRENO_ACTIVADO
-                Actuadores_Conectados = Freno_Conectado;
-        #else
-                Actuadores_Conectados = true;
-        #endif
-    #endif
-        /////ActuadoresDesconectados = !ActuadoresConectados; //Para retro en los LEDs
-    }
+    Actuadores_Conectados = evaluarConexionesActuadores(Freno_Conectado, Acelerador_Conectado);
 
     potsAltos = Actuadores_Conectados && Joystick_Conectado;
 
-    #if DEBUG_POTS
-    if(potsAltos) //(potsAltos = ActuadoresConectados && JoystickConectado;)
+    #if DEBUG_POTS_ERROR
+    if(!potsAltos) //(potsAltos = ActuadoresConectados && JoystickConectado;)
     {
-        Serial.println(". Todos Altos.");
-    } else {
         Serial.print("Falla Pots_H: ");
         if(!Joystick_Conectado) Serial.print(" Joys_H, ");
         if(!Actuadores_Conectados) Serial.print(" Acts_H.");
         Serial.print("\n");
     }
     #endif
+    ///***************** FIN Validación en ALTO.*********************///
+    ///**************************************************************///
 
-    /// Validación en BAJO
+
+    ///**************************************************************///
+    ///****************** Validación en BAJO*************************///
     // Validar que al poner ambos extremos de los potenciómetros a cero
     // todos los wipers marquen 0 ó 1.
-    digitalWrite(pinGNDVirtual, LOW);
-    digitalWrite(pin5VVirtual, LOW);
+    verificacionPots_ponerExtremosEnBajo();
     delay(1);
 
-/*
-    #if JOYSTICK_ACTIVADO
-    JoystickPotHorizontal_Conectado = verificarConexionPotenciometro(0, NivelesDigitales::ALTO, umbralPotJoy_Inferior);
-    JoystickPotHorizontal_Conectado = verificarConexionPotenciometro(1, NivelesDigitales::ALTO, umbralPotJoy_Inferior);
-    #else
-         Joystick_Conectado = true;
-    #endif
-*/
-
-    for(unsigned int ii = 0;    ii < cantPots;     ii++)
-    {
-        valorPot = analogRead(potenciometros[ii]);
-        //delay(1);
-    #if DEBUG_POTS
-        Serial.print("\tii: "); Serial.print(ii);
-        Serial.print(",\tvalorPot: "); Serial.println(valorPot);
-    #endif
 
 #if JOYSTICK_ACTIVADO
-        if(ii == 0)
-        {
-            if(valorPot > umbralPotJoy_Inferior )
-            {
-            #if DEBUG_POTS_ERROR
-                if(!mensajesEmergenciaDesplegados)
-                {
-                    Serial.print(", **Joy_V**");
-                    Serial.print(",\tLowVal: "); Serial.println(valorPot);
-                }
-            #endif
-                JoystickPotVertical_Conectado = false;
-            }
-        }
-        if(ii == 1)
-        {
-            if(valorPot > umbralPotJoy_Inferior)
-            {
-            #if DEBUG_POTS_ERROR
-                if(!mensajesEmergenciaDesplegados)
-                {
-                    Serial.print(",  **Joy_H**");
-                    Serial.print(",\tLowVal: "); Serial.println(valorPot);
-                }
-            #endif
-                JoystickPotHorizontal_Conectado = false;
-            }
-        }
-        Joystick_Conectado = JoystickPotHorizontal_Conectado && JoystickPotVertical_Conectado;
+    JoystickPotVertical_Conectado = verificarConexionPotenciometro(0, NivelesDigitales::BAJO, umbralPotJoy_Inferior);
+    JoystickPotHorizontal_Conectado = verificarConexionPotenciometro(1, NivelesDigitales::BAJO, umbralPotJoy_Inferior);
+    Joystick_Conectado = JoystickPotHorizontal_Conectado && JoystickPotVertical_Conectado;
 #else
-     Joystick_Conectado = true;
+         Joystick_Conectado = true;
 #endif
-        //JoystickDesconectado = !JoystickConectado; //No aquí. En principal
-    #if FRENO_ACTIVADO
-        if(ActuadorFreno_TipoFeedback == TipoFeedback::ResistenciaVariable)
-        {
-            if(ii == 2)
-            {
-                if(valorPot > umbralPotActuadores_Inferior)
-                {
-                    //potsConectados = false;
-                    #if DEBUG_POTS_ERROR
-                    if(!mensajesEmergenciaDesplegados)
-                    {
-                        Serial.print(",  **Freno**");
-                        Serial.print(",\tLowVal: "); Serial.println(valorPot);
-                    }
-                    #endif
-                    Freno_Conectado = false;
-                }
-            }
-        }
-        else if(ActuadorFreno_TipoFeedback == TipoFeedback::EncoderIncremental)
-        {
-            //TODO: Implementar función para validar que el encoder del freno esté conectado.
-        }
-    #endif
-
-    #if ACELERADOR_ACTIVADO
-        if(ii == 3)
-        {
-            if(valorPot > umbralPotActuadores_Inferior)
-            {
-                //potsConectados = false;
-                #if DEBUG_POTS_ERROR
-                if(!mensajesEmergenciaDesplegados)
-                {
-                    Serial.print(",  **Accel**");
-                    Serial.print(",\tLowVal: "); Serial.println(valorPot);
-                }
-                #endif
-                Acelerador_Conectado = false;
-            }
-        }
-    #endif
-  }
-
-    #if ACELERADOR_ACTIVADO
-        #if FRENO_ACTIVADO
-            Actuadores_Conectados = Freno_Conectado && Acelerador_Conectado;
-        #else
-            Actuadores_Conectados = Acelerador_Conectado;
-        #endif
-    #else
-        #if FRENO_ACTIVADO
-            Actuadores_Conectados = Freno_Conectado;
-        #else
-            Actuadores_Conectados = true;
-        #endif
-    #endif
-    //ActuadoresDesconectados = !ActuadoresConectados; //Esto no se hace aquí,
-    //se hace en el ciclo principal después de que el contador llega a cero.
-
-    potsBajos =  Joystick_Conectado && Actuadores_Conectados;
-
-    potsConectados = potsAltos && potsBajos;
-
-    #if DEBUG_POTS
-    if(potsConectados)
+#if FRENO_ACTIVADO
+    //if(ActuadorFreno_TipoFeedback == TipoFeedback::ResistenciaVariable)
     {
-        Serial.println(". Todos Bajos.");
+        Freno_Conectado = verificarConexionPotenciometro(2, NivelesDigitales::BAJO, umbralPotActuadores_Inferior);
     }
-    else
+    /*else if(ActuadorFreno_TipoFeedback == TipoFeedback::EncoderIncremental)
+    {
+        //TODO: Implementar función para validar que el encoder del freno esté conectado.
+    }*/
+#endif
+#if ACELERADOR_ACTIVADO
+    Acelerador_Conectado = verificarConexionPotenciometro(3, NivelesDigitales::BAJO, umbralPotActuadores_Inferior);
+#endif
+
+    Actuadores_Conectados = evaluarConexionesActuadores(Freno_Conectado, Acelerador_Conectado);
+    potsBajos =  Joystick_Conectado && Actuadores_Conectados;
+    ///******************FIN Validación en BAJO**********************///
+    ///**************************************************************///
+
+    #if DEBUG_POTS_ERROR
+    if(!potsBajos)
     {
         Serial.print("Falla Pots_L: ");
         if(!Joystick_Conectado)
@@ -484,12 +531,11 @@ boolean VerificarConexionPotenciometros(unsigned int cantPots)
     #endif
 
     //Regresar los pines a la configuración normal.
-    digitalWrite(pinGNDVirtual, LOW);
-    digitalWrite(pin5VVirtual, HIGH);
+    verificacionPots_activarVoltajeVirtual();
 
+    potsConectados = potsAltos && potsBajos;
     return potsConectados;
 }
-
 
 boolean verificarConexionPotenciometro(unsigned int indicePot, NivelesDigitales nivel, unsigned int umbral)
 {
@@ -501,18 +547,15 @@ boolean verificarConexionPotenciometro(unsigned int indicePot, NivelesDigitales 
     Serial.print(",\tvalorPot: "); Serial.println(valorPot);
     #endif
 
-    //delay(1);
-    // TODO: Verificar si el delay de VerificarConexionPotenciometros DENTRO DEL FOR es necesario.
-
-    if(nivel == NivelesDigitales::ALTO) //Joystick vertical
+    if(nivel == NivelesDigitales::ALTO)
     {
         if(valorPot < umbral)
         {
         #if DEBUG_POTS_ERROR
             if(!mensajesEmergenciaDesplegados)
             {
-                Serial.print(",  **Pot_"); Serial.print(indicePot); Serial.print("** ");
-                Serial.print(",\tHighVal: "); Serial.println(valorPot);
+                Serial.print(",  **Pot_"); Serial.print(indicePot);
+                Serial.print(",\t**HighVal: "); Serial.println(valorPot);
             }
         #endif
             potConectado = false;
@@ -524,13 +567,13 @@ boolean verificarConexionPotenciometro(unsigned int indicePot, NivelesDigitales 
     }
     else if(nivel == NivelesDigitales::BAJO)
     {
-        if(valorPot > umbralPotJoy_Inferior )
+        if(valorPot > umbralPotJoy_Inferior)
         {
         #if DEBUG_POTS_ERROR
             if(!mensajesEmergenciaDesplegados)
             {
-                Serial.print(",  **Pot_"); Serial.print(indicePot); Serial.print("** ");
-                Serial.print(",\tLowVal: "); Serial.println(valorPot);
+                Serial.print(",  **Pot_"); Serial.print(indicePot);
+                Serial.print(",\t**LowVal: "); Serial.println(valorPot);
             }
         #endif
             potConectado = false;
@@ -544,25 +587,25 @@ boolean verificarConexionPotenciometro(unsigned int indicePot, NivelesDigitales 
     return potConectado;
 }
 
-void evaluarConexionesActuadores()
+boolean evaluarConexionesActuadores(uint8_t Freno_Conectado, uint8_t Acelerador_Conectado)
 {
+    boolean actuadores_connection = false;
 #if ACELERADOR_ACTIVADO
     #if FRENO_ACTIVADO
-        Actuadores_Conectados = Freno_Conectado && Acelerador_Conectado;
+        actuadores_connection = Freno_Conectado && Acelerador_Conectado;
     #else
-            Actuadores_Conectados = Acelerador_Conectado;
+        actuadores_connection = Acelerador_Conectado;
     #endif
 #else
     #if FRENO_ACTIVADO
-            Actuadores_Conectados = Freno_Conectado;
+        actuadores_connection = Freno_Conectado;
     #else
-            Actuadores_Conectados = true;
+        actuadores_connection = true;
     #endif
 #endif
-}
 
-//boolean verificarJoystick_PotHorizontal(unsigned int indicePot, NivelesDigitales nivel)
-//{}
+    return actuadores_connection;
+}
 
 
 
@@ -575,6 +618,9 @@ void aplicarRutinasSeguridad()
             estadoDelSistema = ErrorCodes::ImmediateStop;
         }
         retraerAcelerador();
+        extenderFreno();
+        volante_Inhibir();
+
         if(!mensajeError_ActuadorAcelerador_Registrado)
         {
             Serial.println("**Actuador Acelerador Desconectado**");
@@ -591,14 +637,14 @@ void aplicarRutinasSeguridad()
             estadoDelSistema = ErrorCodes::EmergencyBraking;
         }
         extenderFreno();
-        // TODO: Evaluar la opción de activar control OpenLoop del freno en este caso.
+        // TODO: B. Evaluar la opción de activar control OpenLoop del freno en este caso.
         retraerAcelerador();
-        // TODO: Automatizar la palanca de cambios y ponerla en Neutral.
-        // TODO: Encender luces preventivas.
+        // TODO: C. Automatizar la palanca de cambios y ponerla en Neutral.
+        // TODO: C. Encender luces preventivas.
 
         if(!mensajeError_ActuadorFreno_Registrado)
         {
-            Serial.println("**Actuador Freno Desconectado**");
+            Serial.println("**Freno Desconectado**");
             mensajeError_ActuadorFreno_Registrado = true;
             LED_ActuadorFrenoDesconectado = true; // Encender el LED de error
         }
@@ -611,16 +657,13 @@ void aplicarRutinasSeguridad()
             estadoDelSistema = ErrorCodes::EmergencyBraking;
         }
         extenderFreno();
-        // TODO: Evaluar la opción de activar control OpenLoop del freno en este caso.
         retraerAcelerador();
-        // TODO: Automatizar la palanca de cambios y ponerla en Neutral.
-        // TODO: Encender luces preventivas.
 
         if(!mensajeError_JoystickVer_Registrado)
         {
             Serial.println("**Joystick Vertical Desconectado**");
-            mensajeError_JoystickVer_Registrado = true;
             LED_JoystickVerDesconectado = true; // Encender el LED de error
+            mensajeError_JoystickVer_Registrado = true;
         }
     }
 
@@ -630,26 +673,34 @@ void aplicarRutinasSeguridad()
         {
             estadoDelSistema = ErrorCodes::EmergencyStop;
         }
-        tipoControlVolante = TiposControlVolante::MODO_INHIBIDO;
+        volante_Inhibir();
+        ControlarVolante();
 
-        if(!mensajeError_JoystickVer_Registrado)
+        //tipoControlVolante = TiposControlVolante::MODO_INHIBIDO;
+
+        if(!mensajeError_JoystickHor_Registrado)
         {
             Serial.println("**Joystick Horizontal Desconectado**");
-            mensajeError_JoystickVer_Registrado = true;
-            LED_JoystickVerDesconectado = true; // Encender el LED de error
+            mensajeError_JoystickHor_Registrado = true;
+            LED_JoystickHorDesconectado = true; // Encender el LED de error
         }
     }
 
+
+    // TODO: Optimizar las funciones de seguridad por desconexión.
+    volante_Inhibir();
+    ControlarVolante();
+
     // Una vez que aplica las acciones asociadas a los errores, seguir leyendo los potenciómetros
     // en caso de que se reconecten
-
     Potenciometros_Conectados = VerificarConexionPotenciometros(cantidadPots);
+
     if(Potenciometros_Conectados)
     {
         // El sistema volverá a funcionar, pero debe indicarse en el log que hubo un error.
         estadoDelSistema = ErrorCodes::SafeParking;
         // TODO: Agregar incidencia en el log.
-        Serial.println("Los componentes se han reconectado");
+        Serial.println("**Los componentes se han reconectado**");
 
         // Si un componente se reconecta, reiniciar las banderas de mensaje de Error registrado
         // mientras que los LEDs se mantendrán encendidos hasta el próximo inicio del sistema
@@ -659,10 +710,44 @@ void aplicarRutinasSeguridad()
         mensajeError_ActuadorAcelerador_Registrado = false;
         mensajeError_ActuadorFreno_Registrado = false;
 
-        tipoControlVolante = TiposControlVolante::MODO_OPENLOOP_PORPARTES;
+        volante_Desinhibir();
     }
 }
 
+void desplegarPatronErroresArranque()
+{  /*
+    *
+    */
+    static unsigned int periodoPatronErrores = 500;
+
+    if(contadorPatronErroresArranque < periodoPatronErrores) {
+
+        ExtensorPCF_ErroresArranque_LeerEscribir(JoystickCentrado, Potenciometros_Conectados, ActuadoresRangoValidoBoot, ActuadoresMoving);
+    }
+    else if(contadorPatronErroresArranque < (2 * periodoPatronErrores) )  {
+        ExtensorPCF_ErroresArranque_LeerEscribir(0, 0, 0, 0); //Apagar todos los LED's
+    }
+    else {
+        contadorPatronErroresArranque = 0;
+    }
+
+    contadorPatronErroresArranque++;
+
+}
+
+
+void volante_Inhibir()
+{
+    tipoControlVolante = TiposControlVolante::MODO_INHIBIDO;
+}
+
+void volante_Desinhibir()
+{
+    //tipoC = MODO_POSICION_LIN;
+    //tipoC = MODO_POSICION_LOG;
+    //tipoC = MODO_VELOCIDAD_OPENLOOP; //Modo de control por velocidad sin retroalimentación del encoder.
+    tipoControlVolante = TiposControlVolante::MODO_OPENLOOP_PORPARTES;
+}
 
 void ParoManualEmergencia()
 {
@@ -671,7 +756,8 @@ void ParoManualEmergencia()
      * - Contraer el acelerador. El acelerador se contrae con valores de control negativos.
      * - Extender el freno.
 */
-    Serial.println("Paro Emerg Manual.");
+    Serial.println("**Paro de Emergencia Manual.**");
+
 
     retraerAcelerador();
 
@@ -679,23 +765,30 @@ void ParoManualEmergencia()
     {
         //Si el freno está conectados utilizar la retroalimentación
         //para frenar automáticamente el carro.
-        // TODO: Buscar el valor del pot en extensión máxima.
-        // TODO: Modificar el paro de emergencia para el nuevo actuador con encoder.
-        int ActuadorFreno_PosDeseadaParo = actFreno_valorParoEmergencia;
+        int ActuadorFreno_PosDeseadaParo = ActuadorFreno_valorParoEmergencia;
 
         ActuadorFreno_ErrorPosicion = ActuadorFreno_PosDeseadaParo - ActuadorFreno_Posicion;
         //ActuadorFreno_Control = ActuadorFreno_ErrorPosicion * ActuadorFreno_Kp;
-        moverActuador(TipoActuador::Freno, ActuadorAcelerador_ErrorPosicion);
+        moverActuador(TipoActuador::Freno, ActuadorFreno_ErrorPosicion);
+    #if DEBUG_PAROEMERGENCIA
+        Serial.println("Freno Conectado.");
+    #endif
     }
     else
     {
         //Si el freno está desconectado frenar en lazo abierto
         extenderFreno();
+    #if DEBUG_PAROEMERGENCIA
+        Serial.println("Freno Desconectado.");
+    #endif
     }
 
+    volante_Inhibir();
+    ControlarVolante();
 }
 
-void ParoDeEmergencia(  ) /// Función anterior, borrar después de que funcione aplicarRutinasSeguridad()
+
+void ParoDeEmergencia(  ) /// TODO: Función anterior, borrar después de que funcione aplicarRutinasSeguridad()
 {
     /* El paro de emergencia se activa cuando se detecta algún componente desconectado.
      *
@@ -730,7 +823,7 @@ void ParoDeEmergencia(  ) /// Función anterior, borrar después de que funcione
         //Si los actuadores están conectados seguir utilizando la retroalimentación
         //para frenar el carro.
         //***TO-DO***: Buscar el valor del pot en extensión máxima.
-        int ActuadorFreno_PosDeseada = actFreno_valorParoEmergencia;
+        int ActuadorFreno_PosDeseada = ActuadorFreno_valorParoEmergencia;
 
         ActuadorFreno_ErrorPosicion = ActuadorFreno_Posicion - ActuadorFreno_PosDeseada ;
         ActuadorFreno_Control = ActuadorFreno_ErrorPosicion * ActuadorFreno_Kp;
@@ -797,24 +890,50 @@ void ParoDeEmergencia(  ) /// Función anterior, borrar después de que funcione
 }
 
 
-
+#if PCF_ACTIVADO
 void ExtensorPCF_LeerEscribir()
 {
-    ExtensorPCF_Leer(&fijarPosicionFreno, &modoCarreteraActivado, &bajarPalanca, &subirPalanca);
+
+    uint8_t input0, input1, input2, input3;
+    ExtensorPCF_Leer(&input0, &input1, &input2, &input3);
+
+    fijarPosicionFreno    = !input0;
+    modoCarreteraActivado = !input1;
+    subirPalanca          = !input2;
+    bajarPalanca          = !input3;
+
     ExtensorPCF_Escribir(!LED_ActuadorAceleradorDesconectado,
                          !LED_JoystickHorDesconectado,
                          !LED_ActuadorFrenoDesconectado,
                          !LED_JoystickVerDesconectado);
 }
 
-bool VerificarConexionArduinoNano()
+void ExtensorPCF_ErroresArranque_LeerEscribir(uint8_t salida1, uint8_t salida2, uint8_t salida3, uint8_t salida4)
 {
-    /*Función que se utiliza cuando el feedback de posición del actuador del freno
-    * se hace con el encoder incremental.
-    * En las pruebas realizadas a veces perdía el último dígito (por ejemplo 34 en lugar de 346)
-    * por lo que se optó por usar un potenciómetro de precisión para la retroalimentación.
+    uint8_t input0,input1, input2, input3;
+    ExtensorPCF_Leer(&input0, &input1, &input2, &input3);
+
+    fijarPosicionFreno    = !input0;
+    modoCarreteraActivado = !input1;
+    subirPalanca          = !input2;
+    bajarPalanca          = !input3;
+
+    ExtensorPCF_Escribir(!salida1,
+                         !salida2,
+                         !salida3,
+                         !salida4);
+}
+#endif
+
+//#if ENCODER_ACTIVADO
+/*bool VerificarConexionArduinoNano()
+{
+    // Función que se utiliza cuando el feedback de posición del actuador del freno
+    // se hace con el encoder incremental.
+    // En las pruebas realizadas a veces perdía el último dígito (por ejemplo 34 en lugar de 346)
+    // por lo que se optó por usar un potenciómetro de precisión para la retroalimentación.
     //https://forum.arduino.cc/index.php?topic=500027.0
-    //Verificar que se reciban 5 dígitos consecutivos.*/
+    //Verificar que se reciban 5 dígitos consecutivos.
 
     Serial.println("Verificación Conexión Arduino Nano iniciada.");
 
@@ -898,8 +1017,8 @@ bool VerificarConexionArduinoNano()
 
     return nanoConectado;
 
-    // TODO: Hacer una rutina al arranque que mueva el freno para garantizar que el encoder está funcionando.
 }
-
+*/
+//#endif
 
 #endif

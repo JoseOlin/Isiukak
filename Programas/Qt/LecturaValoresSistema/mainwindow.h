@@ -57,6 +57,8 @@ private slots:
 
     void on_cmbSerialPortSelector_highlighted(int index);
 
+    void on_btnDesconectar_clicked();
+
 private:
     //QStringList buscarPuertos();
     void fillPortsParameters();

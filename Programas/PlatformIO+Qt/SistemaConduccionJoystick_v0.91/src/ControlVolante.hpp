@@ -34,9 +34,6 @@ float relacionSprockets = (float)dientesEje / dientesMotor;
 
 float setPointGrados = 180.0 / relacionSprockets;
 //float ajusteGrados180 = 0.0;
-/////** TODO: Implementar control de velocidad.
-// Para limitar el valor máximo de control aplicado y evitar giros bruscos.
-// El máximo es 3,200, probar con 3/4 del máximo.
 
 //Rango de giro del volante a izquierda y derecha.
 //El máximo aproximado es 1 y 3/4 de vuelta (360 + 270 = 630), pero se redujo ligeramente para evitar
@@ -155,7 +152,6 @@ void InicializarEncoder()
 
 void ControlarVolante()
 {
-    //int velocidad_volante = 0;
 
 #if ENCODER_ACTIVADO
     LeerConvertirEncoder(&EncoderDesconectado); //Aquí mismo se valida si el encoder está conectado.
@@ -167,10 +163,15 @@ void ControlarVolante()
     if(tipoControlVolante == TiposControlVolante::MODO_INHIBIDO)
     {
         velocidad_volante = 0;
+#if VOLANTE_ACTIVADO
         setMotorSpeed_Protocol(ActuadorVolante_Address, velocidad_volante);
+#endif
     }
     else if(tipoControlVolante == TiposControlVolante::MODO_OPENLOOP_PORPARTES)
     {
+#if DEBUG_VOLANTE
+        Serial.println("tipoCtrl: OLpP");
+#endif
 /*                             Joystick X
        387               60%          512       60%       . 40%    643
      Mínimo    Izq_Segm1        umb_I     umb_D       Der_Segm1    Máximo
@@ -203,7 +204,10 @@ void ControlarVolante()
         } else{
             velocidad_volante = 0;
         }
+
+    #if VOLANTE_ACTIVADO
         setMotorSpeed_Protocol(ActuadorVolante_Address, velocidad_volante);
+    #endif
     }
     else if(tipoControlVolante == TiposControlVolante::MODO_OPENLOOP_EXPONENCIAL)
     {
@@ -248,11 +252,12 @@ void ControlarVolante()
             valorControlVolante = signo*(exp(signo*(x_Escalado))) * ajusteEscalar;
             valorControlVolante -= signo*ajusteEscalar;//e^0 = 1. Hay que ajustar eso manualmente.
         }
-        else{ //Joystick centrado.
+        else { //Joystick centrado.
             valorControlVolante = 0;
         }
+        #if VOLANTE_ACTIVADO
         setMotorSpeed_Protocol(ActuadorVolante_Address, valorControlVolante); //Dentro de esta función se acotan los valores de -3200 a 3200.
-
+        #endif
     }
     else if(tipoControlVolante == TiposControlVolante::MODO_OPENLOOP_LINEAL)
     {
@@ -267,11 +272,14 @@ void ControlarVolante()
           {
               velocidad_volante = map(smoothJS_X, joyMaximoIzquierda, joyMaximoDerecha, 1600, -1600);  //Invertido porque el motor se mueve a la izquierda con joystick a la derecha.
           }*/
-            setMotorSpeed_Protocol(ActuadorVolante_Address, velocidad_volante);
+
         } else
         {
-            setMotorSpeed_Protocol(ActuadorVolante_Address, 0);
+            velocidad_volante = 0;
         }
+        #if VOLANTE_ACTIVADO
+        setMotorSpeed_Protocol(ActuadorVolante_Address, velocidad_volante);
+        #endif
     }
     else if(tipoControlVolante == TiposControlVolante::MODO_CLOSEDLOOP_VELOCIDAD)
     {
@@ -305,7 +313,9 @@ void ControlarVolante()
         {
           velocidad_volante = 1600;
         }
+    #if VOLANTE_ACTIVADO
         setMotorSpeed_Protocol(ActuadorVolante_Address, velocidad_volante);
+    #endif
     }
     else if(tipoControlVolante == TiposControlVolante::MODO_CLOSEDLOOP_POSICION_LINEAL)
     {
@@ -389,6 +399,7 @@ void ControlarVolante()
 
     }
 
+
     #if DEBUG_POS_VOLANTE
     //Serial.print(",\tPsM(a:"); Serial.print(PosMotorDeg_actual);
     //Serial.print(", d:"); Serial.print(PosMotorDeg_deseada); Serial.print(")");
@@ -401,7 +412,6 @@ void ControlarVolante()
     //Serial.print(PosMotorPulsos);     //Position in pulses.
     //Serial.print(", M:");     Serial.print(PosMotorDeg);   //Posición del motor (no del volante) en grados.
     #endif
-
 }
 
 

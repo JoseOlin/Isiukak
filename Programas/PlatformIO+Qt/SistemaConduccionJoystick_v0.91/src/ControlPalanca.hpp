@@ -6,33 +6,58 @@
 
 #include "LecturaFeedback.hpp"
 
-int pinPalanca_Subir = 5;
-int pinPalanca_Bajar = 4;
-
-uint8_t subirPalanca;
-uint8_t bajarPalanca;
+int pinOutput_PalancaSubir = 5;
+int pinOutput_PalancaBajar = 4;
 
 
-void ControlPalanca(int joystick_Y)
+
+
+void ControlPalanca(int ActuadorFreno_Posicion)
 {
-    if(joystick_Y < joyY_FrenoCambios)
+    //ActuadorFreno_Posicion
+    //joystick_Y =
+    //int joystick_Y_PosAbs = joyY_Center - joyY_FrenoCambios; //Cuando la posición del joystick decrece la posición deseada del actuador aumenta.
+    //int actuadorFreno_PosCambios = map(joystick_Y_PosAbs,  0, (joyY_Center - joyY_MinVal),
+    //                                            actFreno_valorRetraido, actFreno_valorExtendido);
+
+    static int actuadorFreno_PosCambios = 435;
+#if PALANCA_ACTIVADA
+    //Serial.print("Actuador freno para cambios");
+    //Serial.print(actuadorFreno_PosCambios);
+
+    if(ActuadorFreno_Posicion > actuadorFreno_PosCambios)
     {
+#if INFO_PALANCA
+        Serial.print("Freno Pos. Shift");
+#endif
         if(subirPalanca)
         {
-            digitalWrite(pinPalanca_Subir, HIGH);
-            digitalWrite(pinPalanca_Bajar, LOW);
+#if INFO_PALANCA
+            Serial.print("Palanca: Up");
+#endif
+            digitalWrite(pinOutput_PalancaSubir, HIGH);
+            digitalWrite(pinOutput_PalancaBajar, LOW);
         }
         else if(bajarPalanca)
         {
-            digitalWrite(pinPalanca_Subir, LOW);
-            digitalWrite(pinPalanca_Bajar, HIGH);
+#if INFO_PALANCA
+            Serial.print("Palanca: Down");
+#endif
+            digitalWrite(pinOutput_PalancaSubir, LOW);
+            digitalWrite(pinOutput_PalancaBajar, HIGH);
+        }
+        else
+        {
+            digitalWrite(pinOutput_PalancaSubir, LOW);
+            digitalWrite(pinOutput_PalancaBajar, LOW);
         }
     }
     else
     {
-        digitalWrite(pinPalanca_Subir, LOW);
-        digitalWrite(pinPalanca_Bajar, LOW);
+        digitalWrite(pinOutput_PalancaSubir, LOW);
+        digitalWrite(pinOutput_PalancaBajar, LOW);
     }
+#endif
 }
 
 #endif // CONTROLPALANCA_HPP

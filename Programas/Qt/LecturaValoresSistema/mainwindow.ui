@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1046</width>
-    <height>431</height>
+    <width>1366</width>
+    <height>509</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -53,7 +53,7 @@
                   <property name="minimumSize">
                    <size>
                     <width>10</width>
-                    <height>0</height>
+                    <height>50</height>
                    </size>
                   </property>
                   <property name="text">
@@ -67,7 +67,7 @@
                    <bool>true</bool>
                   </property>
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                   <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -75,12 +75,12 @@
                   <property name="minimumSize">
                    <size>
                     <width>0</width>
-                    <height>30</height>
+                    <height>50</height>
                    </size>
                   </property>
                   <property name="font">
                    <font>
-                    <pointsize>14</pointsize>
+                    <pointsize>20</pointsize>
                     <weight>75</weight>
                     <bold>true</bold>
                    </font>
@@ -101,7 +101,7 @@
                   <property name="minimumSize">
                    <size>
                     <width>0</width>
-                    <height>30</height>
+                    <height>50</height>
                    </size>
                   </property>
                   <property name="font">
@@ -127,7 +127,7 @@
                   <property name="minimumSize">
                    <size>
                     <width>10</width>
-                    <height>0</height>
+                    <height>50</height>
                    </size>
                   </property>
                   <property name="text">
@@ -157,6 +157,12 @@
                 </item>
                 <item row="0" column="1">
                  <widget class="QLCDNumber" name="volante_lcd">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
                   <property name="minimumSize">
                    <size>
                     <width>0</width>
@@ -357,19 +363,6 @@
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="0">
-                 <widget class="QLabel" name="label_2">
-                  <property name="minimumSize">
-                   <size>
-                    <width>20</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Ctrl</string>
-                  </property>
-                 </widget>
-                </item>
                 <item row="1" column="1">
                  <widget class="QLCDNumber" name="frenoDes_lcd">
                   <property name="sizePolicy">
@@ -393,7 +386,24 @@
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="1">
+                <item row="2" column="1">
+                 <widget class="QLCDNumber" name="Freno_lcdError">
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>30</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="Freno_lblError">
+                  <property name="text">
+                   <string>Error</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
                  <widget class="QLCDNumber" name="frenoControl_lcd">
                   <property name="enabled">
                    <bool>true</bool>
@@ -426,19 +436,56 @@
                  </widget>
                 </item>
                 <item row="3" column="0">
-                 <widget class="QLabel" name="Freno_lblError">
+                 <widget class="QLabel" name="label_2">
+                  <property name="minimumSize">
+                   <size>
+                    <width>20</width>
+                    <height>0</height>
+                   </size>
+                  </property>
                   <property name="text">
-                   <string>Error</string>
+                   <string>Ctrl</string>
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="1">
-                 <widget class="QLCDNumber" name="Freno_lcdError">
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>30</height>
-                   </size>
+               </layout>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox">
+             <property name="title">
+              <string>Botones</string>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_9">
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_8">
+                <item>
+                 <widget class="QCheckBox" name="FixFreno_chk">
+                  <property name="text">
+                   <string>Fix Freno</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="PalUp_chk">
+                  <property name="text">
+                   <string>Pal Up</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="PalDown_chk">
+                  <property name="text">
+                   <string>Pal Down</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="RoadMode_chk">
+                  <property name="text">
+                   <string>Modo Road</string>
                   </property>
                  </widget>
                 </item>
@@ -607,6 +654,18 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="minimumSize">
+          <size>
+           <width>300</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="baseSize">
+          <size>
+           <width>300</width>
+           <height>0</height>
+          </size>
+         </property>
          <property name="plainText">
           <string/>
          </property>
@@ -622,7 +681,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1046</width>
+     <width>1366</width>
      <height>22</height>
     </rect>
    </property>

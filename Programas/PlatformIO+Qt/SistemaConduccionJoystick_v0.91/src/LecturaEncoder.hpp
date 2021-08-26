@@ -34,11 +34,12 @@ SCK     13
 Codigo de Jamiec (Foro Arduino).
 */
 #if ENCODER_ACTIVADO
-#include <SPI.h>
+//#include <SPI.h>
 #endif
 
 #include "Seguridad.hpp"
 
+#if ENCODER_ACTIVADO
 ///*************Variables configuración****************
 unsigned int umbralContadorRespuesta = 1000;
 
@@ -64,6 +65,8 @@ uint16_t contadorNoRespuesta = 0;
 //boolean conectado = true;
 
 uint8_t temp[2];
+#endif
+
 
 #if ENCODER_ACTIVADO
 uint8_t  SPI_T(uint8_t msg)    //Repetive SPI transmit sequence

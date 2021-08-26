@@ -65,43 +65,73 @@ void MainWindow::desplegarValores(QString renglonDatos)
     int valorJx = buscarExpresionRegular("J_X: (\\d+)", renglonDatos);
     ui->joystick_X_lcd->display(valorJx);
 
-    int B_pos = buscarExpresionRegular("B_pos: (\\d+)", renglonDatos);
+    int B_pos = buscarExpresionRegular("B_p: (\\d+)", renglonDatos);
     ui->frenoPos_lcd->display(B_pos);
 
-    int B_tgt = buscarExpresionRegular("B_tgt: (\\d+)", renglonDatos);
+    int B_tgt = buscarExpresionRegular("B_t: (\\d+)", renglonDatos);
     ui->frenoDes_lcd->display(B_tgt);
 
-    int B_Ctrl = buscarExpresionRegular("B_ctrl: (-?(\\d+))", renglonDatos);
+    int B_Ctrl = buscarExpresionRegular("B_c: (-?(\\d+))", renglonDatos);
     // Uno o ningún signo menos, seguido de uno o más dígitos.
     ui->frenoControl_lcd->display(B_Ctrl);
 
-    int B_Error = buscarExpresionRegular("B_err: (-?(\\d+))", renglonDatos);
+    int B_Error = buscarExpresionRegular("B_e: (-?(\\d+))", renglonDatos);
     ui->Freno_lcdError->display(B_Error);
 
 
-    int A_pos = buscarExpresionRegular("A_pos: (\\d+)", renglonDatos);
+    int A_pos = buscarExpresionRegular("A_p: (\\d+)", renglonDatos);
     ui->aceleradorPos_lcd->display(A_pos);
 
-    int A_tgt = buscarExpresionRegular("A_tgt: (\\d+)", renglonDatos);
+    int A_tgt = buscarExpresionRegular("A_t: (\\d+)", renglonDatos);
     ui->aceleradorDes_lcd->display(A_tgt);
 
-    int A_Ctrl = buscarExpresionRegular("A_ctrl: (-?(\\d+))", renglonDatos);
+    int A_Ctrl = buscarExpresionRegular("A_c: (-?(\\d+))", renglonDatos);
     ui->aceleradorControl_lcd->display(A_Ctrl);
 
-    int A_Error = buscarExpresionRegular("A_err: (-?(\\d+))", renglonDatos);
+    int A_Error = buscarExpresionRegular("A_e: (-?(\\d+))", renglonDatos);
     ui->Acelerador_lcdError->display(A_Error);
 
-    int V_Ctrl = buscarExpresionRegular("Ctrl. volante: (-?(\\d+))", renglonDatos);
+    int V_Ctrl = buscarExpresionRegular("Ctrl_Vol: (-?(\\d+))", renglonDatos);
     //qDebug() << "V_Ctrl: " << V_Ctrl;
     ui->volante_lcd->display(V_Ctrl);
 
+    int StatusFixFreno = buscarExpresionRegular("bFB: (-?(\\d+))", renglonDatos);
+    bool statusFixFreno_chk = ui->FixFreno_chk->checkState();
+    if( StatusFixFreno && !statusFixFreno_chk)
+    {
+        ui->FixFreno_chk->setChecked(true);
+    }
+    else if (!StatusFixFreno && statusFixFreno_chk)
+    {
+        ui->FixFreno_chk->setChecked(false);
+    }
+
+    int statusModoCarr    = buscarExpresionRegular("bMC: (-?(\\d+))", renglonDatos);
+    bool statusModoCarr_chk = ui->RoadMode_chk->checkState();
+    if(statusModoCarr && !statusModoCarr_chk)
+        ui->RoadMode_chk->setChecked(true);
+    else if ( !statusModoCarr && statusModoCarr_chk)
+        ui->RoadMode_chk->setChecked(false);
 
 
+    int statusPalancaUp   = buscarExpresionRegular("bPU: (-?(\\d+))", renglonDatos);
+    bool statusPalancaUp_chk = ui->PalUp_chk->checkState();
+    if(statusPalancaUp && !statusPalancaUp_chk)
+        ui->PalUp_chk->setChecked(true);
+    else if (!statusPalancaUp && statusPalancaUp_chk)
+        ui->PalUp_chk->setChecked(false);
 
+    int statusPalancaDown = buscarExpresionRegular("bPD: (-?(\\d+))", renglonDatos);
+    bool statusPalancaDown_chk = ui->PalDown_chk->checkState();
+    if(statusPalancaDown && !statusPalancaDown_chk)
+        ui->PalDown_chk->setChecked(true);
+    else if (!statusPalancaDown && statusPalancaDown_chk)
+        ui->PalDown_chk->setChecked(false);
 
     //Errores
     //QRegularExpression expRegInt_R
-    QRegularExpression expRegInt_R = QRegularExpression ("(\\*\\*)(Freno|Joy_V|Joy_H|Acelerador)(.+)\n");
+    //QRegularExpression expRegInt_R = QRegularExpression ("(\\*\\*)(Freno|Joy_V|Joy_H|Acelerador|Pot_)(.+)\n");
+    QRegularExpression expRegInt_R = QRegularExpression ("(\\*\\*)(.+)\n");
     // \\*\\* = **
     // (Freno|Joy_V|Joy_H|Acelerador) = Freno OR Joy_V OR Joy_H OR Acelerador
     // (.+) = Cualquier caracter una o más veces
@@ -521,6 +551,11 @@ void MainWindow::dibujarVolante(float anguloGrados)
 }
 
 void MainWindow::on_cmbSerialPortSelector_highlighted(int index)
+{
+
+}
+
+void MainWindow::on_btnDesconectar_clicked()
 {
 
 }
