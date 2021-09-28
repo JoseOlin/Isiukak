@@ -1,4 +1,5 @@
 # Sistema de Conducción Isiukak
 
-Repositorio con las instrucciones y definición de componentes para replicar el sistema Isiukak
+Repositorio con los diagramas, esquemáticos y código para replicar el sistema Isiukak para conducción con Joystick
+
 
