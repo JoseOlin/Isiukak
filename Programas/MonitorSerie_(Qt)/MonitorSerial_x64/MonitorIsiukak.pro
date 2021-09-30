@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
-# sudo apt install libqt5serialport5-dev
+
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -21,6 +21,7 @@ HEADERS  += mainwindow.h
 FORMS    += mainwindow.ui
 
 QT += serialport
+# sudo apt install libqt5serialport5-dev
 
 RESOURCES += \
     #build-LecturaValores/resources.qrc \

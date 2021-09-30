@@ -136,15 +136,17 @@ void loop()
             }
             else
         #else
-            if(errorConexionesArranque)
+            /*if(errorConexionesArranque)*/
         #endif
-            {
+            /*{
                 aplicarRutinasSeguridad(); //Aquí se siguen leyendo los sensores, en caso de que se reconecten.
+
                 feedbackOnly();
             }
-            else
+            else*/
             {
                 if(!Potenciometros_Conectados || !Potenciometros_EnRangoValido)
+                //if(!Potenciometros_Conectados)
                 {
                      aplicarRutinasSeguridad(); //Aquí se siguen leyendo los sensores, en caso de que se reconecten.
                      feedbackOnly();
@@ -164,7 +166,7 @@ void loop()
         Serial.print(",\tT:"); Serial.print(diferencia);
     #endif
 
-        Serial.println("");
+        Serial.println(" ");
         tiempoAnterior = tiempoActual;
     }
 }
@@ -202,7 +204,7 @@ void feedbackAndControl()
     desplegarInfoPalanca(Joystick_Y);
     // ***************************** //
 
-    verificacionSeguridad_Constante();
+    //verificacionSeguridad_Constante();
     verificacionSeguridad_Periodica();
 }
 

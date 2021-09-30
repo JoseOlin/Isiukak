@@ -54,17 +54,22 @@ void MainWindow::desplegarValores(QString renglonDatos)
 {
     ui->InfoSalida_txt->insertPlainText(renglonDatos);
     ui->InfoSalida_txt->ensureCursorVisible();
+    ui->erroresSalida_txt->ensureCursorVisible();
 
     /// Separar renglón datos para mostrar valores del Joystick.
 
-    // Joystick Y
+    /// Joystick Y
     int valorJy = buscarExpresionRegular("J_Y: (\\d+)", renglonDatos);
     ui->joystick_Y_lcd->display(valorJy);
+    ui->joystickVertical_sld->setValue(valorJy);
 
-    //Joystick X
+    /// Joystick X
     int valorJx = buscarExpresionRegular("J_X: (\\d+)", renglonDatos);
     ui->joystick_X_lcd->display(valorJx);
+    ui->joystickHorizontal_Sld->setValue(valorJx);
 
+
+    /// Freno
     int B_pos = buscarExpresionRegular("B_p: (\\d+)", renglonDatos);
     ui->frenoPos_lcd->display(B_pos);
 
@@ -74,11 +79,13 @@ void MainWindow::desplegarValores(QString renglonDatos)
     int B_Ctrl = buscarExpresionRegular("B_c: (-?(\\d+))", renglonDatos);
     // Uno o ningún signo menos, seguido de uno o más dígitos.
     ui->frenoControl_lcd->display(B_Ctrl);
+    ui->FrenoControl_Slider->setValue(B_Ctrl);
+
 
     int B_Error = buscarExpresionRegular("B_e: (-?(\\d+))", renglonDatos);
     ui->Freno_lcdError->display(B_Error);
 
-
+    /// Acelerador
     int A_pos = buscarExpresionRegular("A_p: (\\d+)", renglonDatos);
     ui->aceleradorPos_lcd->display(A_pos);
 
@@ -87,14 +94,18 @@ void MainWindow::desplegarValores(QString renglonDatos)
 
     int A_Ctrl = buscarExpresionRegular("A_c: (-?(\\d+))", renglonDatos);
     ui->aceleradorControl_lcd->display(A_Ctrl);
+    ui->AceleradorControl_Slider->setValue(A_Ctrl);
 
     int A_Error = buscarExpresionRegular("A_e: (-?(\\d+))", renglonDatos);
     ui->Acelerador_lcdError->display(A_Error);
 
+    /// Volante
     int V_Ctrl = buscarExpresionRegular("Ctrl_Vol: (-?(\\d+))", renglonDatos);
     //qDebug() << "V_Ctrl: " << V_Ctrl;
     ui->volante_lcd->display(V_Ctrl);
+    ui->VolanteControl_Dial->setValue(V_Ctrl);
 
+    /// Botón FixFreno.
     int StatusFixFreno = buscarExpresionRegular("bFB: (-?(\\d+))", renglonDatos);
     bool statusFixFreno_chk = ui->FixFreno_chk->checkState();
     if( StatusFixFreno && !statusFixFreno_chk)

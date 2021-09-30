@@ -74,7 +74,7 @@ uint8_t JoystickX_FueraRango = false;
 uint8_t ActuadorAcelerador_FueraRango = false;
 uint8_t ActuadorFreno_FueraRango = false;
 
-uint8_t Potenciometros_EnRangoValido = true;
+uint8_t Potenciometros_EnRangoValido = false;
 
 
 uint8_t ActuadorFreno_Moving = false;
@@ -359,18 +359,18 @@ boolean verificacionSeguridadArranque()
         Serial.println("**La revisión de potenciómetros devolvió errores.**");
     }
 
-#if VALIDAR_RANGO
+#if VALIDAR_LIMITES_POTS
     retraerAcelerador();
     delay(500);
 
-    ActuadoresRangoValidoBoot = actuatorsNormalPositionBoot(ActuadorFreno_Posicion, ActuadorAcelerador_Posicion);
+    Potenciometros_EnRangoValido = actuatorsNormalPositionBoot(ActuadorFreno_Posicion, ActuadorAcelerador_Posicion);
     if(!ActuadoresRangoValidoBoot)
     {
         estadoDelSistema = ErrorCodes::ImmediateStop;
         Serial.println("**Los actuadores no están en su rango válido.**");
     }
 #else
-    ActuadoresRangoValidoBoot = true;
+    Potenciometros_EnRangoValido = true;
 #endif
 
 
@@ -387,7 +387,7 @@ boolean verificacionSeguridadArranque()
     ActuadoresMoving = true;
 #endif
 
-    errorConexionesStart = !Potenciometros_Conectados || !JoystickCentrado || !ActuadoresRangoValidoBoot || !ActuadoresMoving;
+    errorConexionesStart = !Potenciometros_Conectados || !JoystickCentrado || !Potenciometros_EnRangoValido || !ActuadoresMoving;
 
     return errorConexionesStart;
 }
@@ -405,6 +405,7 @@ boolean validarLimites_Potenciometros()
 {
     boolean potenciometros_EnRango = true;
 
+
     if( (Joystick_Y > (joyY_MaxVal + joystick_UmbralFueraRango))
     ||  (Joystick_Y < (joyY_MinVal - joystick_UmbralFueraRango)) )
     {
@@ -416,7 +417,7 @@ boolean validarLimites_Potenciometros()
     {
         JoystickX_FueraRango = true;
     }
-
+#if VALIDAR_LIMITES_ACTUADORES
     // El pot del actuador del acelerador aumenta al retraerse.
     if(ActuadorAcelerador_Posicion > (ActuadorAcelerador_valorRetraido + ActuadorAcelerador_umbralErrorArranque)
     || ActuadorAcelerador_Posicion < (ActuadorAcelerador_valorExtendido - ActuadorAcelerador_umbralErrorArranque))
@@ -430,7 +431,10 @@ boolean validarLimites_Potenciometros()
     {
         ActuadorFreno_FueraRango = true;
     }
-
+#else
+    ActuadorAcelerador_FueraRango = false;
+    ActuadorFreno_FueraRango = false;
+#endif
     potenciometros_EnRango = !JoystickY_FueraRango && !JoystickX_FueraRango && !ActuadorAcelerador_FueraRango && !ActuadorFreno_FueraRango;
     return potenciometros_EnRango;
 }
@@ -760,6 +764,7 @@ void aplicarRutinasSeguridad()
 
 
     /// Instrucciones de validación de Potenciómetros dentro del rango válido
+#if VALIDAR_LIMITES_ACTUADORES
     if(ActuadorAcelerador_FueraRango)
     {
         if(estadoDelSistema < ErrorCodes::ImmediateStop)
@@ -797,6 +802,7 @@ void aplicarRutinasSeguridad()
             LED_ActuadorFrenoFueraRango = true; // Encender el LED de error
         }
     }
+#endif
 
     if(JoystickY_FueraRango)
     {

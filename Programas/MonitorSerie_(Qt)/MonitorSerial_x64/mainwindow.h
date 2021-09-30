@@ -6,6 +6,7 @@
 //#include <QMainWindow>
 #include <QtWidgets/QMainWindow>
 
+
 #include <QtSerialPort/QtSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
 #include <QGraphicsView>

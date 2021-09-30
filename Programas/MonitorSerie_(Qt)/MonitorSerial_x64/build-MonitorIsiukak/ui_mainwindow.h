@@ -53,15 +53,15 @@ public:
     QLabel *joystick_Y_lbl;
     QLCDNumber *joystick_Y_lcd;
     QVBoxLayout *verticalLayout_10;
-    QSlider *verticalSlider;
-    QSlider *horizontalSlider;
+    QSlider *joystickVertical_sld;
+    QSlider *joystickHorizontal_Sld;
     QGroupBox *grp_Volante;
     QVBoxLayout *verticalLayout_5;
     QVBoxLayout *verticalLayout_11;
     QFormLayout *formLayout;
     QLabel *valorVolante_lbl;
     QLCDNumber *volante_lcd;
-    QDial *dial;
+    QDial *VolanteControl_Dial;
     QSlider *horizontalSlider_2;
     QGroupBox *grp_Acelerador;
     QVBoxLayout *verticalLayout_4;
@@ -212,24 +212,28 @@ public:
         verticalLayout_10 = new QVBoxLayout();
         verticalLayout_10->setSpacing(6);
         verticalLayout_10->setObjectName(QString::fromUtf8("verticalLayout_10"));
-        verticalSlider = new QSlider(grp_Joystick);
-        verticalSlider->setObjectName(QString::fromUtf8("verticalSlider"));
-        verticalSlider->setMinimumSize(QSize(0, 60));
-        verticalSlider->setMinimum(370);
-        verticalSlider->setMaximum(640);
-        verticalSlider->setValue(512);
-        verticalSlider->setOrientation(Qt::Vertical);
+        joystickVertical_sld = new QSlider(grp_Joystick);
+        joystickVertical_sld->setObjectName(QString::fromUtf8("joystickVertical_sld"));
+        joystickVertical_sld->setMinimumSize(QSize(0, 60));
+        joystickVertical_sld->setMinimum(370);
+        joystickVertical_sld->setMaximum(640);
+        joystickVertical_sld->setPageStep(36);
+        joystickVertical_sld->setValue(512);
+        joystickVertical_sld->setOrientation(Qt::Vertical);
+        joystickVertical_sld->setTickPosition(QSlider::TicksBelow);
 
-        verticalLayout_10->addWidget(verticalSlider);
+        verticalLayout_10->addWidget(joystickVertical_sld);
 
-        horizontalSlider = new QSlider(grp_Joystick);
-        horizontalSlider->setObjectName(QString::fromUtf8("horizontalSlider"));
-        horizontalSlider->setMinimum(374);
-        horizontalSlider->setMaximum(640);
-        horizontalSlider->setValue(512);
-        horizontalSlider->setOrientation(Qt::Horizontal);
+        joystickHorizontal_Sld = new QSlider(grp_Joystick);
+        joystickHorizontal_Sld->setObjectName(QString::fromUtf8("joystickHorizontal_Sld"));
+        joystickHorizontal_Sld->setMinimum(374);
+        joystickHorizontal_Sld->setMaximum(640);
+        joystickHorizontal_Sld->setPageStep(33);
+        joystickHorizontal_Sld->setValue(512);
+        joystickHorizontal_Sld->setOrientation(Qt::Horizontal);
+        joystickHorizontal_Sld->setTickPosition(QSlider::TicksAbove);
 
-        verticalLayout_10->addWidget(horizontalSlider);
+        verticalLayout_10->addWidget(joystickHorizontal_Sld);
 
 
         verticalLayout_6->addLayout(verticalLayout_10);
@@ -271,16 +275,16 @@ public:
 
         verticalLayout_5->addLayout(verticalLayout_11);
 
-        dial = new QDial(grp_Volante);
-        dial->setObjectName(QString::fromUtf8("dial"));
-        dial->setAutoFillBackground(false);
-        dial->setMinimum(-3200);
-        dial->setMaximum(3200);
-        dial->setSingleStep(100);
-        dial->setPageStep(400);
-        dial->setInvertedAppearance(false);
+        VolanteControl_Dial = new QDial(grp_Volante);
+        VolanteControl_Dial->setObjectName(QString::fromUtf8("VolanteControl_Dial"));
+        VolanteControl_Dial->setAutoFillBackground(false);
+        VolanteControl_Dial->setMinimum(-3200);
+        VolanteControl_Dial->setMaximum(3200);
+        VolanteControl_Dial->setSingleStep(100);
+        VolanteControl_Dial->setPageStep(400);
+        VolanteControl_Dial->setInvertedAppearance(false);
 
-        verticalLayout_5->addWidget(dial);
+        verticalLayout_5->addWidget(VolanteControl_Dial);
 
         horizontalSlider_2 = new QSlider(grp_Volante);
         horizontalSlider_2->setObjectName(QString::fromUtf8("horizontalSlider_2"));
@@ -375,7 +379,10 @@ public:
         AceleradorControl_Slider->setObjectName(QString::fromUtf8("AceleradorControl_Slider"));
         AceleradorControl_Slider->setMinimum(-3200);
         AceleradorControl_Slider->setMaximum(3200);
+        AceleradorControl_Slider->setSingleStep(100);
+        AceleradorControl_Slider->setPageStep(800);
         AceleradorControl_Slider->setOrientation(Qt::Horizontal);
+        AceleradorControl_Slider->setTickPosition(QSlider::TicksAbove);
 
         verticalLayout_4->addWidget(AceleradorControl_Slider);
 
@@ -460,7 +467,10 @@ public:
         FrenoControl_Slider->setObjectName(QString::fromUtf8("FrenoControl_Slider"));
         FrenoControl_Slider->setMinimum(-3200);
         FrenoControl_Slider->setMaximum(3200);
+        FrenoControl_Slider->setSingleStep(100);
+        FrenoControl_Slider->setPageStep(800);
         FrenoControl_Slider->setOrientation(Qt::Horizontal);
+        FrenoControl_Slider->setTickPosition(QSlider::TicksAbove);
 
         verticalLayout_2->addWidget(FrenoControl_Slider);
 
