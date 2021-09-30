@@ -2,8 +2,8 @@
 
 Repositorio con los diagramas, esquemáticos y código para replicar el sistema Isiukak para conducción con Joystick.
 
-La carpeta Programas contiene el código del Arduino UNO del módulo de control, así cómo código en Qt Creator para monitorear los valores del sistema en tiempo real.
-La carpeta Componentes contiene el diagrama general y los esquemáticos de cada subsistema, así como las piezas 3D necesarias y fotografías de las piezas construidas.
+La carpeta **Programas** contiene el código del Arduino UNO del módulo de control, así cómo código en Qt Creator para monitorear los valores del sistema en tiempo real.
+La carpeta **Componentes** contiene el diagrama general del sistema y los esquemáticos de cada subsistema, así como las piezas 3D necesarias y fotografías de las piezas construidas.
 
 ## Estructura general del sistema
 
@@ -17,9 +17,9 @@ Los componentes del sistema son:
 
 Que se muestran a continuación.
 
-<!-- ![Esquema_General.png](static/proyectos/isiukak/Diagrama_General_Isiukak.png) -->
+![Esquema_General.png](./assets/imgs/Diagrama_General_Isiukak.png)
 
-<img src="static/proyectos/isiukak/Diagrama_General_Isiukak.png" title="Diagrama general del Sistema para Conducción Isiukak" alt="Diagrama_General_Isiukak.png" width="500">
+
 
 El **módulo de control** es la parte central, donde se realiza el procesamiento del sistema. Lee la  posición del joystick para controlar los pedales y el volante.  
 
@@ -28,4 +28,3 @@ El **eje vertical del joystick, controla el freno y el acelerador**, mientras qu
 Dos actuadores lineales controlan el freno y el acelerador, un tercer motor asiste en el movimiento del volante y otro actuador lineal asiste en el movimiento de la palanca.
 
 Actualmente se tiene una prueba de concepto del sistema implementada en un Arduino UNO. La siguiente etapa portar el código a un microcontrolador de grado automotriz.
-
