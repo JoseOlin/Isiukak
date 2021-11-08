@@ -6,7 +6,7 @@
  */
 
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
+
 
 
 #include <string.h>
@@ -50,6 +50,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     //ui->joystick_graphics->setScene(escena);
 }
 
+MainWindow::~MainWindow()
+{
+    ui->btnDesconectar->click();
+    delete ui;
+}
+
 void MainWindow::desplegarValores(QString renglonDatos)
 {
     ui->InfoSalida_txt->insertPlainText(renglonDatos);
@@ -59,90 +65,81 @@ void MainWindow::desplegarValores(QString renglonDatos)
     /// Separar renglón datos para mostrar valores del Joystick.
 
     /// Joystick Y
-    int valorJy = buscarExpresionRegular("J_Y: (\\d+)", renglonDatos);
+    int valorJy = buscarExpresionRegular_returnNextInt("J_Y: (\\d+)", renglonDatos);
     ui->joystick_Y_lcd->display(valorJy);
     ui->joystickVertical_sld->setValue(valorJy);
 
     /// Joystick X
-    int valorJx = buscarExpresionRegular("J_X: (\\d+)", renglonDatos);
+    int valorJx = buscarExpresionRegular_returnNextInt("J_X: (\\d+)", renglonDatos);
     ui->joystick_X_lcd->display(valorJx);
     ui->joystickHorizontal_Sld->setValue(valorJx);
 
 
     /// Freno
-    int B_pos = buscarExpresionRegular("B_p: (\\d+)", renglonDatos);
+    int B_pos = buscarExpresionRegular_returnNextInt("B_p: (\\d+)", renglonDatos);
     ui->frenoPos_lcd->display(B_pos);
 
-    int B_tgt = buscarExpresionRegular("B_t: (\\d+)", renglonDatos);
+    int B_tgt = buscarExpresionRegular_returnNextInt("B_t: (\\d+)", renglonDatos);
     ui->frenoDes_lcd->display(B_tgt);
 
-    int B_Ctrl = buscarExpresionRegular("B_c: (-?(\\d+))", renglonDatos);
+    int B_Ctrl = buscarExpresionRegular_returnNextInt("B_c: (-?(\\d+))", renglonDatos);
     // Uno o ningún signo menos, seguido de uno o más dígitos.
     ui->frenoControl_lcd->display(B_Ctrl);
     ui->FrenoControl_Slider->setValue(B_Ctrl);
 
 
-    int B_Error = buscarExpresionRegular("B_e: (-?(\\d+))", renglonDatos);
+    int B_Error = buscarExpresionRegular_returnNextInt("B_e: (-?(\\d+))", renglonDatos);
     ui->Freno_lcdError->display(B_Error);
 
     /// Acelerador
-    int A_pos = buscarExpresionRegular("A_p: (\\d+)", renglonDatos);
+    int A_pos = buscarExpresionRegular_returnNextInt("A_p: (\\d+)", renglonDatos);
     ui->aceleradorPos_lcd->display(A_pos);
 
-    int A_tgt = buscarExpresionRegular("A_t: (\\d+)", renglonDatos);
+    int A_tgt = buscarExpresionRegular_returnNextInt("A_t: (\\d+)", renglonDatos);
     ui->aceleradorDes_lcd->display(A_tgt);
 
-    int A_Ctrl = buscarExpresionRegular("A_c: (-?(\\d+))", renglonDatos);
+    int A_Ctrl = buscarExpresionRegular_returnNextInt("A_c: (-?(\\d+))", renglonDatos);
     ui->aceleradorControl_lcd->display(A_Ctrl);
     ui->AceleradorControl_Slider->setValue(A_Ctrl);
 
-    int A_Error = buscarExpresionRegular("A_e: (-?(\\d+))", renglonDatos);
+    int A_Error = buscarExpresionRegular_returnNextInt("A_e: (-?(\\d+))", renglonDatos);
     ui->Acelerador_lcdError->display(A_Error);
 
     /// Volante
-    int V_Ctrl = buscarExpresionRegular("Ctrl_Vol: (-?(\\d+))", renglonDatos);
+    int V_Ctrl = buscarExpresionRegular_returnNextInt("Ctrl_Vol: (-?(\\d+))", renglonDatos);
     //qDebug() << "V_Ctrl: " << V_Ctrl;
     ui->volante_lcd->display(V_Ctrl);
     ui->VolanteControl_Dial->setValue(V_Ctrl);
 
+    /// Estado del Sistema
+    int edoSistemaNum = buscarExpresionRegular_returnNextInt("edo: (\\d+)", renglonDatos);
+    //qDebug() << "Edo Sistema: " << edoSistema;
+    if(edoSistemaNum < 0)
+        edoSistemaNum = 7;
+
+    QStringList estadosSistema = {"OK", "Mnt Req", "Return Home", "Safe Parking", "Immediate Stop", "Emergency Stop", "Emergency Braking", "NA"};
+    QString edoSist = estadosSistema[edoSistemaNum];
+
+    QString edoSistema_str = QString::number(edoSistemaNum) + ": " + edoSist;
+    ui->estadoSistema_lbl->setText(edoSistema_str);
+
+
     /// Botón FixFreno.
-    int StatusFixFreno = buscarExpresionRegular("bFB: (-?(\\d+))", renglonDatos);
-    bool statusFixFreno_chk = ui->FixFreno_chk->checkState();
-    if( StatusFixFreno && !statusFixFreno_chk)
-    {
-        ui->FixFreno_chk->setChecked(true);
-    }
-    else if (!StatusFixFreno && statusFixFreno_chk)
-    {
-        ui->FixFreno_chk->setChecked(false);
-    }
+    int statusFixFreno = buscarExpresionRegular_returnNextInt("bFB: (-?(\\d+))", renglonDatos);
+    checkBoxBouncing(ui->FixFreno_chk, statusFixFreno);
 
-    int statusModoCarr    = buscarExpresionRegular("bMC: (-?(\\d+))", renglonDatos);
-    bool statusModoCarr_chk = ui->RoadMode_chk->checkState();
-    if(statusModoCarr && !statusModoCarr_chk)
-        ui->RoadMode_chk->setChecked(true);
-    else if ( !statusModoCarr && statusModoCarr_chk)
-        ui->RoadMode_chk->setChecked(false);
+    int statusModoCarr    = buscarExpresionRegular_returnNextInt("bMC: (-?(\\d+))", renglonDatos);
+    checkBoxBouncing(ui->RoadMode_chk, statusModoCarr);
 
+    int statusPalancaUp   = buscarExpresionRegular_returnNextInt("bPU: (-?(\\d+))", renglonDatos);
+    checkBoxBouncing(ui->PalUp_chk, statusPalancaUp);
 
-    int statusPalancaUp   = buscarExpresionRegular("bPU: (-?(\\d+))", renglonDatos);
-    bool statusPalancaUp_chk = ui->PalUp_chk->checkState();
-    if(statusPalancaUp && !statusPalancaUp_chk)
-        ui->PalUp_chk->setChecked(true);
-    else if (!statusPalancaUp && statusPalancaUp_chk)
-        ui->PalUp_chk->setChecked(false);
+    int statusPalancaDown = buscarExpresionRegular_returnNextInt("bPD: (-?(\\d+))", renglonDatos);
+    checkBoxBouncing(ui->PalDown_chk, statusPalancaDown);
 
-    int statusPalancaDown = buscarExpresionRegular("bPD: (-?(\\d+))", renglonDatos);
-    bool statusPalancaDown_chk = ui->PalDown_chk->checkState();
-    if(statusPalancaDown && !statusPalancaDown_chk)
-        ui->PalDown_chk->setChecked(true);
-    else if (!statusPalancaDown && statusPalancaDown_chk)
-        ui->PalDown_chk->setChecked(false);
-
-    //Errores
-    //QRegularExpression expRegInt_R
-    //QRegularExpression expRegInt_R = QRegularExpression ("(\\*\\*)(Freno|Joy_V|Joy_H|Acelerador|Pot_)(.+)\n");
-    QRegularExpression expRegInt_R = QRegularExpression ("(\\*\\*)(.+)\n");
+    /// Errores
+    //QRegularExpression expRegInt_R = QRegularExpression ("(\\*\\*)(.+)\n");
+    QRegularExpression expRegInt_R = QRegularExpression ("(\\*\\*)(.+)(\\*\\*)");
     // \\*\\* = **
     // (Freno|Joy_V|Joy_H|Acelerador) = Freno OR Joy_V OR Joy_H OR Acelerador
     // (.+) = Cualquier caracter una o más veces
@@ -150,14 +147,48 @@ void MainWindow::desplegarValores(QString renglonDatos)
     QString Error_s = match.captured(0);
 
     ui->erroresSalida_txt->insertPlainText(Error_s);
+
+    // Joystick Y Desconectado
+    bool LED_Joystick_Y_Desconectado = buscarExpresionRegular("(\\*\\*)(Joystick_Y Desconectado)(.+)(\\*\\*)", renglonDatos);
+    checkBoxBouncing_Errors(ui->chk_LED_Joy_Y_Desc, LED_Joystick_Y_Desconectado);
+
+    bool LED_Joystick_X_Desconectado = buscarExpresionRegular("(\\*\\*)(Joystick_X Desconectado)(.+)", renglonDatos);
+    checkBoxBouncing_Errors(ui->chk_LED_Joy_X_Desc, LED_Joystick_X_Desconectado);
+
+    bool LED_Acelerador_Desconectado = buscarExpresionRegular("(\\*\\*)(Acelerador Desconectado)(.+)", renglonDatos);
+    checkBoxBouncing_Errors(ui->chk_LED_Acel_Desc, LED_Acelerador_Desconectado);
+
+    bool LED_Freno_Desconectado = buscarExpresionRegular("(\\*\\*)(Freno Desconectado)(.+)", renglonDatos);
+    checkBoxBouncing_Errors(ui->chk_LED_Freno_Desc, LED_Freno_Desconectado);
+
+    bool LED_Freno_OutOfRange = buscarExpresionRegular("(\\*\\*)(Freno Fuera de Rango)(.+)(\\*\\*)", renglonDatos);
+    checkBoxBouncing_Errors(ui->chk_LED_Freno_OutR, LED_Freno_OutOfRange);
+
+    bool LED_Acel_OutOfRange = buscarExpresionRegular("(\\*\\*)(Acelerador Fuera de Rango)(.+)(\\*\\*)", renglonDatos);
+    checkBoxBouncing_Errors(ui->chk_LED_Acel_OutR, LED_Acel_OutOfRange);
+
     //int valorJx = Jx_s.toInt();
 
 }
 
-MainWindow::~MainWindow()
+void MainWindow::checkBoxBouncing(QCheckBox *chkBox, int statusRcv)
 {
-    ui->btnDesconectar->click();
-    delete ui;
+    bool chkStatus = chkBox->checkState();
+    if(statusRcv && !chkStatus)
+        chkBox->setChecked(true);
+    else if(!statusRcv && chkStatus)
+        chkBox->setChecked(false);
+
+}
+
+void MainWindow::checkBoxBouncing_Errors(QCheckBox *chkBox, bool statusRcv)
+{
+    bool chkStatus = chkBox->checkState();
+    if(statusRcv && !chkStatus)
+        chkBox->setChecked(true);
+    /*else if(!statusRcv && chkStatus)
+        chkBox->setChecked(false);
+*/
 }
 
 /*
@@ -423,17 +454,37 @@ void MainWindow::showPortInfo(int idx)
 
 
 
-int MainWindow::buscarExpresionRegular(QString expReg, QString fuente)
+int MainWindow::buscarExpresionRegular_returnNextInt(QString expReg, QString fuente)
 {
+
     //QRegularExpression expRegInt_R("J_Y: (\\d+)");
     QRegularExpression expRegInt_R(expReg);
     QRegularExpressionMatch RegExMatch = expRegInt_R.match(fuente);
     //int indiceJy_Fin
     //int indiceJy_Ini = expRegInt.indexIn(renglonDatos_s);
-    QString match_s = RegExMatch.captured(1);
-    int match_int = match_s.toInt();
+    if(RegExMatch.hasMatch() )
+    {
+        QString match_s = RegExMatch.captured(1);
+        int match_int = match_s.toInt();
+        return match_int;
+    }
+    else
+        return -1;
+}
 
-    return match_int;
+bool MainWindow::buscarExpresionRegular(QString expReg_str, QString fuente)
+{
+    QRegularExpression expReg(expReg_str);
+    QRegularExpressionMatch RegExMatch = expReg.match(fuente);
+    if(RegExMatch.hasMatch())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+
 }
 
 void MainWindow::on_cmbSerialPortSelector_currentTextChanged(const QString &arg1)

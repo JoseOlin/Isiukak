@@ -11,20 +11,23 @@
 // Constantes para Debugueo de funciones
 
 #define DEBUG_BOOT 1
-#define DEBUG_POTS_ERROR 1
+#define DEBUG_POTS_ERROR 0
 #define DEBUG_POTS 0
 
 #define DEBUG_CONTROL 0
-#define DEBUG_VOLANTE 0
-
-#define DEBUG_PAROEMERGENCIA 0
+#define DEBUG_ACTUATORS_CONTROL 1
+#define DEBUG_ACTUATORS_RANGE 1
 
 #define DEBUG_ACTUADORES_BLOQUEOFRENO 0
 
-#define DEBUG_COMUNICACION_NANO 0
-#define DEBUG_WIRE 0 // Para el i2c
 
+#define DEBUG_VOLANTE 0
 #define DEBUG_CONTROL_VOLANTE 0
+
+#define DEBUG_PAROEMERGENCIA 0
+
+#define DEBUG_COMUNICACION_NANO 0
+//#define DEBUG_WIRE 0 // Para el i2c
 
 #define DEBUG_SEGURIDAD 0 //Acerca de la conexión de los dispositivos.
 

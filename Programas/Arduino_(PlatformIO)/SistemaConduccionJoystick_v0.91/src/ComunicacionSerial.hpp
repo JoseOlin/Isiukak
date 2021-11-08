@@ -3,9 +3,12 @@
 
 
 //************ Variables para comunicacion Serial **********//
+#include "Config.hpp"
+#include "Debug.hpp"
+
 #include <Arduino.h>
 #include <SoftwareSerial.h>
-#include "Debug.hpp"
+
 
 //****Variables para comunicacin serial.****//
 #define rxPin 7  //

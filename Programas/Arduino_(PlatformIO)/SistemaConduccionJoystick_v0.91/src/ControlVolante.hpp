@@ -1,11 +1,8 @@
 #ifndef CONTROLVOLANTE
 #define CONTROLVOLANTE
 
-//*********Variables y librerias para control de direccion
-/* En esta sección están las variables y funciones para controlar el volante.
-*/
-
-//#include "Debug.hpp"
+//**************** Variables y librerias para control de direccion ********************//
+/* En esta sección están las variables y funciones para controlar el volante. */
 
 #if ENCODER_ACTIVADO
     //#include <EEPROM.h> //Para almacenar valores en memoria no volatil.
@@ -15,14 +12,14 @@
 #include "LecturaFeedback.hpp"
 #include "ControlPedales.hpp" //->//#include "LecturaJoystick.hpp"
                               //->//#include "DriversMotores.hpp"
-//*****************************Variables configuración**************************
+
 
 int valMin_CtrlVolante = 200; //Por debajo de este valor el motor no se mueve, aún si ya estaba en movimiento.
 // TODO: Homogeneizar la nomenclatura de estas dos variables.
 int controlVolanteMaximo = 3200;
 //int controlVolanteMaximo = 2400;
 
-
+//*****************************Variables configuración**************************
 #if ENCODER_ACTIVADO
 /// Variables para control de Posición
 //El volante puede girar una vuelta y 3/4 aproximadamente hacia izquierda y derecha.
@@ -79,10 +76,10 @@ enum TiposControlVolante {
     MODO_CLOSEDLOOP_VELOCIDAD,  //Controla la velocidad de giro en función de la posición del joystick (Relación lineal, con retroalimentación).
     MODO_INHIBIDO // Si se detecta el Joystick desconectado, dejar de aplicar control al volante.
 };
-TiposControlVolante tipoControlVolante;
+TiposControlVolante TipoControlVolante;
 
-int valorControlVolante;
-int velocidad_volante = 0;
+int Volante_valorControl;
+int Volante_Velocidad = 0;
 
 ///*** Variables control por segmentos (MODO_OPENLOOP_PORPARTES) ***///
 //
@@ -123,47 +120,10 @@ uint8_t contadorLEDEncoderDesconectado = 0;
 //**************Prototipos*******************//
 int ControlPosicionVolante(float posicionMotorDeseada, float posicionMotorActual, float* errorMotorDireccion, int controlMaximo);
 //**************Fin Prototipos*******************//
-void InicializarEncoder()
-{
-#if ENCODER_ACTIVADO
-    //**Inicializacion Comunicacion Encoder (SPI)*****************
-    pinMode(CS, OUTPUT);//Slave Select
-    digitalWrite(CS, HIGH);
-
-    //Serial.println("Antes SPI");
-    SPI.begin();
-    SPI.setBitOrder(MSBFIRST);
-    SPI.setDataMode(SPI_MODE0);
-    SPI.setClockDivider(SPI_CLOCK_DIV32);
-    SPI.end();
-    //***Fin Inicializacion Comunicacion Encoder (SPI)****************
-
-
-    //Cargar valor de cantidad de vueltas.
-    //EEPROM.write(0, 0);
-
-    //vueltas = EEPROM.read(0); //Leer el byte de la direccion 0 en la EEPROM
-    vueltas = 0;  ////**********************************///**********************///*****************
-    Serial.print("vts: ");
-    Serial.println(vueltas);
-    #if PUESTACERO //Definida en Debug.hpp
-    puestaACeroEncoder();
-    #endif
-
-    //Para evitar que en la primer lectura la diferencia sea grande e interprete eso como una vuelta.
-    ABSposition_last = LeerEncoder(&EncoderConectado);
-    AbsPosLastDeg = ABSposition_last*factorGradosPulsos;
-
-    if(!EncoderConectado)
-        Serial.println("Encoder desconectado");
-
-    LeerConvertirEncoder();
-#endif
-}
 
 
 
-void ControlarVolante()
+void ControlarVolante(int Joystick_X, TiposControlVolante tipoControlVolante)
 {
 
 #if ENCODER_ACTIVADO
@@ -175,9 +135,9 @@ void ControlarVolante()
 
     if(tipoControlVolante == TiposControlVolante::MODO_INHIBIDO)
     {
-        velocidad_volante = 0;
+        Volante_Velocidad = 0;
 #if VOLANTE_ACTIVADO
-        setMotorSpeed_Protocol(ActuadorVolante_Address, velocidad_volante);
+        setMotorSpeed_Protocol(ActuadorVolante_Address, Volante_Velocidad);
 #endif
     }
     else if(tipoControlVolante == TiposControlVolante::MODO_OPENLOOP_PORPARTES)
@@ -194,37 +154,38 @@ void ControlarVolante()
         |---------.----------------.---|---.--------------.--------|     */
         int umbralLecturaIzq = joyX_Center - umbral_Lectura_JoyX;
         int umbralLecturaDer = joyX_Center + umbral_Lectura_JoyX;
+
         if( Joystick_X < umbralLecturaIzq || Joystick_X > umbralLecturaDer)
         {
             if( Joystick_X < umbralLecturaIzq && Joystick_X >= joyIzq_Segmento1)
             {
-                velocidad_volante = map(Joystick_X,
+                Volante_Velocidad = map(Joystick_X,
                                         joyX_Center,          joyIzq_Segmento1,
                                         valMin_CtrlVolante,   ControlVolante_IzqSegm1);
             }
             else if(Joystick_X < joyIzq_Segmento1)
             {
-                velocidad_volante = map(Joystick_X,
+                Volante_Velocidad = map(Joystick_X,
                                         joyIzq_Segmento1,        joyX_MinVal,
                                         ControlVolante_IzqSegm1, controlMaximoIzq);
             }
             else if (Joystick_X > umbralLecturaDer && Joystick_X <= joyDer_Segmento1){
-                velocidad_volante = map(Joystick_X,
+                Volante_Velocidad = map(Joystick_X,
                                         joyX_Center,           joyDer_Segmento1,
                                         -valMin_CtrlVolante,   ControlVolante_DerSegm1);
             }
             else if(Joystick_X > joyDer_Segmento1){
-                velocidad_volante = map(Joystick_X,
+                Volante_Velocidad = map(Joystick_X,
                                         joyDer_Segmento1,   joyX_MaxVal,
                                         ControlVolante_DerSegm1, controlMaximoDer);
             }
             //velocidad_volante = map(smoothJS_X, joyMaximoIzquierda, joyMaximoDerecha, 3200, -3200);  //Invertido porque el motor se mueve a la izquierda con joystick a la derecha.
         } else{
-            velocidad_volante = 0;
+            Volante_Velocidad = 0;
         }
 
     #if VOLANTE_ACTIVADO
-        setMotorSpeed_Protocol(ActuadorVolante_Address, velocidad_volante);
+        setMotorSpeed_Protocol(ActuadorVolante_Address, Volante_Velocidad);
     #endif
     }
     else if(tipoControlVolante == TiposControlVolante::MODO_OPENLOOP_EXPONENCIAL)
@@ -244,7 +205,7 @@ void ControlarVolante()
         {
             if( x_Centrado < joyX_Center){ //Girar hacia la izquierda
                 signo = -1;
-                if(modoCarreteraActivado) {
+                if(ModoCarreteraActivado) {
                     ajusteExp = ajusteExpCarretera_L;
                     ajusteEscalar = ajusteEscalar_Carretera;
                 }
@@ -255,7 +216,7 @@ void ControlarVolante()
             }
             else if (Joystick_X > joyX_Center){ //Girar hacia la derecha.
                 signo = 1;
-                if(modoCarreteraActivado)
+                if(ModoCarreteraActivado)
                 {
                     ajusteExp = ajusteExpCarretera_R;
                     ajusteEscalar = ajusteEscalar_Carretera;
@@ -267,14 +228,14 @@ void ControlarVolante()
 
             }
             x_Escalado = x_Centrado / ajusteExp;
-            valorControlVolante = signo*(exp(signo*(x_Escalado))) * ajusteEscalar;
-            valorControlVolante -= signo*ajusteEscalar;//e^0 = 1. Hay que ajustar eso manualmente.
+            Volante_valorControl = signo*(exp(signo*(x_Escalado))) * ajusteEscalar;
+            Volante_valorControl -= signo*ajusteEscalar;//e^0 = 1. Hay que ajustar eso manualmente.
         }
         else { //Joystick centrado.
-            valorControlVolante = 0;
+            Volante_valorControl = 0;
         }
         #if VOLANTE_ACTIVADO
-        setMotorSpeed_Protocol(ActuadorVolante_Address, valorControlVolante); //Dentro de esta función se acotan los valores de -3200 a 3200.
+        setMotorSpeed_Protocol(ActuadorVolante_Address, Volante_valorControl); //Dentro de esta función se acotan los valores de -3200 a 3200.
         #endif
     }
     else if(tipoControlVolante == TiposControlVolante::MODO_OPENLOOP_LINEAL)
@@ -284,7 +245,7 @@ void ControlarVolante()
         {
           //if(mapeoCompletoVolante) //mapeoCompletoVolante activo.
           {
-            velocidad_volante = map(Joystick_X, joyX_MinVal, joyX_MaxVal, 3200, -3200);  //Invertido porque el motor se mueve a la izquierda con joystick a la derecha.
+            Volante_Velocidad = map(Joystick_X, joyX_MinVal, joyX_MaxVal, 3200, -3200);  //Invertido porque el motor se mueve a la izquierda con joystick a la derecha.
           }
           /*else //mapeoCompletoVolante inactivo.
           {
@@ -293,10 +254,10 @@ void ControlarVolante()
 
         } else
         {
-            velocidad_volante = 0;
+            Volante_Velocidad = 0;
         }
         #if VOLANTE_ACTIVADO
-        setMotorSpeed_Protocol(ActuadorVolante_Address, velocidad_volante);
+        setMotorSpeed_Protocol(ActuadorVolante_Address, Volante_Velocidad);
         #endif
     }
     #if ENCODER_ACTIVADO
@@ -434,6 +395,74 @@ void ControlarVolante()
 }
 
 
+void desplegarInfoVolante()
+{
+    #if INFO_VOLANTE
+    Serial.print(",\tCtrl_Vol: "); Serial.print(Volante_Velocidad);
+    //Serial.print(valorControlVolante); //Esta activarla con el modo exponencial.
+    #endif
+}
+
+
+void volante_Inhibir()
+{
+    /*! \brief Pone el volante en modo Inhibido y llama controlarVolante para
+     *  aplicar el modo inhibido.  */
+    TipoControlVolante = TiposControlVolante::MODO_INHIBIDO;
+    ControlarVolante(0, TipoControlVolante);
+}
+
+void volante_Desinhibir()
+{
+    //tipoC = MODO_POSICION_LIN;
+    //tipoC = MODO_POSICION_LOG;
+    //tipoC = MODO_VELOCIDAD_OPENLOOP; //Modo de control por velocidad sin retroalimentación del encoder.
+    TipoControlVolante = TiposControlVolante::MODO_OPENLOOP_PORPARTES;
+}
+
+
+
+
+
+
+
+void InicializarEncoder()
+{
+#if ENCODER_ACTIVADO
+    //**Inicializacion Comunicacion Encoder (SPI)*****************
+    pinMode(CS, OUTPUT);//Slave Select
+    digitalWrite(CS, HIGH);
+
+    //Serial.println("Antes SPI");
+    SPI.begin();
+    SPI.setBitOrder(MSBFIRST);
+    SPI.setDataMode(SPI_MODE0);
+    SPI.setClockDivider(SPI_CLOCK_DIV32);
+    SPI.end();
+    //***Fin Inicializacion Comunicacion Encoder (SPI)****************
+
+
+    //Cargar valor de cantidad de vueltas.
+    //EEPROM.write(0, 0);
+
+    //vueltas = EEPROM.read(0); //Leer el byte de la direccion 0 en la EEPROM
+    vueltas = 0;  ////**********************************///**********************///*****************
+    Serial.print("vts: ");
+    Serial.println(vueltas);
+    #if PUESTACERO //Definida en Debug.hpp
+    puestaACeroEncoder();
+    #endif
+
+    //Para evitar que en la primer lectura la diferencia sea grande e interprete eso como una vuelta.
+    ABSposition_last = LeerEncoder(&EncoderConectado);
+    AbsPosLastDeg = ABSposition_last*factorGradosPulsos;
+
+    if(!EncoderConectado)
+        Serial.println("Encoder desconectado");
+
+    LeerConvertirEncoder();
+#endif
+}
 
 int ControlPosicionVolante(float posicionMotorDeseada, float posicionMotorActual, float* errorMotorDireccion_P, int controlMaximo)
 {
@@ -464,28 +493,28 @@ int ControlPosicionVolante(float posicionMotorDeseada, float posicionMotorActual
   return controlMotorDireccion;
 }
 
-#if ENCODER_ACTIVADO
-/*INFO: Hay un problema con la interpretación de la lectura del encoder cuando se da
-una vuelta completa. Por ejemplo, si el encoder queda en -5°, la siguiente vez
-que inicie lo interpretará como 355° y dará casi una vuelta entera para llevarla a 0°
-
-Una opción es almacenar el valor de las vueltas en la EEPROM, pero debe almacenarse
-cada que se apaga el automóvil, y no es tan necesario ya que al final el joystick siempre
-queda centrado, por lo que (probablemente) será suficiente con guardar la cantidad
-de vueltas en tiempo de ejecución y dar por hecho que al final quedará muy cerca del origen.
-
-Esto sigue representando un problema, ya que como se mencionó, un pequeño desfase negativo
-se interpreta como un gran desgase positivo en el reinicio (-5 = 355), lo cual puede
-corregirse almacenando el valor de las vueltas pero es recomendable minimizar este almacenamiento.
-
-Hacerlo al apagado del auto implica agregar una señal digital que detecte tal situación.
-Hacerlo cada que se detecte una vuelta generaría muchos accesos a la EEPROM ya que el encoder está centrado
-en 0° y las transiciones de valores pequeños negativos a valores pequeños positivos son usuales.
-
-Para resolver el problema se tomarán 180° del encoder como la posición inicial.
-*/
 void LeerConvertirEncoder(uint8_t* EncoderDesconectado)
 {
+    #if ENCODER_ACTIVADO
+    /*INFO: Hay un problema con la interpretación de la lectura del encoder cuando se da
+    una vuelta completa. Por ejemplo, si el encoder queda en -5°, la siguiente vez
+    que inicie lo interpretará como 355° y dará casi una vuelta entera para llevarla a 0°
+
+    Una opción es almacenar el valor de las vueltas en la EEPROM, pero debe almacenarse
+    cada que se apaga el automóvil, y no es tan necesario ya que al final el joystick siempre
+    queda centrado, por lo que (probablemente) será suficiente con guardar la cantidad
+    de vueltas en tiempo de ejecución y dar por hecho que al final quedará muy cerca del origen.
+
+    Esto sigue representando un problema, ya que como se mencionó, un pequeño desfase negativo
+    se interpreta como un gran desgase positivo en el reinicio (-5 = 355), lo cual puede
+    corregirse almacenando el valor de las vueltas pero es recomendable minimizar este almacenamiento.
+
+    Hacerlo al apagado del auto implica agregar una señal digital que detecte tal situación.
+    Hacerlo cada que se detecte una vuelta generaría muchos accesos a la EEPROM ya que el encoder está centrado
+    en 0° y las transiciones de valores pequeños negativos a valores pequeños positivos son usuales.
+
+    Para resolver el problema se tomarán 180° del encoder como la posición inicial.
+    */
   //Lectura de encoder
   ABSposition = LeerEncoder(&EncoderConectado);
   //AbsPosDeg = ABSposition*factor;
@@ -526,9 +555,8 @@ void LeerConvertirEncoder(uint8_t* EncoderDesconectado)
       *EncoderDesconectado = true;
       contadorLEDEncoderDesconectado = 6;
   }
-
-}
 #endif
+}
 
 void guardarVueltas(int pinEncendido)
 {

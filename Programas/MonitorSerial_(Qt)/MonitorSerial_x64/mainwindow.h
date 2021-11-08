@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-
+#include "ui_mainwindow.h"
 
 //#include <QMainWindow>
 #include <QtWidgets/QMainWindow>
@@ -69,7 +69,9 @@ private:
     void desplegarValores(QString renglonDatos_s);
 
     void dibujarVolante(float anguloGrados);
-    int buscarExpresionRegular(QString expReg, QString fuente);
+    int buscarExpresionRegular_returnNextInt(QString expReg, QString fuente);
+    bool buscarExpresionRegular(QString expReg, QString fuente);
+
     Ui::MainWindow *ui;
 
     //Variables globales
@@ -77,6 +79,9 @@ private:
     QSerialPort* serial;
 
     QString renglonDatos_s;
+
+    void checkBoxBouncing(QCheckBox *chkBox, int statusRcv);
+    void checkBoxBouncing_Errors(QCheckBox *chkBox, bool statusRcv);
 };
 
 #endif // MAINWINDOW_H
