@@ -117,6 +117,7 @@ public:
     QHBoxLayout *horizontalLayout_6;
     QLabel *lblEstadoSistema;
     QLabel *estadoSistema_lbl;
+    QLabel *label_6;
     QPlainTextEdit *erroresSalida_txt;
     QHBoxLayout *horizontalLayout_3;
     QPushButton *btnParoEmergencia;
@@ -134,7 +135,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(1073, 625);
+        MainWindow->resize(1077, 542);
         QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -731,6 +732,15 @@ public:
 
         horizontalLayout_6->addWidget(estadoSistema_lbl);
 
+        label_6 = new QLabel(ConexionConfigForm_Widget);
+        label_6->setObjectName(QString::fromUtf8("label_6"));
+        label_6->setMaximumSize(QSize(100, 100));
+        label_6->setAutoFillBackground(false);
+        label_6->setPixmap(QPixmap(QString::fromUtf8(":/images/Isotipo.png")));
+        label_6->setScaledContents(true);
+
+        horizontalLayout_6->addWidget(label_6);
+
 
         verticalLayout_12->addLayout(horizontalLayout_6);
 
@@ -815,7 +825,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1073, 22));
+        menuBar->setGeometry(QRect(0, 0, 1077, 22));
         sizePolicy5.setHeightForWidth(menuBar->sizePolicy().hasHeightForWidth());
         menuBar->setSizePolicy(sizePolicy5);
         menuConfiguraci_n = new QMenu(menuBar);
@@ -885,6 +895,7 @@ public:
         lblLEDsError_OutRange->setText(QApplication::translate("MainWindow", "OutR", nullptr));
         lblEstadoSistema->setText(QApplication::translate("MainWindow", "Estado: ", nullptr));
         estadoSistema_lbl->setText(QApplication::translate("MainWindow", "E0: OK", nullptr));
+        label_6->setText(QString());
         erroresSalida_txt->setPlainText(QString());
         btnParoEmergencia->setText(QApplication::translate("MainWindow", "Paro de emergencia", nullptr));
         btnConectar->setText(QString());

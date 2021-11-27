@@ -164,8 +164,8 @@ void ControlarPedales(int Joystick_Y,
         int Joystick_Y_PosAbs = Joystick_Y - joyY_Center;
 
         if(Joystick_Y > (joyY_Center + umbral_lectura_joystick) )
-        {
-            /// Se desea FRENAR.
+        {   /// Se desea FRENAR.
+
             // Retraer el acelerador.
             ActuadorAcelerador_PosDeseada = ActuadorAcelerador_valorRetraido; //Valor del actuador del acelerador retraido.
 
@@ -176,18 +176,23 @@ void ControlarPedales(int Joystick_Y,
                                                 0,                              (joyY_MaxVal - joyY_Center),
                                                 ActuadorFreno_valorRetraido,     ActuadorFreno_valorExtendido);
             }
+            //else //Mantiene la posición anterior.
+
+
         }
         else if(Joystick_Y < (joyY_Center - umbral_lectura_joystick) )
         {   /// Se desea ACELERAR.
+
+            int Joystick_Y_PosAbs =  joyY_Center - Joystick_Y;
+            ActuadorAcelerador_PosDeseada = map(abs(Joystick_Y_PosAbs),
+                                                0,                      (joyY_Center - joyY_MinVal),
+                                                ActuadorAcelerador_valorRetraido,  ActuadorAcelerador_valorExtendido);
+
             // Retraer el freno
             if(!fijarPosicionFreno)
             {
                 ActuadorFreno_PosDeseada = ActuadorFreno_valorRetraido; //Valor del actuador retraido.
             }
-            int Joystick_Y_PosAbs =  joyY_Center - Joystick_Y;
-            ActuadorAcelerador_PosDeseada = map(abs(Joystick_Y_PosAbs),
-                                                0,                      (joyY_Center - joyY_MinVal),
-                                                ActuadorAcelerador_valorRetraido,  ActuadorAcelerador_valorExtendido);
 
         }
         else //El joystick está centrado. Retraer ambos actuadores.

@@ -60,14 +60,13 @@ void configurarPines()
     pinMode(pin5VVirtual, OUTPUT);
     pinMode(pinGNDVirtual, OUTPUT);
 
-    pinMode(pinOutput_PalancaBajar, OUTPUT);
-    pinMode(pinOutput_PalancaSubir, OUTPUT);
-
     pinMode(pinFijarPosicionFreno, INPUT);
     pinMode(pinSubirPalanca, INPUT);
     pinMode(pinBajarPalanca, INPUT);
     pinMode(pinModoCarretera, INPUT);
 
+    pinMode(pinOutput_PalancaBajar, OUTPUT);
+    pinMode(pinOutput_PalancaSubir, OUTPUT);
     digitalWrite(pinOutput_PalancaBajar, LOW);
     digitalWrite(pinOutput_PalancaSubir, LOW);
 

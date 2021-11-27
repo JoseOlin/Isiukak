@@ -506,7 +506,7 @@ void LeerConvertirEncoder(uint8_t* EncoderDesconectado)
     de vueltas en tiempo de ejecución y dar por hecho que al final quedará muy cerca del origen.
 
     Esto sigue representando un problema, ya que como se mencionó, un pequeño desfase negativo
-    se interpreta como un gran desgase positivo en el reinicio (-5 = 355), lo cual puede
+    se interpreta como un gran desfase positivo en el reinicio (-5 = 355), lo cual puede
     corregirse almacenando el valor de las vueltas pero es recomendable minimizar este almacenamiento.
 
     Hacerlo al apagado del auto implica agregar una señal digital que detecte tal situación.

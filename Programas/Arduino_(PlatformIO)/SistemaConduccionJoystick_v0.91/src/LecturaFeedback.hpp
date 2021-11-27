@@ -108,13 +108,17 @@ int pinJoystickX = A1;
 int pinActFreno  = A2;
 int pinActAcel   = A3;
 
-int pinFijarPosicionFreno = 10; //10
-int pinSubirPalanca = A5; //A5
-int pinBajarPalanca = 11; //11
-int pinModoCarretera = A4; //A4
+int pinFijarPosicionFreno = 10;
+int pinSubirPalanca = A5;
+int pinBajarPalanca = 11;
+int pinModoCarretera = A4;
+
+/*int pinFijarPosicionFreno = 10;
+int pinSubirPalanca = A5;
+int pinBajarPalanca = A4;
+int pinModoCarretera = 11;*/
 
 int pinBotonParoEmergencia = 9;
-
 
 
 int Joystick_X;

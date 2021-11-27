@@ -501,7 +501,9 @@ void Actuador_Acelerador_EstaEnRango(const int actuadorAcelerador_Posicion, uint
     || actuadorAcelerador_Posicion < (ActuadorAcelerador_valorExtendido - ActuadorAcelerador_umbralError_Rango))
     {
     #if DEBUG_ACTUATORS_RANGE
-        Serial.print("**GasOutRange: "); Serial.print(actuadorAcelerador_Posicion); Serial.print("**");
+        //Serial.print("**GasOutRange: ");
+        //Serial.print("valExt: "); Serial.print(ActuadorAcelerador_valorExtendido);
+        //Serial.print("pos: "); Serial.print(actuadorAcelerador_Posicion); Serial.println("**");
     #endif
         Acelerador_EnRango = false;
     }
