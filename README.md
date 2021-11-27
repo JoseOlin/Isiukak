@@ -29,9 +29,9 @@ Actualmente se tiene una prueba de concepto del sistema implementada en un Ardui
 
 
 ## Acerca del Software
-Aunque se utiliza una tarjeta Arduino para implementar el sistema, debido a la extensión del código hace mucho tiempo dejamos de usar el editor básico de Arduino.
-Actualmente utlizamos PlatformIO para la compilación y Qt Creator como editor del código.
+Aunque se utiliza una tarjeta Arduino para implementar el sistema, debido a la extensión del código, hace tiempo dejamos de usar el editor básico de Arduino.
+Actualmente utlizamos [PlatformIO](https://platformio.org/) para la compilación y [Qt Creator](https://www.qt.io/product/development-tools) como editor del código.
  
-El software se comparte con la mejor intención de que como comunidad desarollemos tecnología de asistencia que nos permita una vida más autónoma, pero con ninguna garantía de funcionalidad.
+El software se comparte con la mejor intención de que, como comunidad, desarollemos tecnología de asistencia que nos permita una vida más autónoma, pero sin garantías de algún tipo.
 
-  Esperamos que te diviertas tanto como nosotros desarrollándolo. Que la Autonomía te acompañe.
+ Esperamos que te diviertas tanto como nosotros desarrollándolo. Que la Autonomía te acompañe.
