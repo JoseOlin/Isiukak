@@ -40,7 +40,21 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->cmbSerialPortSelector,  SIGNAL(currentIndexChanged(int)),
            this,                       SLOT(showPortInfo(int))   );
 
-    //showPortInfo(ui->cmbSerialPortSelector->currentIndex());
+
+    int joyY_MaxVal = 687;
+    int joyY_Center = 570;
+    int joyY_MinVal = 447;
+    int joyY_FrenoCambios = 600;
+
+    // ** Eje X (Volante)
+    int joyX_MinVal = 448;  //
+    int joyX_Center = 568;  //
+    int joyX_MaxVal = 681;  //
+
+    ui->joystickVertical_sld->setMinimum(joyY_MinVal);
+    ui->joystickVertical_sld->setMaximum(joyY_MaxVal);
+    ui->joystickHorizontal_Sld->setMinimum(joyX_MinVal);
+    ui->joystickHorizontal_Sld->setMaximum(joyX_MaxVal);
 
 
     ui->btnConectar->click(); //Conectar automáticamente al arranque.
@@ -56,8 +70,46 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+int MainWindow::buscarExpresionRegular_returnNextInt(QString expReg, QString fuente)
+{
+
+    //QRegularExpression expRegInt_R("J_Y: (\\d+)");
+    QRegularExpression expRegInt_R(expReg);
+    QRegularExpressionMatch RegExMatch = expRegInt_R.match(fuente);
+    //int indiceJy_Fin
+    //int indiceJy_Ini = expRegInt.indexIn(renglonDatos_s);
+    if(RegExMatch.hasMatch() )
+    {
+        QString match_s = RegExMatch.captured(1);
+        int match_int = match_s.toInt();
+        return match_int;
+    }
+    else
+        return -1;
+}
+
+bool MainWindow::buscarExpresionRegular(QString expReg_str, QString fuente)
+{
+    QRegularExpression expReg(expReg_str);
+    QRegularExpressionMatch RegExMatch = expReg.match(fuente);
+    if(RegExMatch.hasMatch())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+
+}
+
 void MainWindow::desplegarValores(QString renglonDatos)
 {
+    /* Función para desplegar los datos que se reciben por Serial y mostrar los errores en la GUI.
+     * Se invoca en readData()
+     *
+    */
     ui->InfoSalida_txt->insertPlainText(renglonDatos);
     ui->InfoSalida_txt->ensureCursorVisible();
     ui->erroresSalida_txt->ensureCursorVisible();
@@ -87,9 +139,9 @@ void MainWindow::desplegarValores(QString renglonDatos)
     ui->frenoControl_lcd->display(B_Ctrl);
     ui->FrenoControl_Slider->setValue(B_Ctrl);
 
-
     int B_Error = buscarExpresionRegular_returnNextInt("B_e: (-?(\\d+))", renglonDatos);
     ui->Freno_lcdError->display(B_Error);
+
 
     /// Acelerador
     int A_pos = buscarExpresionRegular_returnNextInt("A_p: (\\d+)", renglonDatos);
@@ -104,6 +156,7 @@ void MainWindow::desplegarValores(QString renglonDatos)
 
     int A_Error = buscarExpresionRegular_returnNextInt("A_e: (-?(\\d+))", renglonDatos);
     ui->Acelerador_lcdError->display(A_Error);
+
 
     /// Volante
     int V_Ctrl = buscarExpresionRegular_returnNextInt("Ctrl_Vol: (-?(\\d+))", renglonDatos);
@@ -141,30 +194,40 @@ void MainWindow::desplegarValores(QString renglonDatos)
     //QRegularExpression expRegInt_R = QRegularExpression ("(\\*\\*)(.+)\n");
     QRegularExpression expRegInt_R = QRegularExpression ("(\\*\\*)(.+)(\\*\\*)");
     // \\*\\* = **
-    // (Freno|Joy_V|Joy_H|Acelerador) = Freno OR Joy_V OR Joy_H OR Acelerador
+    // (Freno|Joy_V|Joy_H|Acelerador) = Freno   OR   Joy_V   OR   Joy_H   OR   Acelerador
     // (.+) = Cualquier caracter una o más veces
     QRegularExpressionMatch match = expRegInt_R.match(renglonDatos);
     QString Error_s = match.captured(0);
 
     ui->erroresSalida_txt->insertPlainText(Error_s);
 
-    // Joystick Y Desconectado
-    bool LED_Joystick_Y_Desconectado = buscarExpresionRegular("(\\*\\*)(Joystick_Y Desconectado)(.+)(\\*\\*)", renglonDatos);
+    // Joystick
+    /// Desconectado
+    bool LED_Joystick_Y_Desconectado = buscarExpresionRegular("(\\*\\*)(Joystick_Y_Desconectado)(\\*\\*)", renglonDatos);
     checkBoxBouncing_Errors(ui->chk_LED_Joy_Y_Desc, LED_Joystick_Y_Desconectado);
 
-    bool LED_Joystick_X_Desconectado = buscarExpresionRegular("(\\*\\*)(Joystick_X Desconectado)(.+)", renglonDatos);
+    bool LED_Joystick_X_Desconectado = buscarExpresionRegular("(\\*\\*)(Joystick_X_Desconectado)(\\*\\*)", renglonDatos);
     checkBoxBouncing_Errors(ui->chk_LED_Joy_X_Desc, LED_Joystick_X_Desconectado);
+    /// OutOfRange
+    bool LED_Joystick_Y_OutOfRange = buscarExpresionRegular("(\\*\\*)(Joystick_Y_OutOfRange)(\\*\\*)", renglonDatos);
+    checkBoxBouncing_Errors(ui->chk_LED_Joy_Y_OutR, LED_Joystick_Y_OutOfRange);
 
-    bool LED_Acelerador_Desconectado = buscarExpresionRegular("(\\*\\*)(Acelerador Desconectado)(.+)", renglonDatos);
+    bool LED_Joystick_X_OutOfRange = buscarExpresionRegular("(\\*\\*)(Joystick_X_OutOfRange)(\\*\\*)", renglonDatos);
+    checkBoxBouncing_Errors(ui->chk_LED_Joy_X_OutR, LED_Joystick_X_OutOfRange);
+
+    // Actuadores
+    /// Desconectado
+    bool LED_Acelerador_Desconectado = buscarExpresionRegular("(\\*\\*)(Acelerador_Desconectado)(\\*\\*)", renglonDatos);
     checkBoxBouncing_Errors(ui->chk_LED_Acel_Desc, LED_Acelerador_Desconectado);
 
-    bool LED_Freno_Desconectado = buscarExpresionRegular("(\\*\\*)(Freno Desconectado)(.+)", renglonDatos);
+    bool LED_Freno_Desconectado = buscarExpresionRegular("(\\*\\*)(Freno_Desconectado)(\\*\\*)", renglonDatos);
     checkBoxBouncing_Errors(ui->chk_LED_Freno_Desc, LED_Freno_Desconectado);
 
-    bool LED_Freno_OutOfRange = buscarExpresionRegular("(\\*\\*)(Freno Fuera de Rango)(.+)(\\*\\*)", renglonDatos);
+    ///OutOfRange
+    bool LED_Freno_OutOfRange = buscarExpresionRegular("(\\*\\*)(Freno_OutOfRange)(\\*\\*)", renglonDatos);
     checkBoxBouncing_Errors(ui->chk_LED_Freno_OutR, LED_Freno_OutOfRange);
 
-    bool LED_Acel_OutOfRange = buscarExpresionRegular("(\\*\\*)(Acelerador Fuera de Rango)(.+)(\\*\\*)", renglonDatos);
+    bool LED_Acel_OutOfRange = buscarExpresionRegular("(\\*\\*)(Acelerador_OutOfRange)(\\*\\*)", renglonDatos);
     checkBoxBouncing_Errors(ui->chk_LED_Acel_OutR, LED_Acel_OutOfRange);
 
     //int valorJx = Jx_s.toInt();
@@ -291,10 +354,6 @@ void MainWindow::readData()
     if(!ui->btnConectar->isEnabled())
     {
         QByteArray data = serial->readAll();
-
-        //QString cadena = QString::fromStdString(data.data());
-        //qDebug() << "data: " << data;
-        //qDebug() << cadena;
 
         if(!data.isEmpty())
         {
@@ -454,38 +513,6 @@ void MainWindow::showPortInfo(int idx)
 
 
 
-int MainWindow::buscarExpresionRegular_returnNextInt(QString expReg, QString fuente)
-{
-
-    //QRegularExpression expRegInt_R("J_Y: (\\d+)");
-    QRegularExpression expRegInt_R(expReg);
-    QRegularExpressionMatch RegExMatch = expRegInt_R.match(fuente);
-    //int indiceJy_Fin
-    //int indiceJy_Ini = expRegInt.indexIn(renglonDatos_s);
-    if(RegExMatch.hasMatch() )
-    {
-        QString match_s = RegExMatch.captured(1);
-        int match_int = match_s.toInt();
-        return match_int;
-    }
-    else
-        return -1;
-}
-
-bool MainWindow::buscarExpresionRegular(QString expReg_str, QString fuente)
-{
-    QRegularExpression expReg(expReg_str);
-    QRegularExpressionMatch RegExMatch = expReg.match(fuente);
-    if(RegExMatch.hasMatch())
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-
-}
 
 void MainWindow::on_cmbSerialPortSelector_currentTextChanged(const QString &arg1)
 {

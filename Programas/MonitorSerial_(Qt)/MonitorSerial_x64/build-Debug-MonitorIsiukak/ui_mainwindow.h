@@ -55,9 +55,9 @@ public:
     QFormLayout *formLayout_2;
     QLabel *joystick_X_lbl;
     QLCDNumber *joystick_X_lcd;
-    QLabel *joystick_Y_lbl;
     QLCDNumber *joystick_Y_lcd;
-    QVBoxLayout *verticalLayout_10;
+    QLabel *joystick_Y_lbl;
+    QGridLayout *gridLayout_2;
     QSlider *joystickVertical_sld;
     QSlider *joystickHorizontal_Sld;
     QGroupBox *grp_Volante;
@@ -218,9 +218,9 @@ public:
         sizePolicy2.setVerticalStretch(0);
         sizePolicy2.setHeightForWidth(joystick_X_lbl->sizePolicy().hasHeightForWidth());
         joystick_X_lbl->setSizePolicy(sizePolicy2);
-        joystick_X_lbl->setMinimumSize(QSize(10, 50));
+        joystick_X_lbl->setMinimumSize(QSize(17, 50));
 
-        formLayout_2->setWidget(0, QFormLayout::LabelRole, joystick_X_lbl);
+        formLayout_2->setWidget(2, QFormLayout::LabelRole, joystick_X_lbl);
 
         joystick_X_lcd = new QLCDNumber(grp_Joystick);
         joystick_X_lcd->setObjectName(QString::fromUtf8("joystick_X_lcd"));
@@ -238,15 +238,7 @@ public:
         joystick_X_lcd->setFont(font);
         joystick_X_lcd->setDigitCount(4);
 
-        formLayout_2->setWidget(0, QFormLayout::FieldRole, joystick_X_lcd);
-
-        joystick_Y_lbl = new QLabel(grp_Joystick);
-        joystick_Y_lbl->setObjectName(QString::fromUtf8("joystick_Y_lbl"));
-        sizePolicy2.setHeightForWidth(joystick_Y_lbl->sizePolicy().hasHeightForWidth());
-        joystick_Y_lbl->setSizePolicy(sizePolicy2);
-        joystick_Y_lbl->setMinimumSize(QSize(10, 50));
-
-        formLayout_2->setWidget(1, QFormLayout::LabelRole, joystick_Y_lbl);
+        formLayout_2->setWidget(2, QFormLayout::FieldRole, joystick_X_lcd);
 
         joystick_Y_lcd = new QLCDNumber(grp_Joystick);
         joystick_Y_lcd->setObjectName(QString::fromUtf8("joystick_Y_lcd"));
@@ -262,12 +254,21 @@ public:
 
         formLayout_2->setWidget(1, QFormLayout::FieldRole, joystick_Y_lcd);
 
+        joystick_Y_lbl = new QLabel(grp_Joystick);
+        joystick_Y_lbl->setObjectName(QString::fromUtf8("joystick_Y_lbl"));
+        sizePolicy2.setHeightForWidth(joystick_Y_lbl->sizePolicy().hasHeightForWidth());
+        joystick_Y_lbl->setSizePolicy(sizePolicy2);
+        joystick_Y_lbl->setMinimumSize(QSize(18, 50));
+
+        formLayout_2->setWidget(1, QFormLayout::LabelRole, joystick_Y_lbl);
+
 
         verticalLayout_6->addLayout(formLayout_2);
 
-        verticalLayout_10 = new QVBoxLayout();
-        verticalLayout_10->setSpacing(6);
-        verticalLayout_10->setObjectName(QString::fromUtf8("verticalLayout_10"));
+        gridLayout_2 = new QGridLayout();
+        gridLayout_2->setSpacing(6);
+        gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
+        gridLayout_2->setContentsMargins(0, -1, -1, -1);
         joystickVertical_sld = new QSlider(grp_Joystick);
         joystickVertical_sld->setObjectName(QString::fromUtf8("joystickVertical_sld"));
         joystickVertical_sld->setMinimumSize(QSize(0, 60));
@@ -278,7 +279,7 @@ public:
         joystickVertical_sld->setOrientation(Qt::Vertical);
         joystickVertical_sld->setTickPosition(QSlider::TicksBelow);
 
-        verticalLayout_10->addWidget(joystickVertical_sld);
+        gridLayout_2->addWidget(joystickVertical_sld, 2, 0, 1, 1);
 
         joystickHorizontal_Sld = new QSlider(grp_Joystick);
         joystickHorizontal_Sld->setObjectName(QString::fromUtf8("joystickHorizontal_Sld"));
@@ -289,10 +290,10 @@ public:
         joystickHorizontal_Sld->setOrientation(Qt::Horizontal);
         joystickHorizontal_Sld->setTickPosition(QSlider::TicksAbove);
 
-        verticalLayout_10->addWidget(joystickHorizontal_Sld);
+        gridLayout_2->addWidget(joystickHorizontal_Sld, 3, 0, 1, 1);
 
 
-        verticalLayout_6->addLayout(verticalLayout_10);
+        verticalLayout_6->addLayout(gridLayout_2);
 
 
         horizontalLayout->addWidget(grp_Joystick);
