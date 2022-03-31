@@ -3,12 +3,23 @@
 
 #include "DigitalFilter.hpp"
 #include "ComunicacionSerial.hpp"
-
 #include "Config.hpp"
-
-
+#include "Actuators.hpp"
+//#include "ControlPedales.hpp"
 
 ///************************Variables configuración********************///
+int pinJoystickY = A0; //PA0
+int pinJoystickX = A1; //PA1
+int pinActFreno  = A2; //PA4
+int pinActAcel   = A3; //PB0
+
+int pinBotonParoEmergencia = D9; //PC7
+
+int pinFijarPosicionFreno = D10; //PB6
+int pinBajarPalanca = D11;      //PA7
+int pinSubirPalanca = PC3; //Se usaban pines analógicos, ahora se usan pines digitales Morpho
+int pinModoCarretera = PC2;
+
 /// Rango del joystick (Valores experimentales)
 /* // * +Joystick Adafruit (10k)
 
@@ -44,15 +55,18 @@ int joyX_MaxVal = 636;  //
 
 /* Joystick Parallax en ST NUCLEO F40*/
 // ** Eje Y (Acelerador y freno).
-int joyY_MaxVal = 447;
-int joyY_Center = 570;
-int joyY_MinVal = 687;
-int joyY_FrenoCambios = 600;
+uint8_t JoystickActivado = false;
+
+
+int joyY_MaxVal = 640; // joyY_Center +
+int joyY_Center = 511;
+int joyY_MinVal = 376;
+int joyY_FrenoCambios = 512; //DEjarlo libre.
 
 // ** Eje X (Volante)
-int joyX_MinVal = 448;  //
-int joyX_Center = 568;  //
-int joyX_MaxVal = 681;  //
+int joyX_MaxVal = 635;  //
+int joyX_Center = 510;  //
+int joyX_MinVal = 377;  //
 
 
 /* // Valores con transistores conectados a las salidas
@@ -116,25 +130,18 @@ Mínimo: joyMaximoIzquierda    Centro: joyDirectionCenter    Máximo: joyMaximoD
 
 ///***********************************************************************///
 ///**********************Variables de programa****************************///
-int pinJoystickY = A0;
-int pinJoystickX = A1;
-int pinActFreno  = A2;
-int pinActAcel   = A3;
 
 
-
-int pinBotonParoEmergencia = 9;
-
-int pinFijarPosicionFreno = 10;
-int pinBajarPalanca = 11;
-
-int pinSubirPalanca = PC2;
-int pinModoCarretera = PC3;
 
 int Joystick_X;
+int Joystick_X_Raw;
 int Joystick_Y;
+int Joystick_Y_Raw;
+
 int ActuadorFreno_Posicion;
+int ActuadorFreno_Posicion_Raw;
 int ActuadorAcelerador_Posicion;
+int ActuadorAcelerador_Posicion_Raw;
 
 uint8_t SubirPalanca;
 uint8_t BajarPalanca;
@@ -151,42 +158,40 @@ uint8_t PinesDigitales_ValoresVirtuales[4] = {LOW,      LOW,    LOW,    LOW};
 ///***********************************************************************///
 
 
-void Joystick_Leer()
+void Joystick_Read()
 {
-    int joystick1_Y;
-    int joystick1_X;
 
     ////Leer potenciómetros del joystick
-    joystick1_Y = analogRead(pinJoystickY);
-    joystick1_X = analogRead(pinJoystickX);
+    Joystick_Y_Raw = analogRead(pinJoystickY);
+    Joystick_X_Raw = analogRead(pinJoystickX);
 
     /// Aplicar filtrado
-    smoothJS_Y = digitalSmooth(joystick1_Y, joy_Y_SmoothArray);
+    smoothJS_Y = digitalSmooth(Joystick_Y_Raw, joy_Y_SmoothArray);
     Joystick_Y = smoothJS_Y;
 
-    smoothJS_X = digitalSmooth(joystick1_X, joy_X_SmoothArray);
+    smoothJS_X = digitalSmooth(Joystick_X_Raw, joy_X_SmoothArray);
     Joystick_X = smoothJS_X;
 }
 
-void Actuadores_Feedback_Leer()
+void Actuators_Feedback_Read()
 {
-    int act1_PosRaw = analogRead(pinActFreno); //Freno
-    smoothAct1 = digitalSmooth(act1_PosRaw, act1SmoothArray);
+    ActuadorFreno_Posicion_Raw = analogRead(pinActFreno); //Freno
+    smoothAct1 = digitalSmooth(ActuadorFreno_Posicion_Raw, act1SmoothArray);
     ActuadorFreno_Posicion = smoothAct1;
 
-    int act2_PosRaw = analogRead(pinActAcel); //Acelerador
-    smoothAct2 = digitalSmooth(act2_PosRaw, act2SmoothArray);
+    ActuadorAcelerador_Posicion_Raw = analogRead(pinActAcel); //Acelerador
+    smoothAct2 = digitalSmooth(ActuadorAcelerador_Posicion_Raw, act2SmoothArray);
     ActuadorAcelerador_Posicion = smoothAct2;
 }
 
 
-void Leer_Botones()
+void Buttons_Read()
 {
-    FijarPosicionFreno = digitalRead(pinFijarPosicionFreno);
+    FijarPosicionFreno = !digitalRead(pinFijarPosicionFreno);
     //FijarPosicionFreno = !FijarPosicionFreno;
-    BajarPalanca = digitalRead(pinBajarPalanca);
-    SubirPalanca = digitalRead(pinSubirPalanca);
-    ModoCarreteraActivado = digitalRead(pinModoCarretera);
+    BajarPalanca = !digitalRead(pinBajarPalanca);
+    SubirPalanca = !digitalRead(pinSubirPalanca);
+    ModoCarreteraActivado = !digitalRead(pinModoCarretera);
 }
 
 
@@ -195,27 +200,47 @@ void desplegarInfoJoystick()
 #if INFO_JOYSTICK
     Serial.print("J_Y: ");  Serial.print(Joystick_Y);
     Serial.print(",\tJ_X: "); Serial.print(Joystick_X);
-#endif
 
+    #if JOYSTICK_ACTIVADO
+    Serial.print(",  J_ac: 1");
+    #endif
+#endif
+}
+
+void desplegarInfoJoystick_Raw()
+{
+    #if INFO_JOYSTICK
+    Serial.print("J_Y_Raw: ");  Serial.print(Joystick_Y_Raw);
+    Serial.print(",\tJ_X_Raw: "); Serial.print(Joystick_X_Raw);
+    #endif
 }
 
 void desplegarInfoBotones()
 {
-#if INFO_BOTONES
+    #if INFO_BOTONES
     Serial.print(",\tbFB: "); Serial.print(FijarPosicionFreno); //button Fix Brake
     Serial.print(", bPU: "); Serial.print(SubirPalanca); // button Palanca Up
     Serial.print(", bPD: "); Serial.print(BajarPalanca);// button Palanca Down
     Serial.print(", bMC: "); Serial.print(ModoCarreteraActivado); //button Modo Carretera
-#endif
+    #endif
 }
 
 
+void Actuators_Drivers_Read()
+{
+    ActuatorBrake_Driver.readStatus();
+    ActuatorAccel_Driver.readStatus();
+    ActuatorSteer_Driver.readStatus();
+}
+
 void leerFeedback()
 {
-    Joystick_Leer();
-    Leer_Botones();
+    Joystick_Read();
+    Buttons_Read();
 
-    Actuadores_Feedback_Leer();
+    Actuators_Feedback_Read();
+
+    Actuators_Drivers_Read();
 }
 
 void Feedback_fillBuffer()
@@ -224,8 +249,8 @@ void Feedback_fillBuffer()
     // movimiento brusco de los actuadores al arranque.
     for(int ii = 0; ii < filterSamples + 1; ii++)
     {
-        Joystick_Leer();
-        Actuadores_Feedback_Leer();
+        Joystick_Read();
+        Actuators_Feedback_Read();
     }
 }
 

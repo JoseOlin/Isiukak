@@ -29,12 +29,12 @@ int actFreno_valorParoEmergencia = 313;
 */
 
 // (Valores Actuador GoBilda).
-int ActuadorFreno_ValorLimitSwitchRetraido = 120;
-int ActuadorFreno_ValorLimitSwitchExtendido = 986;
+int ActuadorFreno_ValorLimitSwitchRetraido = 200;
+int ActuadorFreno_ValorLimitSwitchExtendido = 1009;
 
 //int actFreno_valorRetraido = 130;
-int ActuadorFreno_valorRetraido = 255;
-int ActuadorFreno_valorExtendido = 800;
+int ActuadorFreno_valorRetraido = 250;
+int ActuadorFreno_valorExtendido = 805;
 
 int ActuadorFreno_valorParoEmergencia = 800; // TODO: Buscar la extensión máxima que puede tener el actuador sin forzar el pedal.
 
@@ -47,7 +47,7 @@ int ActuadorFreno_valorParoEmergencia = 800; // TODO: Buscar la extensión máxi
 #define ACELERADOR_MAPEO_COMPLETO 432 //A menor valor, mas extensión.
 
 int ActuadorAcelerador_valorExtendido = ACELERADOR_MAPEO_MEDIO;
-int ActuadorAcelerador_valorRetraido = 974; //Retraido. El acelerador esta inicialmente ligeramente
+int ActuadorAcelerador_valorRetraido = 985; //Retraido. El acelerador esta inicialmente ligeramente
                             //extendido, para que quede en contacto con el acelerador.
 
 /// Valores de umbral para aplicar control.
@@ -67,7 +67,7 @@ int ActuadorFreno_umbralError_Rango = 35;
 ///************************ Fin Variables configuración*******************************///
 
 
-///*****************Variables del programa***********************
+///****************************** Variables del programa *****************************///
 //*** Constantes de control PID de los actuadores lineales.
 //int ActuadorFreno_Kp = 25;
 //int ActuadorFreno_Kp = 17;
@@ -96,11 +96,10 @@ uint8_t Joystick_comportamientoDirecto = false;
 
 enum TipoActuador{Freno, Acelerador, Volante};
 //TipoActuador tipoActuador;
-//***************************************************************
+///**************************** Fin Variables de Programa ****************************///
 
 /// Prototipos funciones.
 void moverActuador(TipoActuador tipoActuador, int ErrorPosicion);
-
 
 
 void ControlarPedales(int Joystick_Y,
@@ -242,19 +241,18 @@ void moverActuador(TipoActuador tipoActuador, int ErrorPosicion)
      * ErrorPosicion:   ActuadorFreno_PosDeseada - ActuadorFreno_PosicionActual;
      */
 
+    int Kp;
+    int address;
+
+    bool ComportamientoDirecto; //Este comportamiento tiene que ver con la posición de los engranes del motor.
     // Comportamiento Directo: Valores de control positivos EXTIENDEN el actuador.
     // Comportamiento inverso: Valores de control positivos RETRAEN el actuador.
 
-    int Kp;
-
-    bool ComportamientoDirecto; //Este comportamiento tiene que ver con la posición de los engranes del motor.
-    int address;
-
     if(tipoActuador == TipoActuador::Freno)
     {
-        ComportamientoDirecto = false;
+        ComportamientoDirecto = true;
         Kp = ActuadorFreno_Kp;
-        address = ActuadorFreno_Address;
+        address = ActuatorBrake_Address;
         Actuadores_umbralError = ActuadorFreno_umbralError_Ctrl;
 
     }
@@ -262,7 +260,7 @@ void moverActuador(TipoActuador tipoActuador, int ErrorPosicion)
     {
         ComportamientoDirecto = false;
         Kp = ActuadorAcelerador_Kp;
-        address = ActuadorAcelerador_Address;
+        address = ActuatorAccel_Address;
         Actuadores_umbralError = ActuadorAcelerador_umbralError_Ctrl;
     }
 
@@ -340,30 +338,55 @@ void aplicarModoCarretera(uint8_t modoCarreteraActivado)
 }
 
 
+void desplegarInfoPedales_Raw()
+{
+#if FRENO_ACTIVADO
+    Serial.print(",\tB_p: ");   Serial.print(ActuadorFreno_Posicion_Raw);
+#endif
+    #if ACELERADOR_ACTIVADO
+     Serial.print(",\tA_p: ");   Serial.print(ActuadorAcelerador_Posicion_Raw);
+#endif
+}
 
 void desplegarInfoPedales()
 {
 #if INFO_ACTUADORES_POS
     // Brake information
-    Serial.print(",\tB_p: ");   Serial.print(ActuadorFreno_Posicion);
-    Serial.print(",  B_t: ");  Serial.print(ActuadorFreno_PosDeseada); //Serial.print(")");
+    #if FRENO_ACTIVADO
+        Serial.print(",\tB_ac: 1");
+    #endif
+    Serial.print(", B_p: ");   Serial.print(ActuadorFreno_Posicion);
+    Serial.print(", B_t: ");  Serial.print(ActuadorFreno_PosDeseada); //Serial.print(")");
+
+    #if INFO_ACTUADORES_CONTROL
+        Serial.print(", B_e: ");  Serial.print(ActuadorFreno_ErrorPosicion); //posDeseada - posActual
+        Serial.print(", B_c: ");  Serial.print(ActuadorFreno_Control);
+        Serial.print(", B_inh: "); Serial.print(ActuadorFreno_EstaInhibido);
+    #endif
+    #if INFO_MOTOR_DRIVERS
+        ActuatorBrake_Driver.displayInfo();
+    #endif
 #endif
 
-#if INFO_ACTUADORES_CONTROL
-    Serial.print(",  B_e: ");  Serial.print(ActuadorFreno_ErrorPosicion); //posDeseada - posActual
-    Serial.print(",  B_c: ");  Serial.print(ActuadorFreno_Control);
-#endif
 
 #if INFO_ACTUADORES_POS
-    // Gas information
-    Serial.print(",\tA_p: ");   Serial.print(ActuadorAcelerador_Posicion); //Valor del pot del act2 (Acelerador)
+    // Accel information
+    #if ACELERADOR_ACTIVADO
+        Serial.print(",\tA_ac: 1");
+    #endif
+    Serial.print(", A_p: ");   Serial.print(ActuadorAcelerador_Posicion); //Valor del pot del act2 (Acelerador)
     Serial.print(",  A_t: ");  Serial.print(ActuadorAcelerador_PosDeseada); //Serial.print(")");
+
+    #if INFO_ACTUADORES_CONTROL
+        Serial.print(",  A_e: ");  Serial.print(ActuadorAcelerador_ErrorPosicion);
+        Serial.print(",  A_c: ");  Serial.print(ActuadorAcelerador_Control); //Valor de control aplicado al actuador de acelerador.
+        Serial.print(", A_inh: "); Serial.print(ActuadorAcelerador_EstaInhibido);
+    #endif
+    #if INFO_MOTOR_DRIVERS
+        ActuatorAccel_Driver.displayInfo();
+    #endif
 #endif
 
-#if INFO_ACTUADORES_CONTROL
-    Serial.print(",  A_e: ");  Serial.print(ActuadorAcelerador_ErrorPosicion);
-    Serial.print(",  A_c: ");  Serial.print(ActuadorAcelerador_Control); //Valor de control aplicado al actuador de acelerador.
-#endif
 
 }
 

@@ -10,10 +10,13 @@
 #include <Arduino.h>
 
 //HardwareSerial Serial(PA3, PA2);
-HardwareSerial smcSerial(PA10, PA9);
+
+#define rxPin D2  // RX pin D2, PA_10
+#define txPin D8  // TX pin D8, PA_9
+HardwareSerial smcSerial(rxPin, txPin);
+int timeOut = 1; // in ms. To use in setTimeOut
 //****Variables para comunicacin serial.****//
-//#define rxPin 2  // En el STM32 F401RE el RX es en pin D2, PA_10
-//#define txPin 8  // pin8 is asssigned as TX pin of arduino
+
 
 
 void commInit()
@@ -23,9 +26,32 @@ void commInit()
     Serial.println("Comunicación Serial Iniciada.");
     //smcSerial.begin(19200);
     smcSerial.begin(9600); // Se probó con 19200 y funciona.
+    smcSerial.setTimeout(timeOut);
+    unsigned long timeOut = smcSerial.getTimeout();
+    if(timeOut > 1)
+    {
+        Serial.print("**ERROR!!!: TimeOut Not setted.**");
+    }
+
 }
 //SoftwareSerial smcSerial = SoftwareSerial (rxPin, txPin);
 //#define smcSerial Serial1
+
+
+int readByte()
+{
+    /* Read a serial byte (returns -1 if nothing received after the timeout expires)
+    Be sure to set a small timeout to ensure realtime. This is very important for
+    the safety on the Isiukak system. */
+
+    char c;
+    if(smcSerial.readBytes(&c, 1) == 0)
+    {
+        return -1;
+    }
+
+    return (byte)c;
+}
 
 /*
 // Variables para lectura de enteros en el puerto Serial.
@@ -105,6 +131,7 @@ void recvCharsWithStartEndMarkers()
     }
 }
 */
+
 /*
 void recuperarValorNumerico(int* variablePorAsignar)
 {

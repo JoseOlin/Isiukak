@@ -6,8 +6,8 @@
 
 #include "LecturaFeedback.hpp"
 
-int pinOutput_PalancaSubir = 5;
-int pinOutput_PalancaBajar = 4;
+int pinOutput_PalancaSubir = D5; //PB4
+int pinOutput_PalancaBajar = D4; //PB5
 
 //int joystick_Y_PosAbs = joyY_Center - joyY_FrenoCambios; //Cuando la posición del joystick decrece la posición deseada del actuador aumenta.
 //int actuadorFreno_PosCambios = map(joystick_Y_PosAbs,  0, (joyY_Center - joyY_MinVal),
@@ -55,11 +55,14 @@ void ControlPalanca(int ActuadorFreno_Posicion)
 
 void desplegarInfoPalanca(int ActuadorFreno_Posicion)
 {
-#if INFO_PALANCA
-    if(ActuadorFreno_Posicion > actuadorFreno_PosCambios)
-    {
-        Serial.print(", Freno Pos. Shift");
-    }
+#if PALANCA_ACTIVADA
+    #if INFO_PALANCA
+        Serial.print(", Shft_a: 1");
+        if(ActuadorFreno_Posicion > actuadorFreno_PosCambios)
+        {
+            Serial.print(", ShftGr Br");
+        }
+    #endif
 #endif
 }
 

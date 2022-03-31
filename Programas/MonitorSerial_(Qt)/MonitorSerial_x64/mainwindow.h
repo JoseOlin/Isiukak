@@ -41,23 +41,8 @@ private slots:
     void on_cmbSerialPortSelector_currentTextChanged(const QString &arg1);
     void on_cmbSerialPortSelector_currentIndexChanged(int index);
 
-
-    //void on_btnSendBaudRate_released();
-
-    //void on_horizontalSlider_sliderReleased();
-    //void on_verticalSlider_sliderReleased();
-
-    void ControlRobotDiferencial(signed char dx, signed char dy);
-    void EnviarComando();
-
-
-    //void on_dial_sliderReleased();
-
-
-    void on_btnParoEmergencia_pressed();
-
+    //void on_btnParoEmergencia_pressed();
     void on_cmbSerialPortSelector_highlighted(int index);
-
     void on_btnDesconectar_clicked();
 
 private:
@@ -68,20 +53,22 @@ private:
     void showPortInfo(int idx);
     void desplegarValores(QString renglonDatos_s);
 
-    void dibujarVolante(float anguloGrados);
     int buscarExpresionRegular_returnNextInt(QString expReg, QString fuente);
     bool buscarExpresionRegular(QString expReg, QString fuente);
-
-    Ui::MainWindow *ui;
+    void checkBoxBouncing(QCheckBox *chkBox, int statusRcv);
+    void checkBoxColor(QCheckBox * chkBox);
+    void checkBoxBouncing_Errors(QCheckBox *chkBox, bool statusRcv);
+    void apagarLEDsError();
+    void decodeDriverError();
+    void dibujarVolante(float anguloGrados);
 
     //Variables globales
+    Ui::MainWindow *ui;
     QGraphicsScene *escena;
     QSerialPort* serial;
 
     QString renglonDatos_s;
 
-    void checkBoxBouncing(QCheckBox *chkBox, int statusRcv);
-    void checkBoxBouncing_Errors(QCheckBox *chkBox, bool statusRcv);
 };
 
 #endif // MAINWINDOW_H

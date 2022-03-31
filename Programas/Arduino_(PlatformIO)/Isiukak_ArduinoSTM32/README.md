@@ -36,38 +36,50 @@ ModoCarretera
 ## Pines analógicos:
 
 **A0: INPUT Analógica**. Joystick eje Y. Incremento acelera, decremento frena.
+
 **A1: INPUT Analógica**. Josytick eje X. (Volante).
+
 **A2: INPUT Analógica**. Pot actuador 1. (Freno).
+
 **A3: INPUT Analógica**. Pot actuador 2. (Accel).
-**A4: INPUT Digital.** Botón Fijar Posición Freno
-**A5: INPUT Digital.** Botón Subir Palanca.
+
+**A4: INPUT Digital.** (Future) J_Y second pot
+
+**A5: INPUT Digital.** (Future) J_X second pot
 
 En el ST NUCLEO la referencia para el ADC debe configurarse AVDD = VDDVirtual, AGND = GNDVirtual 
 
 ## Pines digitales:
 
-**15: I2C SDA**:  Conectado a A4 ó A5.
-**14: I2C SCL**:  Conectado a A4 ó A5.
-13: Pendiente de implementación
-12: Pendiente de implementación
-**11: INPUT.** Switch Modo Carretera.
-**10: INPUT.** Botón Bajar Palanca.
+**1:** Serial Tx
+**0:** Serial Rx
+
+**3: OUTPUT**. **5V Virtual**. Para Validación de potenciómetros conectados.
+**2: INPUT.**  **smcSerial RX**. Hacia los Drivers de los motores.
+
+6: **Not used** 
+**5: OUTPUT. pinPalanca_Bajar.** Pin para controlar el puebte H de la palanca.
+**4: OUTPUT. pinPalanca_Bajar.** Pin para controlar el puente H de la palanca.
 
 **9: INPUT_PULLUP. PinParoManualEmergencia.**
 **8: OUTPUT**. **smcSerial TX**. Hacia los Drivers de los motores.  
 **7: OUTPUT.** **GND Virtual**.
 
-6: 
-**5: OUTPUT. pinPalanca_Bajar.** Pin para controlar el puebte H de la palanca.
-**4: OUTPUT. pinPalanca_Bajar.** Pin para controlar el puente H de la palanca.
-
-**3: OUTPUT**. **5V Virtual**. Para Validación de potenciómetros conectados.
-**2: INPUT.**  **smcSerial RX**. Hacia los Drivers de los motores.
-
-**1:** Serial Tx
-**0:** Serial Rx
+**13: OUTPUT**: V_DDA Volt referencia ADC VDD
+**12: OUTPUT.** V_SSA Voltaje referencia ADC GND
+**11: INPUT.** Switch Modo Carretera.
+**10: INPUT.** Botón Bajar Palanca.
 
 
+
+
+
+# Operation Modes
+
+The Isiukak have 3 modes of operation.
+- **Normal mode**: Read the joystick and control the actuators.
+- **Embedded Testing**: Set predefined values for the joystick and the flags of connection and normal range of the pots to check if the safety routines works properly.
+- **Joystick Virtual**: Pending of implementation. This mode receives remote values for the joystick over Serial.
 
 # Calibración del Sitema
 

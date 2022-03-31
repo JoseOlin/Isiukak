@@ -68,15 +68,17 @@ int8_t vueltas = 0;
 //boolean vueltasGuardadas = false; //Para saber si en esta sesion el numero de vueltas ya fue almacenado y no volver a guardar.
 
 enum TiposControlVolante {
+    MODO_INHIBIDO, // Si se detecta el Joystick desconectado, dejar de aplicar control al volante.
     MODO_OPENLOOP_LINEAL, //Relación lineal entre la posición del joystick y el voltaje aplicado al motor del volante.
     MODO_OPENLOOP_PORPARTES, //Dos segmentos, Menos sensible al centro, más sensible al extremo.
     MODO_OPENLOOP_EXPONENCIAL,
     MODO_CLOSEDLOOP_POSICION_LINEAL,       //Relación lineal entre la posición del joystick y la posición del volante.
     MODO_CLOSEDLOOP_POSICION_LOGARITMICO,       //Relación logarítmica entre posición del joystick y la posición del volante (menos sensible al centro).
-    MODO_CLOSEDLOOP_VELOCIDAD,  //Controla la velocidad de giro en función de la posición del joystick (Relación lineal, con retroalimentación).
-    MODO_INHIBIDO // Si se detecta el Joystick desconectado, dejar de aplicar control al volante.
+    MODO_CLOSEDLOOP_VELOCIDAD  //Controla la velocidad de giro en función de la posición del joystick (Relación lineal, con retroalimentación).
 };
 TiposControlVolante TipoControlVolante;
+
+
 
 int Volante_valorControl;
 int Volante_Velocidad = 0;
@@ -113,9 +115,8 @@ boolean EncoderConectado = true;
 uint8_t contadorLEDEncoderDesconectado = 0;
 #endif
 
-
-
 //*************************Fin Variables del programa**************************//
+
 
 //**************Prototipos*******************//
 int ControlPosicionVolante(float posicionMotorDeseada, float posicionMotorActual, float* errorMotorDireccion, int controlMaximo);
@@ -137,7 +138,7 @@ void ControlarVolante(int Joystick_X, TiposControlVolante tipoControlVolante)
     {
         Volante_Velocidad = 0;
 #if VOLANTE_ACTIVADO
-        setMotorSpeed_Protocol(ActuadorVolante_Address, Volante_Velocidad);
+        setMotorSpeed_Protocol(ActuatorSteer_Address, Volante_Velocidad);
 #endif
     }
     else if(tipoControlVolante == TiposControlVolante::MODO_OPENLOOP_PORPARTES)
@@ -145,7 +146,7 @@ void ControlarVolante(int Joystick_X, TiposControlVolante tipoControlVolante)
 #if DEBUG_VOLANTE
         Serial.println("tipoCtrl: OLpP");
 #endif
-/* Para mejorar la sensibilidad del volante (menos sensible cerca del centro y más sensible
+        /* Para mejorar la sensibilidad del volante (menos sensible cerca del centro y más sensible
  * hacia los extremos, se definen segmentos del joystick y de control. El 60% del joystick (definido en
  * joy_percentSegmento1) se mapea en el 30% del control del volante (definido en porcentControlPuente_Seg1)
  *                              Joystick X
@@ -185,7 +186,7 @@ void ControlarVolante(int Joystick_X, TiposControlVolante tipoControlVolante)
         }
 
     #if VOLANTE_ACTIVADO
-        setMotorSpeed_Protocol(ActuadorVolante_Address, Volante_Velocidad);
+        setMotorSpeed_Protocol(ActuatorSteer_Address, Volante_Velocidad);
     #endif
     }
     else if(tipoControlVolante == TiposControlVolante::MODO_OPENLOOP_EXPONENCIAL)
@@ -235,7 +236,7 @@ void ControlarVolante(int Joystick_X, TiposControlVolante tipoControlVolante)
             Volante_valorControl = 0;
         }
         #if VOLANTE_ACTIVADO
-        setMotorSpeed_Protocol(ActuadorVolante_Address, Volante_valorControl); //Dentro de esta función se acotan los valores de -3200 a 3200.
+        setMotorSpeed_Protocol(ActuatorSteer_Address, Volante_valorControl); //Dentro de esta función se acotan los valores de -3200 a 3200.
         #endif
     }
     else if(tipoControlVolante == TiposControlVolante::MODO_OPENLOOP_LINEAL)
@@ -257,7 +258,7 @@ void ControlarVolante(int Joystick_X, TiposControlVolante tipoControlVolante)
             Volante_Velocidad = 0;
         }
         #if VOLANTE_ACTIVADO
-        setMotorSpeed_Protocol(ActuadorVolante_Address, Volante_Velocidad);
+        setMotorSpeed_Protocol(ActuatorSteer_Address, Volante_Velocidad);
         #endif
     }
     #if ENCODER_ACTIVADO
@@ -397,10 +398,19 @@ void ControlarVolante(int Joystick_X, TiposControlVolante tipoControlVolante)
 
 void desplegarInfoVolante()
 {
-    #if INFO_VOLANTE
-    Serial.print(",\tCtrl_Vol: "); Serial.print(Volante_Velocidad);
-    //Serial.print(valorControlVolante); //Esta activarla con el modo exponencial.
+#if INFO_VOLANTE
+    Serial.print(",\tVol_c: "); Serial.print(Volante_Velocidad);
+    Serial.print(", Vol_m: "); Serial.print(TipoControlVolante);
+
+    #if VOLANTE_ACTIVADO
+        Serial.print(", Vol_ac: 1");
     #endif
+
+    #if INFO_MOTOR_DRIVERS
+        ActuatorSteer_Driver.displayInfo();
+    #endif
+    //Serial.print(valorControlVolante); //Esta activarla con el modo exponencial.
+#endif
 }
 
 

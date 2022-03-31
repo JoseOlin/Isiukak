@@ -1,25 +1,21 @@
 #ifndef DEBUG
 #define DEBUG
 
-/*ESTE ARCHIVO SÓLO DEBE SER MODIFICADO DESDE SistemaConducciónJoystick
- * Hay enlace en GeneradorTextoSerial, pero es sólo para generar texto
- * realista que corresponda con el que genera el sistema real, aunque
- * sin conectar sensores ni actuadores.
- *
- */
+/* ESTE ARCHIVO SÓLO DEBE SER MODIFICADO DESDE SistemaConducciónJoystick. */
 
 // Constantes para Debugueo de funciones
 
-#define DEBUG_BOOT 1
+#define DEBUG_POTS_VALUES 0
 #define DEBUG_POTS_ERROR 0
-#define DEBUG_POTS 0
+#define DEBUG_POTS_ERROR_VALUES 1
+
+#define DEBUG_BOOT 0
 
 #define DEBUG_CONTROL 0
-#define DEBUG_ACTUATORS_CONTROL 1
-#define DEBUG_ACTUATORS_RANGE 1
+#define DEBUG_ACTUATORS_CONTROL 0
+#define DEBUG_ACTUATORS_RANGE 0
 
 #define DEBUG_ACTUADORES_BLOQUEOFRENO 0
-
 
 #define DEBUG_VOLANTE 0
 #define DEBUG_CONTROL_VOLANTE 0

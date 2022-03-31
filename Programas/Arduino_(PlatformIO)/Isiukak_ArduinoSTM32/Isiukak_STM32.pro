@@ -68,16 +68,19 @@ CONFIG += c++14
 
 # El orden importa.
 HEADERS +=  src/Config.hpp \
-            src/Debug.hpp
+            src/Debug.hpp \
+            src/main.hpp \
+            test/test.hpp
 
 HEADERS +=  src/ComunicacionSerial.hpp \
-src/DigitalFilter.hpp \
-src/LecturaFeedback.hpp
+            src/DigitalFilter.hpp \
+            src/LecturaFeedback.hpp
 
-HEADERS += src/DriversMotores.hpp \
-src/ControlPalanca.hpp \
-src/ControlPedales.hpp \
-src/ControlVolante.hpp
+HEADERS +=  src/DriversMotores.hpp \
+            src/Actuators.hpp \
+            src/ControlPalanca.hpp \
+            src/ControlPedales.hpp \
+            src/ControlVolante.hpp
 
 HEADERS +=  src/Seguridad.hpp \
             src/Testing.hpp

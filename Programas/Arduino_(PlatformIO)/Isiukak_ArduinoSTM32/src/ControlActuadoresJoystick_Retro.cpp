@@ -3,9 +3,7 @@
 La configuración general del sistema puede consultarse en README.md
 
 ******************************************************************************/
-
-#include "Seguridad.hpp"
-#include "Testing.hpp"
+#include "main.hpp"
 
 //****************************** Variables de programa *************************//
 /*int pinJoystickY = A0;
@@ -22,177 +20,10 @@ int pinBotonParoEmergencia = 9;
 
 */
 
-//Variables para la medición del periodo del sistema.
-long tiempoAnterior = 0, tiempoActual = 0;
-
-uint8_t actualizacionExitosa = false;
-//******************************************************************************//
-
-
-void Control(int Joystick_X, int Joystick_Y,
-                uint8_t ActuadorFreno_EstaInhibido,
-                uint8_t ActuadorAcelerador_EstaInhibido,
-                TiposControlVolante tipoControlVolante)
-{
-/*!
- *****************************************************************************************/
-
-    // *************  *************** //
-
-    ControlarPedales(Joystick_Y, FijarPosicionFreno, Joystick_comportamientoDirecto,
-                     ActuadorFreno_EstaInhibido, ActuadorAcelerador_EstaInhibido);
-
-
-    ControlarVolante(Joystick_X, tipoControlVolante);
-
-
-    ControlPalanca(ActuadorFreno_Posicion);
-}
-
-void configurarPines()
-{
-    //analogReference(eAnalogReference(DEFAULT));
-    //DEFAULT: the default analog reference of 5 volts (on 5V Arduino boards) or 3.3 volts (on 3.3V Arduino boards)
-    //EXTERNAL: the voltage applied to the AREF pin (0 to 5V only).
-    /*pinMode(pinJoystickY, INPUT_ANALOG);
-    pinMode(pinJoystickX, INPUT_ANALOG);
-    pinMode(pinActFreno, INPUT_ANALOG);
-    pinMode(pinActAcel, INPUT_ANALOG);*/
-
-    //GPIO_InitTypeDef GPIO_InitStruct = { 0 };
-    //GPIO_InitStruct.Pin = pinBotonParoEmergencia;
-    //GPIO_InitStruct.Mode =
-    //GPIO_InitStruct.Pull = GPIO_PULLUP;
-    //GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    //GPIO_InitStruct.Alternate = GPIO_AF8_UART4;
-    //HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-    //pushPullOutput_pullUp_UnusedPins(); //TODO:
-
-    pinMode(pinBotonParoEmergencia, INPUT_PULLUP); //Configurar el pin por defecto en alto.
-
-    pinMode(pinVDDVirtual, OUTPUT_PP); //PP = Push Pull; OD = Open Drain?
-    pinMode(pinGNDVirtual, OUTPUT_PP);
-
-    // The buttons have external pullup resistors, so activating internal ones
-    // only will reduce the equivalent resistance?
-    //pinMode(pinFijarPosicionFreno, INPUT_PULLUP);
-    pinMode(pinFijarPosicionFreno, INPUT);
-    pinMode(pinBajarPalanca, INPUT);
-    pinMode(pinSubirPalanca, INPUT);
-    pinMode(pinModoCarretera, INPUT); // Actualmente se lee en pin Analógico, probar quitando.
-
-    pinMode(pinOutput_PalancaBajar, OUTPUT);
-    pinMode(pinOutput_PalancaSubir, OUTPUT);
-
-    digitalWrite(pinOutput_PalancaBajar, LOW);
-    digitalWrite(pinOutput_PalancaSubir, LOW);
-
-    //pinMode(pin_encendido, INPUT_PULLUP); //Por defecto en alto
-}
-
-void desplegarInfoArranque()
-{
-    Serial.print("**Modo Operación Joystick: ");
-
-    if(Joystick_comportamientoDirecto)
-    {
-        Serial.println("Directo. **");
-    }
-    else
-    {
-        Serial.println("Inverso. **");
-    }
-
-#if FRENO_ACTIVADO //Usar ! para negar la constante no funciona como con una variable normal.
-    Serial.println("**El Freno está Activado.**");
-#else
-    Serial.println("**¡EL FRENO NO ESTÁ ACTIVADO!**");
-#endif
-
-#if ACELERADOR_ACTIVADO
-    Serial.println("**El Acelerador está Activado.**");
-#else
-    Serial.println("**¡EL ACELERADOR NO ESTÁ ACTIVADO!**");
-#endif
-
-#if EMBEDDED_TESTING
-    Serial.println("**EMBEDDED TESTING**");
-#endif
-
-#if TESTING_MODE
-    calculate_IterationsPerActuator(periodoDeseado);
-    Serial.println("**TESTING MODE**");
-#endif
-
-#if JOYSTICK_VIRTUAL
-    Serial.println("**JOYSTICK VIRTUAL**");
-#endif
-
-#if ENTRADAS_VIRTUALES
-    Serial.println("**ENTRADAS VIRTUALES**");
-#endif
-
-
-#if DEBUG_CONTROL_VOLANTE_UMBRALES
-    //Serial.print("JoyIzq_Medio: "); Serial.println(joyIzquierdaMedio);
-    //Serial.print("JoyDer_Medio: "); Serial.println(joyDerechaMedio);
-
-    //Serial.print("JoyIzq_2/3: "); Serial.println(joyIzqDosTer);
-    //Serial.print("JoyDer_2/3: "); Serial.println(joyDerDosTer);
-
-
-    Serial.println("Corroborando valores de control por segmentos para Joystick y Actuación del volante");
-    Serial.print("porcentControlPuente_Seg1:  ");
-    Serial.println(porcentControlPuente_Seg1);//Segmento1
-    Serial.print("ControlVolante_IzqSeg1: ");
-    Serial.println(ControlVolante_IzqSeg1);
-    Serial.print("ControlVolante_DerSeg1");
-    Serial.println(ControlVolante_DerSeg1);
-
-    Serial.print("joy_percentSegmento1: ");
-    Serial.println(joy_percentSegmento1);
-    Serial.print("joyIzq_Segmento1: ");
-    Serial.println(joyIzq_Segmento1);
-    Serial.print("joyDer_Segmento1: ");
-    Serial.println(joyDer_Segmento1);
-    delay(2000);
-#endif
-
-    Serial.print("**Periodo verificación: ");   Serial.print(periodoVerificacion);    Serial.println("**");
-    Serial.print("**Periodo Deseado: ");        Serial.print(periodoDeseado);       Serial.println("**");
-    Serial.print("**Cantidad de iteraciones para verificación: "); Serial.print(cantIteracionesParaVerificacion); Serial.println("**");
-}
-
-void displayInfoTime()
-{
-#if INFO_TIME
-    long diferencia = tiempoActual - tiempoAnterior;
-    Serial.print(",\tT:"); Serial.print(diferencia);
-#endif
-    Serial.println(" ");
-    tiempoAnterior = tiempoActual;
-}
-
-void displayInfo()
-{
-    desplegarInfoJoystick();
-    desplegarInfoBotones();
-
-    desplegarInfoPedales();
-
-    desplegarInfoVolante();
-    desplegarInfoPalanca(ActuadorFreno_Posicion);
-
-    desplegarInfoEstadoSistema();
-}
-
 
 void setup()
 {
     commInit();
-
-    /// TODO: Investigar si menor velocidad Serial es menos exigente para el micro.
 
     configurarPines();
 
@@ -201,19 +32,58 @@ void setup()
     Feedback_fillBuffer();
 
     // Verificación de seguridad al arranque.
+#if DEBUG_BOOT
+
+    delay(2000); // Tiempo para permitir que arranque el monitor serial y leer errores al arranque.
+    // En la Dell Vostro este parece y con el ST Nucleo este fue el menor valor posible (con 500 ya no detecta).
+    Serial.print("***DEBUG_BOOT ACTIVADO***");
+#endif
+
+#if VERIFICACION_ADC
+    delay(2000);
+    #if JOYSTICK_ACTIVADO
+        Joystick_Leer();
+        desplegarInfoJoystick_Raw();
+    #endif
+    #if FRENO_ACTIVADO
+        Actuadores_Feedback_Leer();
+        desplegarInfoPedales_Raw();
+    #endif
+    //desplegarInfoPedales();
+
+    int delayLecturaLenta = 7000;
+    verificacionManualADC(Potenciometros_Conectados, delayLecturaLenta);
+
+    #if JOYSTICK_ACTIVADO
+        Joystick_Leer();
+        desplegarInfoJoystick_Raw();
+    #endif
+    #if FRENO_ACTIVADO
+        Actuadores_Feedback_Leer();
+        desplegarInfoPedales_Raw();
+    #endif
+
+    Serial.println("\nFin de la verifición de pots");
+    delay(delayLecturaLenta);
+#endif
 
 #if VOLANTE_ACTIVADO
     volante_Desinhibir();
 #endif
 
-    tiempoAnterior = millis();
-
     desplegarInfoArranque();
 
-#if DEBUG_BOOT
-    delay(600); // Tiempo para permitir que arranque el monitor serial y leer errores al arranque.
-    // En la Dell Vostro este parece y con el ST Nucleo este fue el menor valor posible (con 500 ya no detecta).
-#endif
+    //TO-DO: Add function to check that the right defines are activated for normal use.
+    if(!validateDefinesNormalUse() )
+    {
+        Serial.print("**NOT ALL DEFINES FOR NORMAL USE ARE SETTED!!!**");
+    }
+
+    #if EMBEDDED_TESTING
+    calculate_IterationsPerActuator(periodoDeseado);
+    #endif
+
+    tiempoAnterior = millis();
 }
 
 void loop()
@@ -244,17 +114,17 @@ void loop()
         #endif
 
             aplicarRutinasSeguridad(
-                        Joystick_X_Conectado, Joystick_Y_Conectado,
-                        ActuadorAcelerador_Conectado, ActuadorFreno_Conectado,
+                Joystick_X_Conectado, Joystick_Y_Conectado,
+                ActuadorAcelerador_Conectado, ActuadorFreno_Conectado,
 
-                        Joystick_X_EnRango,   Joystick_Y_EnRango,
-                        ActuadorAcelerador_EnRango, ActuadorFreno_EnRango,
+                Joystick_X_EnRango,   Joystick_Y_EnRango,
+                ActuadorAcelerador_EnRango, ActuadorFreno_EnRango,
 
-                        EstadoDelSistema,
-                        ActuadorAcelerador_EstaInhibido, ActuadorFreno_EstaInhibido);
+                EstadoDelSistema,
+                ActuadorAcelerador_EstaInhibido, ActuadorFreno_EstaInhibido);
 
             Control(Joystick_X, Joystick_Y,
-                    ActuadorFreno_EstaInhibido, ActuadorAcelerador_EstaInhibido, TipoControlVolante);
+                ActuadorFreno_EstaInhibido, ActuadorAcelerador_EstaInhibido, TipoControlVolante);
 
             displayInfo();
         }

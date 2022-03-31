@@ -1,0 +1,25 @@
+Solo requiere conexión de GND con el micro y rx del puente con el tx del micro.
+El micro del puente se alimenta con el voltaje de la fuente.
+
+Velocidad se especifica con valores entre -3200 y 3200 [full reverse, full forward]
+
+
+0x85 (133) Comando de avance del Motor.
+
+Página 60 del pdf vienen los comandos.
+
+
+Una vez instalados: libusb-1.0-0-dev mono-runtime libmono-winforms2.0-cil
+
+Ejecutar con ./SmcCenter en la carpeta smc_linux
+
+o $ mono ./SmcCenter
+(si no encuentra la tarjeta correr con sudo)
+
+
+
+You want to make sure though you use a large electrolytic capacitor on the power input.  
+Use 1000uf per amp, and rate the capacitor voltage at double what you run the motor.  
+I have used it with the USB serial, as shown in the video, as well as the TTL serial on the side header.  
+I havent used the RC or analog control though. 
+

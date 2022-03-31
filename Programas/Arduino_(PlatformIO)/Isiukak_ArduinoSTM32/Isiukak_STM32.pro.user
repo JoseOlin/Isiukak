@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.11.0, 2022-02-24T19:56:40. -->
+<!-- Written by QtCreator 4.11.0, 2022-03-31T15:51:52. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -75,7 +75,7 @@
    <value type="int" key="ProjectExplorer.Target.ActiveDeployConfiguration">0</value>
    <value type="int" key="ProjectExplorer.Target.ActiveRunConfiguration">0</value>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.0">
-    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">/media/Ext4/JoseLuis/Proyectos/1_Olin_Robotics/1_Sistema_Conducción_Joystick/Programas/Isiukak_ST/Isiukak_STM32_PlatformIO</value>
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">/media/Ext4/JoseLuis/Proyectos/1_Olin_Robotics/1_Sistema_Conducción_Joystick/Programas/Isiukak_ST/Isiukak_ArduinoSTM32</value>
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
@@ -105,12 +105,12 @@
     <value type="int" key="ProjectExplorer.BuildConfiguration.BuildStepListCount">2</value>
     <value type="bool" key="ProjectExplorer.BuildConfiguration.ClearSystemEnvironment">false</value>
     <valuelist type="QVariantList" key="ProjectExplorer.BuildConfiguration.UserEnvironmentChanges"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Build Test</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Test Native</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4BuildConfiguration</value>
     <value type="int" key="Qt4ProjectManager.Qt4BuildConfiguration.BuildConfiguration">2</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.1">
-    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">/media/Ext4/JoseLuis/Proyectos/1_Olin_Robotics/1_Sistema_Conducción_Joystick/Programas_SistemaConduccion/Isiukak_STM32_PlatformIO</value>
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">/media/Ext4/JoseLuis/Proyectos/1_Olin_Robotics/1_Sistema_Conducción_Joystick/Repositorio_Github_Isiukak/Programas/Arduino_(PlatformIO)/Isiukak_ArduinoSTM32</value>
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
@@ -145,9 +145,16 @@
     <value type="int" key="Qt4ProjectManager.Qt4BuildConfiguration.BuildConfiguration">0</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.2">
-    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">/media/Ext4/JoseLuis/Proyectos/1_Olin_Robotics/1_Sistema_Conducción_Joystick/Programas/Isiukak_ST/Isiukak_STM32_PlatformIO</value>
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">/media/Ext4/JoseLuis/Proyectos/1_Olin_Robotics/1_Sistema_Conducción_Joystick/Repositorio_Github_Isiukak/Programas/Arduino_(PlatformIO)/Isiukak_ArduinoSTM32</value>
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
-     <value type="int" key="ProjectExplorer.BuildStepList.StepsCount">0</value>
+     <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
+      <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
+      <value type="QString" key="ProjectExplorer.ProcessStep.Arguments"> test -e nucleo_f401re</value>
+      <value type="QString" key="ProjectExplorer.ProcessStep.Command">platformio</value>
+      <value type="QString" key="ProjectExplorer.ProcessStep.WorkingDirectory">%{buildDir}</value>
+      <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">ProjectExplorer.ProcessStep</value>
+     </valuemap>
+     <value type="int" key="ProjectExplorer.BuildStepList.StepsCount">1</value>
      <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Build</value>
      <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Build</value>
      <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">ProjectExplorer.BuildSteps.Build</value>
@@ -161,7 +168,7 @@
     <value type="int" key="ProjectExplorer.BuildConfiguration.BuildStepListCount">2</value>
     <value type="bool" key="ProjectExplorer.BuildConfiguration.ClearSystemEnvironment">false</value>
     <valuelist type="QVariantList" key="ProjectExplorer.BuildConfiguration.UserEnvironmentChanges"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Profile</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Test Nucleo</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4BuildConfiguration</value>
     <value type="int" key="Qt4ProjectManager.Qt4BuildConfiguration.BuildConfiguration">0</value>
    </valuemap>
@@ -289,8 +296,9 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/media/Ext4/JoseLuis/Proyectos/1_Olin_Robotics/1_Sistema_Conducción_Joystick/Programas_SistemaConduccion/Isiukak_STM32_PlatformIO/Isiukak_STM32.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/media/Ext4/JoseLuis/Proyectos/1_Olin_Robotics/1_Sistema_Conducción_Joystick/Programas_SistemaConduccion/Isiukak_STM32_PlatformIO/Isiukak_STM32.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Isiukak_STM322</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/media/Ext4/JoseLuis/Proyectos/1_Olin_Robotics/1_Sistema_Conducción_Joystick/Repositorio_Github_Isiukak/Programas/Arduino_(PlatformIO)/Isiukak_ArduinoSTM32/Isiukak_STM32.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/media/Ext4/JoseLuis/Proyectos/1_Olin_Robotics/1_Sistema_Conducción_Joystick/Repositorio_Github_Isiukak/Programas/Arduino_(PlatformIO)/Isiukak_ArduinoSTM32/Isiukak_STM32.pro</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -301,7 +309,7 @@
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
     <value type="QString" key="RunConfiguration.WorkingDirectory"></value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/media/Ext4/JoseLuis/Proyectos/1_Olin_Robotics/1_Sistema_Conducción_Joystick/Programas_SistemaConduccion/Isiukak_STM32_PlatformIO</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default"></value>
    </valuemap>
    <value type="int" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>
