@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.11.0, 2022-03-31T15:51:52. -->
+<!-- Written by QtCreator 4.11.0, 2022-03-31T16:58:43. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -296,9 +296,8 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Isiukak_STM322</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/media/Ext4/JoseLuis/Proyectos/1_Olin_Robotics/1_Sistema_Conducción_Joystick/Repositorio_Github_Isiukak/Programas/Arduino_(PlatformIO)/Isiukak_ArduinoSTM32/Isiukak_STM32.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/media/Ext4/JoseLuis/Proyectos/1_Olin_Robotics/1_Sistema_Conducción_Joystick/Repositorio_Github_Isiukak/Programas/Arduino_(PlatformIO)/Isiukak_ArduinoSTM32/Isiukak_STM32.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/media/Ext4/JoseLuis/Proyectos/1_Olin_Robotics/1_Sistema_Conducción_Joystick/Programas_SistemaConduccion/Isiukak_ArduinoSTM32/Isiukak_STM32.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/media/Ext4/JoseLuis/Proyectos/1_Olin_Robotics/1_Sistema_Conducción_Joystick/Programas_SistemaConduccion/Isiukak_ArduinoSTM32/Isiukak_STM32.pro</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>
@@ -309,7 +308,7 @@
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
     <value type="QString" key="RunConfiguration.WorkingDirectory"></value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default"></value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">/media/Ext4/JoseLuis/Proyectos/1_Olin_Robotics/1_Sistema_Conducción_Joystick/Repositorio_Github_Isiukak/Programas/Arduino_(PlatformIO)/Isiukak_ArduinoSTM32</value>
    </valuemap>
    <value type="int" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>
