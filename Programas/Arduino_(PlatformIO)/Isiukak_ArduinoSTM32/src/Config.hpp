@@ -2,11 +2,11 @@
 #define CONFIG_HPP
 
 // Constantes para definición de los actuadores a utilizar
-#define JOYSTICK_ACTIVADO 1
-#define FRENO_ACTIVADO 1
-#define ACELERADOR_ACTIVADO 1 //Para definir si se usará el actuador de acelerador
-#define VOLANTE_ACTIVADO 1  //Para especificar que se controlará el volante.
-#define PALANCA_ACTIVADA 1
+#define JOYSTICK_ACTIVADO 0
+#define FRENO_ACTIVADO 0
+#define ACELERADOR_ACTIVADO 0 //Para definir si se usará el actuador de acelerador
+#define VOLANTE_ACTIVADO 0  //Para especificar que se controlará el volante.
+#define PALANCA_ACTIVADA 0
 
 // Constantes para despliegue de información.
 #define INFO_JOYSTICK 1
@@ -27,10 +27,10 @@
 // DEFINES PARA TESTING
 #define TESTING_MODE 0  // Define si los valores de los pots para la validación de conexión
 #define ENTRADAS_VIRTUALES 0
+#define EMBEDDED_TESTING 0
 
 // Se activa para probar varias condiciones de operación directamente en el microcontrolador
 #define TESTING_NATIVE 0
-#define EMBEDDED_TESTING 0
 
 
 #define JOYSTICK_VIRTUAL 0

@@ -42,19 +42,22 @@ public:
     void readTemp();
     void readErrorsFlag();
 
-    uint16_t getVin();
-    uint16_t getTemp();
-    uint16_t getErrosFlag();
+    int getVin();
+    int getTemp();
+    int getErrosFlag();
 
     void displayInfo();
 
 
 private:
     byte address;
-
-    uint16_t Temp;
-    uint16_t Vin;
-    uint16_t Errors_flag;
+    // Necessary to be ints to validate -1 values.
+    //uint16_t Temp;
+    //uint16_t Vin;
+    //uint16_t Errors_flag;
+    int Temp;
+    int Vin;
+    int Errors_flag;
 };
 
 MotorDriver::MotorDriver(const char prefix[], byte address)
@@ -81,22 +84,23 @@ int MotorDriver::getVariable_Protocol(byte address, unsigned char variableID)
 
     smcSerial.write(0xA1); // Get Variable Command Byte
     smcSerial.write(variableID);
-
+    //delayMicroseconds(10);
+    //return readByte() + 256 * readByte();
     // Response Format:
     // Response Byte 1      |   Response Byte 2
     // variable low byte    |   variable high byte
-    byte lowByte = readByte();
-    byte highByte = readByte();
 
-    if(lowByte != -1 && highByte != -1)
+    int lowByte = readByte();
+    int highByte = readByte();
+
+    if( (lowByte > -1) && (highByte > -1) )
     {
         //return readByte() + 256 * readByte();
-        return (uint16_t)(256 * highByte) + lowByte ;
+        //return (uint16_t)((256 * highByte) + lowByte) ;
+        return (256 * highByte) + lowByte;
     }
     else
-    {
-        return -1;
-    }
+    {   return -1;     }
 }
 
 
@@ -106,7 +110,7 @@ void MotorDriver::readVin()
     Vin = getVariable_Protocol(address, DRIVER_INPUT_VOLTAGE);
 }
 
-uint16_t MotorDriver::getVin()
+int MotorDriver::getVin()
 {
     return Vin;
 }
@@ -117,17 +121,34 @@ void MotorDriver::readTemp()
     Temp = getVariable_Protocol(address, DRIVER_TEMPERATURE);
 }
 
-uint16_t MotorDriver::getTemp()
+int MotorDriver::getTemp()
 {
     return Temp;
 }
 
 void MotorDriver::readErrorsFlag()
 {
+    /*The motor can only be driven when this register has a value of 0.
+     * (See Section 3.4 for error descriptions.)
+    • Bit 0: Safe Start Violation
+    • Bit 1: Required Channel Invalid
+    • Bit 2: Serial Error
+    • Bit 3: Command Timeout
+    • Bit 4: Limit/Kill Switch
+    • Bit 5: Low VIN
+    • Bit 6: High VIN
+    • Bit 7: Over Temperature
+    • Bit 8: Motor Driver Error
+    • Bit 9: ERR Line High
+    • Bits 10-15: reserved */
+                // 0000 0011 1111 1111 // Only the first 10 bits have info. =1,023
+
+    //uint16_t mask = 1023;
     Errors_flag = getVariable_Protocol(address, DRIVER_ERROR_STATUS);
+
 }
 
-uint16_t MotorDriver::getErrosFlag()
+int MotorDriver::getErrosFlag()
 {
     return Errors_flag;
 }
@@ -135,29 +156,29 @@ uint16_t MotorDriver::getErrosFlag()
 
 void MotorDriver::displayInfo()
 {
-#if INFO_MOTOR_DRIVERS
+    #if INFO_MOTOR_DRIVERS
+        //Serial.print(", B_Vin: ");
+        Serial.print(", "); Serial.print(prefix); Serial.print("_Vin: ");
+        //Serial.print(getVariable_Protocol(ActuadorBrake_Address, DRIVER_INPUT_VOLTAGE));
+        Serial.print(getVin());
 
-    //Serial.print(", B_Vin: ");
-    Serial.print(", "); Serial.print(prefix); Serial.print("_Vin: ");
-    //Serial.print(getVariable_Protocol(ActuadorBrake_Address, DRIVER_INPUT_VOLTAGE));
-    Serial.print(getVin());
 
+        Serial.print(", "); Serial.print(prefix); Serial.print("_Tmp: ");
+        Serial.print(getTemp());
 
-    Serial.print(", "); Serial.print(prefix); Serial.print("_Tmp: ");
-    Serial.print(getTemp());
-
-    Serial.print(", "); Serial.print(prefix); Serial.print("_Err: ");
-    //Serial.print(getVariable_Protocol(ActuadorBrake_Address, DRIVER_ERROR_STATUS));
-    Serial.print(getErrosFlag());
-
-#endif
+        Serial.print(", "); Serial.print(prefix); Serial.print("_Err: ");
+        //Serial.print(getVariable_Protocol(ActuadorBrake_Address, DRIVER_ERROR_STATUS));
+        Serial.print(getErrosFlag());
+    #endif
 }
 
 //**** Funciones para control de puente H con Protocolo Pololu.****//
 void setMotorSpeed_Protocol(int address, int speed)  // Function for sending data to motor controller
 {
-  if(speed < -3200) speed = -3200;
-  if(speed >  3200) speed =  3200;
+  if(speed < -3200){
+      speed = -3200; }
+  if(speed >  3200) {
+      speed =  3200; }
 
   smcSerial.write(0xAA);
   smcSerial.write(address);

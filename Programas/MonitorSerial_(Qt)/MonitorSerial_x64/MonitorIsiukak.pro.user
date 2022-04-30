@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.11.0, 2022-03-29T20:20:34. -->
+<!-- Written by QtCreator 4.11.0, 2022-04-29T21:40:11. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -287,9 +287,8 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">MonitorIsiukak2</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/media/Ext4/JoseLuis/Proyectos/1_Olin_Robotics/1_Sistema_Conducción_Joystick/Repositorio_Github_Isiukak/Programas/MonitorSerial_(Qt)/MonitorSerial_x64/MonitorIsiukak.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/media/Ext4/JoseLuis/Proyectos/1_Olin_Robotics/1_Sistema_Conducción_Joystick/Repositorio_Github_Isiukak/Programas/MonitorSerial_(Qt)/MonitorSerial_x64/MonitorIsiukak.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/media/Ext4/JoseLuis/Proyectos/1_Olin_Robotics/1_Sistema_Conducción_Joystick/Programas_SistemaConduccion/MonitorSerial_x64/MonitorIsiukak.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">/media/Ext4/JoseLuis/Proyectos/1_Olin_Robotics/1_Sistema_Conducción_Joystick/Programas_SistemaConduccion/MonitorSerial_x64/MonitorIsiukak.pro</value>
     <value type="QString" key="RunConfiguration.Arguments"></value>
     <value type="bool" key="RunConfiguration.Arguments.multi">false</value>
     <value type="QString" key="RunConfiguration.OverrideDebuggerStartup"></value>

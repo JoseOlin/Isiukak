@@ -3,39 +3,60 @@
 
 
 //************ Variables para comunicacion Serial **********//
+#include <Arduino.h>
+
 #include "Config.hpp"
 #include "Debug.hpp"
 
+#define COMM_MONITOR_SPEED 115200
+#define COMM_DRIVERS_SPEED 19200 // Se probó con 19200 y 9600.
 
-#include <Arduino.h>
-
-//HardwareSerial Serial(PA3, PA2);
 
 #define rxPin D2  // RX pin D2, PA_10
 #define txPin D8  // TX pin D8, PA_9
+
+//HardwareSerial Serial(PA3, PA2);
 HardwareSerial smcSerial(rxPin, txPin);
-int timeOut = 1; // in ms. To use in setTimeOut
+// SERIAL_8N1. 8 data bits, No parity bit, 1 stop bit
+
+unsigned long timeOut = 2; // in ms. To use in setTimeOut
+unsigned long timeOutSetted;
 //****Variables para comunicacin serial.****//
 
+unsigned int DriversReading_Period = 1000;
+unsigned int IterationsToDriversReading;
+unsigned int counterIterationsToDriversReading = 0;
 
 
-void commInit()
+void setIterationsToDriversRead(unsigned int systemPeriod)
 {
-    //Serial.begin(38400);
-    Serial.begin(115200);
+    assert(DriversReading_Period >= systemPeriod);
+
+    IterationsToDriversReading = DriversReading_Period / systemPeriod;
+    Serial.print("**IterationsToDriveReadig: ");
+    Serial.print(IterationsToDriversReading);
+    Serial.println("**");
+}
+
+
+uint8_t commInit()
+{
+    uint8_t InitSuccess = true;
+
+    Serial.begin(COMM_MONITOR_SPEED);
     Serial.println("Comunicación Serial Iniciada.");
-    //smcSerial.begin(19200);
-    smcSerial.begin(9600); // Se probó con 19200 y funciona.
+    smcSerial.begin(COMM_DRIVERS_SPEED);
     smcSerial.setTimeout(timeOut);
-    unsigned long timeOut = smcSerial.getTimeout();
-    if(timeOut > 1)
+    timeOutSetted = smcSerial.getTimeout();
+
+    if(timeOutSetted > timeOut)
     {
         Serial.print("**ERROR!!!: TimeOut Not setted.**");
+        InitSuccess = false;
     }
 
+    return InitSuccess;
 }
-//SoftwareSerial smcSerial = SoftwareSerial (rxPin, txPin);
-//#define smcSerial Serial1
 
 
 int readByte()

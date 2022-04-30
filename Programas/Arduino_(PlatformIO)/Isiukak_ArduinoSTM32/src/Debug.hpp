@@ -5,9 +5,10 @@
 
 // Constantes para Debugueo de funciones
 
-#define DEBUG_POTS_VALUES 0
+#define DEBUG_POTS_VALUES 0 // Show the value of the pot on connection checking
 #define DEBUG_POTS_ERROR 0
-#define DEBUG_POTS_ERROR_VALUES 1
+#define DEBUG_POTS_ERROR_VALUES 1 // Show the value of the pot on connection checking only if it were errors.
+#define DEBUG_POTS_ERROR_VALUES_EVERY_PERIOD 0
 
 #define DEBUG_BOOT 0
 

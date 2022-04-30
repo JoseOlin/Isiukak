@@ -21,38 +21,6 @@ int pinSubirPalanca = PC3; //Se usaban pines analógicos, ahora se usan pines di
 int pinModoCarretera = PC2;
 
 /// Rango del joystick (Valores experimentales)
-/* // * +Joystick Adafruit (10k)
-
-// ** Eje-Y (Acelerador y freno).
-int joyForward_minVal = 507;
-int joyForward_maxVal = 1023;
-int joyBackward_minVal = 0;
-int joyBackward_maxVal = 506;
-
-// ** Eje-X (Volante)
-int joyDirectionCenter = 520;  //Centro del joystick.
-int joyMaximoIzquierda = 4;
-int joyMaximoDerecha = 1014;
-int joyIzquierdaMedio = (joyDirectionCenter - joyMaximoIzquierda)/2;
-int joyDerechaMedio = (joyMaximoDerecha - joyDirectionCenter)/2 + joyDirectionCenter;
-*/
-
-// * +Joytick Parallax (5k)
-// ** Eje Y (Acelerador y freno).
-// Valores con 5V virtual directo en las salidas digitales
-/*int joyY_MaxVal = 639;
-int joyY_Center = 509;
-int joyY_MinVal = 374;
-int joyY_FrenoCambios = 450;
-*/
-
-// ** Eje X (Volante)
-// Valores con 5V virtual directo en las salidas digitales
-/*int joyX_MinVal = 377;  //
-int joyX_Center = 510;  //
-int joyX_MaxVal = 636;  //
-*/
-
 /* Joystick Parallax en ST NUCLEO F40*/
 // ** Eje Y (Acelerador y freno).
 uint8_t JoystickActivado = false;
@@ -228,9 +196,19 @@ void desplegarInfoBotones()
 
 void Actuators_Drivers_Read()
 {
-    ActuatorBrake_Driver.readStatus();
-    ActuatorAccel_Driver.readStatus();
-    ActuatorSteer_Driver.readStatus();
+#if INFO_MOTOR_DRIVERS
+    counterIterationsToDriversReading++;
+
+    if(counterIterationsToDriversReading >= IterationsToDriversReading)
+    {
+        ActuatorBrake_Driver.readStatus();
+        ActuatorAccel_Driver.readStatus();
+        ActuatorSteer_Driver.readStatus();
+
+        //counterIterationsToDriversReading = 0; // Reset on MotorDriver::displayInfo()
+        //displayInfo() must be called after this function.
+    }
+#endif
 }
 
 void leerFeedback()

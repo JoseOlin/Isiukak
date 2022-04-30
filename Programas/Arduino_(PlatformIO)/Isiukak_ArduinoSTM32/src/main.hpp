@@ -12,67 +12,111 @@ uint8_t actualizacionExitosa = false;
 
 bool validateDefinesNormalUse()
 {
-    bool definesNormaleUse = true;
-
+    definesNormalUse = true;
     //assert(JOYSTICK_ACTIVADO);
 
-    if(!JOYSTICK_ACTIVADO) {
-        definesNormaleUse = false;
-        Serial.print("**Joystick Activado: "); Serial.print(definesNormaleUse); Serial.println("**");
+    // Checking defines that must be activated
+    uint8_t mustBeActivated[13] = {
+        JOYSTICK_ACTIVADO,
+        FRENO_ACTIVADO,
+        ACELERADOR_ACTIVADO,
+        VOLANTE_ACTIVADO,
+        PALANCA_ACTIVADA,
+
+        INFO_JOYSTICK,
+        INFO_BOTONES,
+        INFO_ACTUADORES_POS,
+        INFO_ACTUADORES_CONTROL,
+        INFO_VOLANTE,
+        INFO_PALANCA,
+
+        INFO_MOTOR_DRIVERS,
+        INFO_TIME
+    };
+
+    uint8_t mustBeDeactivated[8] = {
+        JOYSTICK_VIRTUAL, EMBEDDED_TESTING, TESTING_MODE,
+        ENTRADAS_VIRTUALES, VERIFICACION_ADC,
+        DEBUG_BOOT, DEBUG_POTS_VALUES, DEBUG_POTS_ERROR_VALUES
+    };
+
+    uint activatedsArrayLenght  = sizeof(mustBeActivated);
+    for(uint cont = 0; cont < activatedsArrayLenght; cont++)
+    {
+        if(!mustBeActivated[cont])
+        {
+            definesNormalUse = false;
+            Serial.print("**Element ");
+            Serial.print(cont);
+            Serial.println(" of MustBeActivated Array is deactivated**");
+        }
     }
-    // FRENO_ACTIVADO 1
-    // VOLANTE_ACTIVADO 1
-    // ACELERADOR_ACTIVADO 1
-    // VOLANTE_ACTIVADO 1
-    // PALANCA_ACTIVADA 1
 
-    // INFO_JOYSTICK 1
-    // INFO_BOTONES 1
-    // INFO_ACTUADORES_CONTROL 0
-    // INFO_ACTUADORES_POS 1
-    // INFO_VOLANTE 1
-    // INFO_PALANCA 0
-    // INFO_TIME 1
+    /*if(!JOYSTICK_ACTIVADO) {
+        definesNormalUse = false;
+        Serial.println("**Joystick Desactivado"); Serial.println("**");
+    }
 
+    if(!FRENO_ACTIVADO )
+    {
+
+    }*/
+
+    uint deactivatedsArrayLenght  = sizeof(mustBeDeactivated);
+    for(uint cont = 0; cont < deactivatedsArrayLenght; cont++)
+    {
+        if(mustBeDeactivated[cont])
+        {
+            definesNormalUse = false;
+            Serial.print("**Element ");
+            Serial.print(cont);
+            Serial.println(" of MustBeDeactivated Array is Activated**");
+        }
+    }
+
+    /*
     if(JOYSTICK_VIRTUAL) // 0 in normal use.
     {
-        Serial.print("**JOYSTICK_VIRTUAL ACTIVATED**");
-        definesNormaleUse = false;
+        definesNormalUse = false;
+        Serial.println("**JOYSTICK_VIRTUAL ACTIVATED**");
     }
 
     if(EMBEDDED_TESTING) // 0 in normal use.
     {
-        Serial.print("**EMBEDDED_TESTING ACTIVATED**");
-        definesNormaleUse = false;
+        definesNormalUse = false;
+        Serial.println("**EMBEDDED_TESTING ACTIVATED**");
     }
 
     bool testingModeDisabled = !TESTING_MODE;
     //assert(testingModeDisabled);
     if(!testingModeDisabled)
     {
+        definesNormalUse = false;
         Serial.println("**TESTING_MODE ACTIVATED!!!**");
-        definesNormaleUse = false;
     }
 
     bool entradasVirtualesDesactivadas = !ENTRADAS_VIRTUALES;
     //assert(entradasVirtualesDesactivadas);
     if(!entradasVirtualesDesactivadas)
     {
+        definesNormalUse = false;
         Serial.println("**ENTRADAS_VIRTUALES ACTIVATED!!!**");
-        definesNormaleUse = false;
     }
 
     bool debugBootDisabled = !DEBUG_BOOT;
     if(!debugBootDisabled)
     {
+        definesNormalUse = false;
         Serial.println("**DEBUG_BOOT_ACTIVATED!!!**");
-        definesNormaleUse = false;
+    }*/
+
+
+    if(timeOutSetted > timeOut) {
+        definesNormalUse = false;
+        Serial.println("**TimeOut Setted > TimeOut Target on smcSerial.**");
     }
 
-    //
-    //Serial.print("**TestingMode2: "); Serial.print(testingMode2); Serial.println("**");
-
-    return definesNormaleUse;
+    return definesNormalUse;
 }
 
 
@@ -151,13 +195,13 @@ void configurarPines()
     pinMode(pinActAcel, INPUT_ANALOG);      //A3; //PB0
 
 
-    pinMode(pinVDDVirtual, OUTPUT);      //D3; //PB3;
-    pinMode(pinGNDVirtual, OUTPUT);      //D7; //PA8;
+    pinMode(pinVDDVirtual, OUTPUT);         //D3; //PB3;
+    pinMode(pinGNDVirtual, OUTPUT);         //D7; //PA8;
 
-    pinMode(pinOutput_PalancaBajar, OUTPUT); //D4; //PB5
-    pinMode(pinOutput_PalancaSubir, OUTPUT); //D5; //PB4
-    digitalWrite(pinOutput_PalancaBajar, LOW);    //D4; //PB5
-    digitalWrite(pinOutput_PalancaSubir, LOW);   //D5; //PB4
+    pinMode(pinOutput_PalancaBajar, OUTPUT);    //D4; //PB5
+    pinMode(pinOutput_PalancaSubir, OUTPUT);    //D5; //PB4
+    digitalWrite(pinOutput_PalancaBajar, LOW);
+    digitalWrite(pinOutput_PalancaSubir, LOW);
 
     pinMode(pinAGND, OUTPUT);            //D12; //PA6
     pinMode(pinAVDD, OUTPUT);            //D13; //PA5
@@ -171,8 +215,9 @@ void configurarPines()
     pinMode(pinBajarPalanca,  INPUT);       //D11; //PA7
     pinMode(pinSubirPalanca,  INPUT);       //       PC2 (Morpho only);
     pinMode(pinModoCarretera, INPUT);       //       PC3 (Morpho only);
+    // FIXME: A. Validar si activar PullUps internas modifica la lectura del ADC.
 
-    ///setUnusedPins_input_pullDown(); //TODO:
+    //TODO: C. //setUnusedPins_input_pullDown();
 
     //pinMode(pin_encendido, INPUT_PULLUP); //Por defecto en alto
 
@@ -195,7 +240,7 @@ void displayInfo()
     desplegarInfoBotones();
 
     desplegarInfoPedales();
-    //desplegarInfoMotorDrivers();
+    desplegarInfoMotorDrivers();
 
     desplegarInfoVolante();
     desplegarInfoPalanca(ActuadorFreno_Posicion);
@@ -206,9 +251,9 @@ void displayInfo()
 
 void desplegarInfoArranque()
 {
-    Serial.print("**Modo Operación Joystick: ");
 
 #if JOYSTICK_ACTIVADO
+    Serial.print("**Modo Operación Joystick: ");
     if(Joystick_comportamientoDirecto)
     {
         Serial.println("Directo. **");
@@ -220,6 +265,7 @@ void desplegarInfoArranque()
 #else
     Serial.println("**EL JOYSTICK NO ESTÁ ACTIVADO");
 #endif
+
 #if FRENO_ACTIVADO //Usar ! para negar la constante no funciona como con una variable normal.
     Serial.println("**El Freno está Activado.**");
 #else
@@ -283,6 +329,7 @@ void desplegarInfoArranque()
     Serial.print("**Periodo verificación: ");   Serial.print(periodoVerificacion);    Serial.println("**");
     Serial.print("**Periodo Deseado: ");        Serial.print(periodoDeseado);       Serial.println("**");
     Serial.print("**Cantidad de iteraciones para verificación: "); Serial.print(cantidadIteracionesParaVerificacion); Serial.println("**");
+    Serial.print("**TimeOut setted for smcSerial: "); Serial.print(timeOutSetted); Serial.println("**");
 }
 
 

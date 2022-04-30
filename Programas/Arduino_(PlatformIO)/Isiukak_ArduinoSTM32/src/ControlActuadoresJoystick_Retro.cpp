@@ -6,24 +6,13 @@ La configuración general del sistema puede consultarse en README.md
 #include "main.hpp"
 
 //****************************** Variables de programa *************************//
-/*int pinJoystickY = A0;
-int pinJoystickX = A1;
-int pinActFreno  = A2;
-int pinActAcel   = A3;
-
-int pinFijarPosicionFreno = 10; //10
-int pinSubirPalanca = A5; //A5
-int pinBajarPalanca = 11; //11
-int pinModoCarretera = A4; //A4
-
-int pinBotonParoEmergencia = 9;
-
-*/
 
 
 void setup()
 {
     commInit();
+
+    setIterationsToDriversRead(periodoDeseado);
 
     configurarPines();
 
@@ -33,7 +22,6 @@ void setup()
 
     // Verificación de seguridad al arranque.
 #if DEBUG_BOOT
-
     delay(2000); // Tiempo para permitir que arranque el monitor serial y leer errores al arranque.
     // En la Dell Vostro este parece y con el ST Nucleo este fue el menor valor posible (con 500 ya no detecta).
     Serial.print("***DEBUG_BOOT ACTIVADO***");
@@ -49,7 +37,6 @@ void setup()
         Actuadores_Feedback_Leer();
         desplegarInfoPedales_Raw();
     #endif
-    //desplegarInfoPedales();
 
     int delayLecturaLenta = 7000;
     verificacionManualADC(Potenciometros_Conectados, delayLecturaLenta);
@@ -76,7 +63,7 @@ void setup()
     //TO-DO: Add function to check that the right defines are activated for normal use.
     if(!validateDefinesNormalUse() )
     {
-        Serial.print("**NOT ALL DEFINES FOR NORMAL USE ARE SETTED!!!**");
+        Serial.println("**NOT ALL DEFINES FOR NORMAL USE ARE SETTED!!!**");
     }
 
     #if EMBEDDED_TESTING
@@ -104,7 +91,7 @@ void loop()
             //Testing_VerificacionSeguridad_SetValues(); //Se hace dedntro de EmbeddedTest_SetInputs()
 
             leerFeedback_Virtual(LOW, LOW, LOW, LOW);
-            Actuadores_Feedback_Leer();
+            Actuators_Feedback_Read();
         #else
             leerFeedback();
             aplicarModoCarretera(ModoCarreteraActivado);

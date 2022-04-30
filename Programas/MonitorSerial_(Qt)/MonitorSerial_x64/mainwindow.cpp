@@ -8,11 +8,6 @@
 #include "mainwindow.h"
 
 
-#include <string.h>
-#include <QMessageBox>
-#include <QDebug>
-
-#define qDbg qDebug()
 //QString serialPort;
 int baudRate = QSerialPort::Baud115200;
 //int baudRate = QSerialPort::Baud9600;
@@ -30,6 +25,10 @@ QString cadAcelInhibido = "A_inh";
 QString cadAcel_Desc = "Acel_Desc";
 QString cadAcel_OutOfRange = "Acel_OutOfRange";
 
+QString cadAccel_VIN = "A_Vin";
+QString cadAccel_Temp = "A_Tmp";
+QString cadAccel_Error = "A_Err";
+
 QString cadBrakeActivado = "B_ac";
 QString cadBrakeInhibido = "B_inh";
 QString cadBrakeDesc = "Freno_Desc";
@@ -38,17 +37,27 @@ QString cadBrake_VIN = "B_Vin";
 QString cadBrake_Temp = "B_Tmp";
 QString cadBrake_Error = "B_Err";
 
-QString cadVolanteActivado = "Vol_ac";
-QString cadVolanteModo = "Vol_m";
+QString cadVolanteActivado = "V_ac";
+QString cadVolanteModo = "V_m";
 QString cadVolanteControl = "Vol_c";
+QString cadSteer_VIN = "V_Vin";
+QString cadSteer_Temp = "V_Tmp";
+QString cadSteer_Error = "V_Err";
 
 QString cadPalancaActivada = "Shft_a";
 
 QString cadEstadoSistema = "edo";
+QString cadT = "T";
+QString cadNormalDefines = "nDef";
 
 QString cadCompsReconnected = "Componentes Reconectados y en Rango Válido";
 QString cadParoEmergenciaManual = "Paro de Emergencia Manual.";
 QString cadRestartTesting = "Testing";
+
+
+
+
+vector<driverValuesRow> brake_driverMat; //Used for testing purposes.
 
 // Usadas en desplegarValores(QString renglonDatos)
 
@@ -93,9 +102,28 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
 
     ui->btnConectar->click(); //Conectar automáticamente al arranque.
+
+    // Initialize gridLayout with 5 rows of empty labels, plus the headers row.
+    uint rows = 5;
+    uint cols = 12; //Vin, Temp and 10 possible errors.
+    for (uint row = 0; row < rows; row++)
+    {
+        //vector<QLabel*> rowQLabels;
+        //erroresMatrix_lbl.push_back(rowQLabels);
+        for (uint col = 0; col < cols; col++)
+        {
+            QLabel* lbl = new QLabel();
+            lbl->setText("0");
+            //erroresMatrix_lbl[row].push_back(lbl);
+
+            //ui->driverErrorsValues_gridLayout->addWidget(lbl, row, col, 1, 1, Qt::AlignCenter);
+            ui->driverErrorsHeaders_gridLayout->addWidget(lbl, row + 1, col, 1, 1, Qt::AlignCenter);
+        }
+    }
+
     ///////////////////////////////////////////////////
 
-    escena = new QGraphicsScene(0,0, 250,250);
+    //escena = new QGraphicsScene(0,0, 250,250);
     //ui->joystick_graphics->setScene(escena);
 }
 
@@ -106,7 +134,296 @@ MainWindow::~MainWindow()
 }
 
 
-int MainWindow::buscarExpresionRegular_returnNextInt(QString expReg, QString fuente)
+void MainWindow::desplegarValores(QString renglonDatos)
+{
+    /* Función para desplegar los datos que se reciben por Serial y mostrar los errores
+     * en la GUI.
+     * Se invoca en readData()     */
+
+    ui->InfoSalida_txt->insertPlainText(renglonDatos);
+
+    ui->InfoSalida_txt->ensureCursorVisible();
+    ui->erroresSalida_txt->ensureCursorVisible();
+    ui->driversValues_txt->ensureCursorVisible();
+
+
+    /// Separar renglón datos para mostrar valores del Joystick.
+
+    ///* Joystick
+    displayInfoJoystick(renglonDatos);
+
+    ///* Buttons
+    displayInfoButtons(renglonDatos);
+
+    ///* Brake INFO
+    displayInfoBrake(renglonDatos);
+
+    ///* Accelerator INFO
+    displayInfoAccel(renglonDatos);
+
+    ///* Steer Wheel
+    displayInfoSteer(renglonDatos);
+
+    ///* Shift gear
+    displayInfoShiftGear(renglonDatos);
+
+    ///* System status
+    displaySystemInfo(renglonDatos);
+
+
+    ///* Test restarting string when running embedded Testing
+    bool testingRestartingReceived = buscarExpresionRegular("(\\*\\*)(" + cadRestartTesting + ")(\\*\\*)", renglonDatos);
+    if(testingRestartingReceived)
+    {
+        apagarLEDsError();
+    }
+
+
+    ///* Errors
+    QRegularExpression expRegInt_R = QRegularExpression ("(\\*\\*)(.+)(\\*\\*)");
+    // \\*\\* = **             (.+) = Any character one or more times
+    QRegularExpressionMatch match = expRegInt_R.match(renglonDatos);
+    QString Error_s = match.captured(0);
+    if( Error_s.length() > 0 )
+    {
+        ui->erroresSalida_txt->insertPlainText(Error_s);
+        ui->erroresSalida_txt->insertPlainText("\n");
+    }
+
+}
+
+void MainWindow::on_btnParoEmergencia_clicked()
+{
+    /*vector<int> rows;
+
+    for (int i = 1; i < 9; ++i)
+    {
+        int sizeR = rows.size();
+
+        if(sizeR > 4)
+        {
+            rows.at(0) = i;
+            //rotate(rows.begin(), rows.end()-1, rows.end());
+            rotate(rows.begin(), rows.begin()+1, rows.end());
+            //rotate(rows.end(), rows.begin()+1, rows.begin());
+            //rows.at(rows.size()-1) = i;
+        }
+        else {
+            rows.push_back(i);
+        }
+
+
+        // Display current values of row.
+        QString debugString;
+        for (vector<int>::iterator it = rows.begin(); it != rows.end(); ++it)
+        {
+            debugString += QString::number(*it);
+            //qDbg << ", " << *it;
+        }
+        //qDbg << "\n";
+        qDbg << debugString;
+    }
+    */
+
+    driverValuesRow brake_row;
+
+    for(int i = 0; i < 10; i++)
+    {
+        qDbg << "it: " << i ;
+        brake_row.Vin = 12.4 + i;
+        brake_row.Temperature = 38.4 + i;
+
+        uint16_t errorRaw = i;
+        //QStringList active_errors_list;
+        decodeDriverError(errorRaw, brake_row);
+
+        //brake_row.errorsList = active_errors_list;
+
+
+        /*int brake_mat_size = brake_driverMat.size();
+        if(brake_mat_size > 4)
+        {
+            brake_driverMat.at(0) = brake_row;
+            rotate(brake_driverMat.begin(),
+                   brake_driverMat.begin()+1,
+                   brake_driverMat.end());
+        }
+        else
+        {
+            brake_driverMat.push_back(brake_row);
+        }
+        */
+        driverMatrixValues_insert(brake_driverMat, brake_row);
+
+
+        /*for(vector<driverValuesRow>::iterator it = brake_driverMat.begin();
+             it != brake_driverMat.end();
+             ++it )
+        {
+            QString debugString;
+            driverValuesRow row = *it;
+
+            debugString += QString::number(row.Vin) + ", ";
+            debugString += QString::number(row.Temperature) + ", ";
+
+            QStringList errors = row.errorsList;
+            foreach(QString error, errors)
+            {
+                debugString += error + ", ";
+            }
+            qDbg << debugString << "\n";
+
+
+            //qDbg << ", " << *it;
+        }
+        */
+        QString brakeMatString = driverMatrixErrors_display(brake_driverMat);
+        //driverMatrixErrors_gridLayoutDisplay(ui->driverErrorsValues_gridLayout, brake_driverMat);
+        driverMatrixErrors_gridLayoutDisplay(ui->driverErrorsHeaders_gridLayout, brake_driverMat);
+        qDbg << brakeMatString;
+        ui->driversValues_txt->setPlainText(brakeMatString);
+    }
+
+
+}
+void MainWindow::driverMatrixValues_insert(vector<driverValuesRow>& driverMatrix,
+                                          driverValuesRow row)
+{
+    int mat_size = driverMatrix.size();
+
+    if(mat_size > 4)
+    {
+        driverMatrix.at(0) = row;
+        rotate(driverMatrix.begin(),
+               driverMatrix.begin()+1,
+               driverMatrix.end());
+    }
+    else
+    {
+        driverMatrix.push_back(row);
+    }
+}
+
+void MainWindow::driverMatrixValues_gridLayoutDisplay(QGridLayout* grid,
+                                                      vector<driverValuesRow> driverMatrix)
+{
+    //TODO: Optimizar considerando que la matrix puede tener menos de 5 renglones.
+    int row = 1; // The first row is for the headers.
+    for(vector<driverValuesRow>::iterator it = driverMatrix.begin();
+         it != driverMatrix.end();
+         ++it )
+    {
+        driverValuesRow DriverRow = *it;
+
+        QLayoutItem* gridItem = grid->itemAtPosition(row, 0);
+        QLabel* gridLbl = (QLabel*)gridItem->widget();
+        gridLbl->setText(QString::number(DriverRow.Vin));
+
+        gridItem = grid->itemAtPosition(row, 1);
+        gridLbl = (QLabel*)gridItem->widget();
+        gridLbl->setText(QString::number(DriverRow.Temperature));
+
+        for(int col = 2; col < 12; col++)
+        {
+            QLayoutItem* gridItem = grid->itemAtPosition(row, col);
+            QLabel* gridLbl = (QLabel*)gridItem->widget();
+            gridLbl->setText(QString::number(DriverRow.errorsArray[col]));
+        }
+        row++;
+    }
+}
+void MainWindow::driverMatrixErrors_gridLayoutDisplay(QGridLayout* grid,
+                                                      vector<driverValuesRow> driverMatrix)
+{
+    //TODO: Optimizar considerando que la matrix puede tener menos de 5 renglones.
+    int row = 1; // The first row is for the headers.
+    for(vector<driverValuesRow>::iterator it = driverMatrix.begin();
+         it != driverMatrix.end();
+         ++it )
+    {
+        driverValuesRow DriverRow = *it;
+
+
+        for(int col = 0; col < 9; col++)
+        {
+            QLayoutItem* gridItem = grid->itemAtPosition(row, col);
+            QLabel* gridLbl = (QLabel*)gridItem->widget();
+            gridLbl->setText(QString::number(DriverRow.errorsArray[col]));
+        }
+        row++;
+    }
+}
+
+QString MainWindow::driverMatrixErrors_display(vector<driverValuesRow> driverMatrix)
+{
+
+    QString matrixString;
+
+    for(vector<driverValuesRow>::iterator it = driverMatrix.begin();
+         it != driverMatrix.end();
+         ++it )
+    {
+        QString rowString;
+        driverValuesRow row = *it;
+
+        //rowString += QString::number(row.Vin) + ", ";
+        //rowString += QString::number(row.Temperature) + ", ";
+
+
+        /*QStringList errors = row.errorsList;
+        foreach(QString error, errors)
+        {
+            rowString += error + ", ";
+        }*/
+        //qDbg << rowString << "\n";
+        //rowString += "Errors: ";
+
+        for(int ind = 0; ind < 10; ind++)
+        {
+            rowString += QString::number(row.errorsArray[ind]) + ", ";
+        }
+
+        matrixString += rowString + '\n';
+        //qDbg << ", " << *it;
+    }
+    return matrixString;
+}
+
+QString MainWindow::driverMatrixValues_display(vector<driverValuesRow> driverMatrix)
+{
+
+    QString matrixString;
+
+    for(vector<driverValuesRow>::iterator it = driverMatrix.begin();
+         it != driverMatrix.end();
+         ++it )
+    {
+        QString rowString;
+        driverValuesRow row = *it;
+
+        rowString += QString::number(row.Vin) + ", ";
+        rowString += QString::number(row.Temperature) + ", ";
+
+
+        /*QStringList errors = row.errorsList;
+        foreach(QString error, errors)
+        {
+            rowString += error + ", ";
+        }*/
+        //qDbg << rowString << "\n";
+        rowString += "Er: ";
+        for(int ind = 0; ind < 10; ind++)
+        {
+            rowString += QString::number(row.errorsArray[ind]) + ", ";
+        }
+
+        matrixString += rowString + '\n';
+        //qDbg << ", " << *it;
+    }
+    return matrixString;
+}
+
+bool MainWindow::buscarExpresionRegular_returnNextInt(QString expReg, QString fuente, int& match_int)
 {
 
     //QRegularExpression expRegInt_R("J_Y: (\\d+)");
@@ -117,12 +434,13 @@ int MainWindow::buscarExpresionRegular_returnNextInt(QString expReg, QString fue
     if(RegExMatch.hasMatch() )
     {
         QString match_s = RegExMatch.captured(1);
-        int match_int = match_s.toInt();
-        return match_int;
+        //int match_int = match_s.toInt();
+        match_int = match_s.toInt();
+        return true;
     }
     else
     {
-        return -1;
+        return false;
     }
 }
 
@@ -142,7 +460,7 @@ bool MainWindow::buscarExpresionRegular(QString expReg_str, QString fuente)
 }
 
 
-void MainWindow::decodeDriverError()
+void MainWindow::decodeDriverError(const uint16_t errorRaw, driverValuesRow& row)
 {
     /*The motor can only be driven when this register has a value of 0. (See Section 3.4 for error descriptions.)
     • Bit 0: Safe Start Violation
@@ -157,220 +475,443 @@ void MainWindow::decodeDriverError()
     • Bit 9: ERR Line High
     • Bits 10-15: reserved */
 
+    QStringList errorsLst = {
+            "0SfStrtV",
+            "1ReqChIv",
+            "2SerlErr",
+            "3ComTmOt",
+            "4LimSwch",
+            "5LowVin",
+            "6HighVin",
+            "7OverTmp",
+            "8MDrvErr",
+            "9ErrLinH"  };
+
+
+    for(uint8_t bit = 0; bit < 10; bit++) // 0 to 9.
+    {
+        //qDbg << "bit: " << bit;
+        uint16_t mask = pow(2, bit);
+        //qDbg << "mask: " << mask;
+
+        uint16_t errorBit = errorRaw & mask;
+        if(errorBit)
+        {
+            row.errorsArray[bit] = 1;
+
+            QString errorDesc = errorsLst[bit];
+            //qDbg << errorDesc;
+            row.errorsList.append(errorDesc);
+        }
+        else{
+            row.errorsArray[bit] = 0;
+        }
+    }
 }
 
-void MainWindow::desplegarValores(QString renglonDatos)
+void MainWindow::Limits_update(int currentValue, int& min, int& max,
+                               QLabel* min_lbl, QLabel* max_lbl)
 {
-    /* Función para desplegar los datos que se reciben por Serial y mostrar los errores
-     * en la GUI.
-     * Se invoca en readData()     */
+    if(currentValue < min && currentValue > -1)
+    {
+        min = currentValue;
+        min_lbl->setText(QString::number(min));
+    }
 
-    ui->InfoSalida_txt->insertPlainText(renglonDatos);
-    ui->InfoSalida_txt->ensureCursorVisible();
-    ui->erroresSalida_txt->ensureCursorVisible();
+    if(currentValue > max && currentValue > -1)
+    {
+        max = currentValue;
+        max_lbl->setText(QString::number(max));
+    }
+}
 
-    /// Separar renglón datos para mostrar valores del Joystick.
+void MainWindow::displayInfoJoystick(QString renglonDatos)
+{
+    //** Joystick Y
 
-    /// Joystick Y
-    int valorJy = buscarExpresionRegular_returnNextInt("J_Y: (\\d+)", renglonDatos);
+    buscarExpresionRegular_returnNextInt("J_Y: (\\d+)", renglonDatos, valorJy);
     ui->joystick_Y_lcd->display(valorJy);
     ui->joystickVertical_sld->setValue(valorJy);
+    Limits_update(valorJy, Joy_Y_min, Joy_Y_max, ui->Jy_Min_lbl, ui->Jy_Max_lbl);
 
-    /// Joystick X
-    int valorJx = buscarExpresionRegular_returnNextInt("J_X: (\\d+)", renglonDatos);
+    //** Joystick X
+    //int valorJx = buscarExpresionRegular_returnNextInt("J_X: (\\d+)", renglonDatos);
+    buscarExpresionRegular_returnNextInt("J_X: (\\d+)", renglonDatos, valorJx);
     ui->joystick_X_lcd->display(valorJx);
     ui->joystickHorizontal_Sld->setValue(valorJx);
+    Limits_update(valorJx, Joy_X_min, Joy_X_max, ui->Jx_Min_lbl, ui->Jx_Max_lbl);
 
 
-    //* Brake INFO
-    int B_pos = buscarExpresionRegular_returnNextInt("B_p: (\\d+)", renglonDatos);
-    ui->frenoPos_lcd->display(B_pos);
+    //** Activado
+    bool statusJoystickActivado = buscarExpresionRegular_returnNextInt(cadJoystickActivado+ ": (-?(\\d+))",
+                                         renglonDatos, Joystick_Activado);
+    checkBoxBouncing(ui->joystick_Activado_chk, statusJoystickActivado);
+    checkBoxColor(ui->joystick_Activado_chk);
 
-    int B_tgt = buscarExpresionRegular_returnNextInt("B_t: (\\d+)", renglonDatos);
-    ui->frenoDes_lcd->display(B_tgt);
-
-    int B_Ctrl = buscarExpresionRegular_returnNextInt("B_c: (-?(\\d+))", renglonDatos);
-    // -?(\\d+) = Uno o ningún signo menos, seguido de uno o más dígitos.
-    ui->frenoControl_lcd->display(B_Ctrl);
-    ui->FrenoControl_Slider->setValue(B_Ctrl);
-
-    int B_Error = buscarExpresionRegular_returnNextInt("B_e: (-?(\\d+))", renglonDatos);
-    ui->Freno_lcdError->display(B_Error);
-
-
-    int B_Vin = buscarExpresionRegular_returnNextInt(cadBrake_VIN + ": (-?(\\d+))", renglonDatos);
-    if(B_Vin > 1000) // 1000 mV = 1V
-    {
-        float B_Vin_f = (float)B_Vin / 1000.0; // Received en mV.
-        ui->Brake_VIN_lbl->setText(QString::number(B_Vin_f));
-    }
-
-    int B_Temp = buscarExpresionRegular_returnNextInt(cadBrake_Temp  + ": (-?(\\d+))", renglonDatos);
-    if(B_Temp > 100) //100 = 10 °C
-    {
-        float B_Temp_f = (float)B_Temp / 10.0; // Received in 0.1 °C
-        ui->Brake_Temp_lbl->setText(QString::number(B_Temp_f));
-    }
-
-    int B_Error_Driver = buscarExpresionRegular_returnNextInt(cadBrake_Error + ": (-?(\\d+))", renglonDatos);
-    if(B_Error_Driver > -1)
-    {
-        ui->Brake_Error_lbl->setText(QString::number(B_Error_Driver));
-        //decodeDriverError();
-    }
-
-
-    // Acelerador INFO
-    int A_pos = buscarExpresionRegular_returnNextInt("A_p: (\\d+)", renglonDatos);
-    ui->aceleradorPos_lcd->display(A_pos);
-
-    int A_tgt = buscarExpresionRegular_returnNextInt("A_t: (\\d+)", renglonDatos);
-    ui->aceleradorDes_lcd->display(A_tgt);
-
-    int A_Ctrl = buscarExpresionRegular_returnNextInt("A_c: (-?(\\d+))", renglonDatos);
-    ui->aceleradorControl_lcd->display(A_Ctrl);
-    ui->AceleradorControl_Slider->setValue(A_Ctrl);
-
-    int A_Error = buscarExpresionRegular_returnNextInt("A_e: (-?(\\d+))", renglonDatos);
-    ui->Acelerador_lcdError->display(A_Error);
-
-
-    /// Volante
-    int Vol_Ctrl = buscarExpresionRegular_returnNextInt(cadVolanteControl + ": (-?(\\d+))", renglonDatos);
-    //qDebug() << "V_Ctrl: " << V_Ctrl;
-    ui->volante_lcd->display(Vol_Ctrl);
-    ui->VolanteControl_Dial->setValue(Vol_Ctrl);
-
-    int Vol_mode = buscarExpresionRegular_returnNextInt(cadVolanteModo + ": (-?(\\d+))", renglonDatos);
-
-
-    ui->VolanteModo_cmb->setCurrentIndex(Vol_mode);
-    if(Vol_mode == 0)    { // Modo Inhibido.
-        checkBoxBouncing(ui->palanca_Activada_chk, true);
-    } else {
-        checkBoxBouncing(ui->palanca_Activada_chk, false);
-    }
-
-    int statusVolActivado = buscarExpresionRegular_returnNextInt(cadVolanteActivado + ": (-?(\\d+))", renglonDatos);
-    checkBoxBouncing(ui->volante_Activado_chk, statusVolActivado);
-    checkBoxColor(ui->volante_Activado_chk);
-
-    /// Estado del Sistema
-    int edoSistemaNum = buscarExpresionRegular_returnNextInt("edo: (\\d+)", renglonDatos);
-    //qDebug() << "Edo Sistema: " << edoSistema;
-    if(edoSistemaNum < 0)
-        edoSistemaNum = 7;
-
-    QStringList estadosSistema = {"OK", "Mnt Req", "Return Home", "Safe Parking", "Immediate Stop", "Emergency Stop", "Emergency Braking", "NA"};
-    QString edoSist = estadosSistema[edoSistemaNum];
-
-    QString edoSistema_str = QString::number(edoSistemaNum) + ": " + edoSist;
-    ui->estadoSistema_lbl->setText(edoSistema_str);
-
-    // BOTONES
-    /// Fix Brake Position.
-    int statusFixFreno = buscarExpresionRegular_returnNextInt("bFB: (-?(\\d+))", renglonDatos);
-    checkBoxBouncing(ui->FixFreno_chk, statusFixFreno);
-
-    /// Modo Carretera
-    int statusModoCarr    = buscarExpresionRegular_returnNextInt("bMC: (-?(\\d+))", renglonDatos);
-    checkBoxBouncing(ui->RoadMode_chk, statusModoCarr);
-
-    int statusPalancaUp   = buscarExpresionRegular_returnNextInt("bPU: (-?(\\d+))", renglonDatos);
-    checkBoxBouncing(ui->PalUp_chk, statusPalancaUp);
-
-    int statusPalancaDown = buscarExpresionRegular_returnNextInt("bPD: (-?(\\d+))", renglonDatos);
-    checkBoxBouncing(ui->PalDown_chk, statusPalancaDown);
-
-    /// Errores
-    //QRegularExpression expRegInt_R = QRegularExpression ("(\\*\\*)(.+)\n");
-    QRegularExpression expRegInt_R = QRegularExpression ("(\\*\\*)(.+)(\\*\\*)");
-    // \\*\\* = **
-    // (.+) = Cualquier caracter una o más veces
-    // (Freno|Joy_V|Joy_H|Acelerador) = Freno   OR   Joy_V   OR   Joy_H   OR   Acelerador
-    QRegularExpressionMatch match = expRegInt_R.match(renglonDatos);
-    QString Error_s = match.captured(0);
-    if(Error_s.length() > 0)
-    {
-        ui->erroresSalida_txt->insertPlainText(Error_s);
-        ui->erroresSalida_txt->insertPlainText("\n");
-    }
-
-
-    // Estas señales actúan como un switch.
-    // Cuando se activan no se desactivarán hasta el próximo inicio del sistema
-
-    //* Joystick
     //** Desconectado
     //bool LED_Joystick_Y_Desconectado = buscarExpresionRegular("(\\*\\*)(Joystick_Y_Desconectado)(\\*\\*)", renglonDatos);
     QString cadJyDescFull = "(\\*\\*)(" + cadJy_Desc + ")(\\*\\*)";
     bool LED_Joystick_Y_Desconectado = buscarExpresionRegular(cadJyDescFull, renglonDatos);
     checkBoxBouncing_Errors(ui->chk_LED_Joy_Y_Desc, LED_Joystick_Y_Desconectado);
+    checkBoxColor_Error(ui->chk_LED_Joy_Y_Desc);
 
     bool LED_Joystick_X_Desconectado = buscarExpresionRegular("(\\*\\*)(" + cadJx_Desc + ")(\\*\\*)", renglonDatos);
     checkBoxBouncing_Errors(ui->chk_LED_Joy_X_Desc, LED_Joystick_X_Desconectado);
+    checkBoxColor_Error(ui->chk_LED_Joy_X_Desc);
 
     //** OutOfRange
     bool LED_Joystick_Y_OutOfRange = buscarExpresionRegular("(\\*\\*)(" + cadJy_OutOfRange + ")(\\*\\*)", renglonDatos);
     checkBoxBouncing_Errors(ui->chk_LED_Joy_Y_OutR, LED_Joystick_Y_OutOfRange);
+    checkBoxColor_Error(ui->chk_LED_Joy_Y_OutR);
 
     bool LED_Joystick_X_OutOfRange = buscarExpresionRegular("(\\*\\*)(" + cadJx_OutOfRange + ")(\\*\\*)", renglonDatos);
     checkBoxBouncing_Errors(ui->chk_LED_Joy_X_OutR, LED_Joystick_X_OutOfRange);
+    checkBoxColor_Error(ui->chk_LED_Joy_X_OutR);
 
-    //** Activado
-    int statusJoystickActivado = buscarExpresionRegular_returnNextInt(cadJoystickActivado+ ": (-?(\\d+))", renglonDatos);
-    checkBoxBouncing(ui->joystick_Activado_chk, statusJoystickActivado);
-    checkBoxColor(ui->joystick_Activado_chk);
+}
+void MainWindow::displayInfoButtons(QString renglonDatos)
+{
+    /// Fix Brake Position.
+    buscarExpresionRegular_returnNextInt("bFB: (-?(\\d+))",
+                                        renglonDatos, statusFixFreno);
+    checkBoxBouncing(ui->FixFreno_chk, statusFixFreno);
+
+    /// Modo Carretera
+    buscarExpresionRegular_returnNextInt("bMC: (-?(\\d+))",
+                                        renglonDatos, statusModoCarr);
+    checkBoxBouncing(ui->RoadMode_chk, statusModoCarr );
+
+    buscarExpresionRegular_returnNextInt("bPU: (-?(\\d+))",
+                                         renglonDatos, statusPalancaUp);
+    checkBoxBouncing(ui->PalUp_chk, statusPalancaUp);
+
+    buscarExpresionRegular_returnNextInt("bPD: (-?(\\d+))",
+                                         renglonDatos, statusPalancaDown);
+    checkBoxBouncing(ui->PalDown_chk, statusPalancaDown);
+}
+void MainWindow::displayInfoBrake(QString renglonDatos)
+{
+    buscarExpresionRegular_returnNextInt("B_p: (\\d+)", renglonDatos, B_pos);
+    ui->frenoPos_lcd->display(B_pos);
+
+    Limits_update(B_pos,
+                  Brake_pos_min,                Brake_pos_max,
+                  ui->brake_PosLimits_Min_lbl,  ui->brake_PosLimits_Max_lbl);
 
 
-    //* ACTUADORES
-    //** Desconectados
-    bool LED_Acelerador_Desconectado = buscarExpresionRegular("(\\*\\*)(" + cadAcel_Desc + ")(\\*\\*)", renglonDatos);
-    checkBoxBouncing_Errors(ui->chk_LED_Acel_Desc, LED_Acelerador_Desconectado);
+    buscarExpresionRegular_returnNextInt("B_t: (\\d+)", renglonDatos, B_tgt);
+    ui->frenoDes_lcd->display(B_tgt);
 
-    bool LED_Freno_Desconectado = buscarExpresionRegular("(\\*\\*)(" + cadBrakeDesc + ")(\\*\\*)", renglonDatos);
-    checkBoxBouncing_Errors(ui->chk_LED_Freno_Desc, LED_Freno_Desconectado);
+    buscarExpresionRegular_returnNextInt("B_e: (-?(\\d+))", renglonDatos, B_Pos_Error);
+    ui->Freno_lcdError->display(B_Pos_Error);
 
-    //** Inhibidos
-    int statusAcelInhibido = buscarExpresionRegular_returnNextInt(cadAcelInhibido + ": (-?(\\d+))", renglonDatos);
-    checkBoxBouncing(ui->Acel_Inhibido_chk, statusAcelInhibido);
+    buscarExpresionRegular_returnNextInt("B_c: (-?(\\d+))", renglonDatos, B_Ctrl);
+    // -?(\\d+) = Uno o ningún signo menos, seguido de uno o más dígitos.
+    ui->frenoControl_lcd->display(B_Ctrl);
+    ui->FrenoControl_Slider->setValue(B_Ctrl);
 
-    int statusFrenoInhibido = buscarExpresionRegular_returnNextInt(cadBrakeInhibido + ": (-?(\\d+))", renglonDatos);
-    checkBoxBouncing(ui->Freno_Inhibido_chk, statusFrenoInhibido);
-
-    //** Activados
-    int statusFrenoActivado = buscarExpresionRegular_returnNextInt(cadBrakeActivado + ": (-?(\\d+))", renglonDatos);
-    checkBoxBouncing(ui->Freno_Activado_chk, statusFrenoActivado);
+    //** Brake Activado
+    bool flagB_Act = buscarExpresionRegular_returnNextInt(cadBrakeActivado + ": (-?(\\d+))",
+                                                renglonDatos, B_Activado);
+    checkBoxBouncing(ui->Freno_Activado_chk, flagB_Act);
     checkBoxColor(ui->Freno_Activado_chk);
 
-    int statusAcelActivado = buscarExpresionRegular_returnNextInt(cadAcelActivado + ": (-?(\\d+))", renglonDatos);
-    //qDbg << "statusAcelActivado" << statusAcelActivado;
-    checkBoxBouncing(ui->Acel_Activado_chk, statusAcelActivado);
-    checkBoxColor(ui->Acel_Activado_chk);
+    //** Brake Disconnected
+    bool LED_Freno_Desconectado = buscarExpresionRegular("(\\*\\*)(" + cadBrakeDesc + ")(\\*\\*)", renglonDatos);
+    checkBoxBouncing_Errors(ui->chk_LED_Freno_Desc, LED_Freno_Desconectado);
+    checkBoxColor_Error(ui->chk_LED_Freno_Desc);
 
-    int statusShiftGearActivated = buscarExpresionRegular_returnNextInt(cadPalancaActivada + ": (-?(\\d+))", renglonDatos);
-    checkBoxBouncing(ui->palanca_Activada_chk, statusShiftGearActivated);
-    checkBoxColor(ui->palanca_Activada_chk);
+    //** Brake Inhibido
+    buscarExpresionRegular_returnNextInt(cadBrakeInhibido + ": (-?(\\d+))",
+                                         renglonDatos, B_Inhibido);
+    checkBoxBouncing(ui->Freno_Inhibido_chk, B_Inhibido);
+    checkBoxColor_Error(ui->Freno_Inhibido_chk);
 
-
-    //** OutOfRange
+    //** Brake OutOfRange
     bool LED_Freno_OutOfRange = buscarExpresionRegular("(\\*\\*)(" + cadBrake_OutOfRange + ")(\\*\\*)", renglonDatos);
     checkBoxBouncing_Errors(ui->chk_LED_Freno_OutR, LED_Freno_OutOfRange);
+    checkBoxColor_Error(ui->chk_LED_Freno_OutR);
+
+
+    //** Brake Driver Info
+    driverValuesRow brake_row;
+    //QStringList brake_errors_list;
+
+
+    bool B_Vin_found = buscarExpresionRegular_returnNextInt(cadBrake_VIN + ": (-?(\\d+))",
+                                                            renglonDatos, B_Vin);
+    bool B_Temp_found = buscarExpresionRegular_returnNextInt(cadBrake_Temp  + ": (-?(\\d+))",
+                                                            renglonDatos, B_Temp);
+    bool B_Driver_Errors_found = buscarExpresionRegular_returnNextInt(cadBrake_Error + ": (-?(\\d+))",
+                                                            renglonDatos, B_Driver_Errors);
+
+
+    if(B_Vin_found)
+    {
+        // When turned off the serial bus of the drivers return 65535.
+        if(B_Vin > -1) // 1000 mV = 1V
+        {
+
+            float B_Vin_f = (float)B_Vin / 1000.0; // Received en mV.
+            ui->Brake_VIN_lbl->setText(QString::number(B_Vin_f));
+            brake_row.Vin = B_Vin_f;
+        }
+        else
+        {
+            ui->Brake_VIN_lbl->setText("NA");
+        }
+    }
+
+
+    if(B_Temp_found)
+    {
+        if(B_Temp > -1)
+        {
+            //if(B_Temp > 100) //100 = 10 °C
+            float B_Temp_f = (float)B_Temp / 10.0; // Received in 0.1 °C
+            ui->Brake_Temp_lbl->setText(QString::number(B_Temp_f));
+            brake_row.Temperature = B_Temp_f;
+            ui->Brake_Error_lbl->setText(QString::number(B_Driver_Errors));
+        }
+        else
+        {
+            ui->Brake_Error_lbl->setText("NA");
+        }
+    }
+        //decodeDriverError(B_Errors_Driver, brake_errors_list);
+
+    if(B_Driver_Errors_found)
+    {
+        decodeDriverError((uint16_t)B_Driver_Errors, brake_row);
+        driverMatrixValues_insert(brake_driverValuesMatrix, brake_row);
+
+        if(B_Driver_Errors > -1)
+        {
+            if(ui->brake_ShowInfo_rBtn->isChecked())
+            {
+                //driverMatrixErrors_gridLayoutDisplay(ui->driverErrorsValues_gridLayout, brake_driverValuesMatrix);
+                driverMatrixValues_gridLayoutDisplay(ui->driverErrorsHeaders_gridLayout,
+                                                     brake_driverValuesMatrix);
+                QString brake_MatrixString = driverMatrixValues_display(brake_driverValuesMatrix);
+                //QString brake_MatrixString = driverMatrixErrors_display(brake_driverValuesMatrix);
+                ui->driversValues_txt->insertPlainText(brake_MatrixString);
+            }
+        }
+        else
+        {
+            // Se recibió valor de -1
+            //QString brake_comm_error = "NA";
+            //ui->driversValues_txt->insertPlainText(brake_comm_error);
+            ui->Brake_Error_lbl->setText("NA");
+        }
+    }
+
+
+}
+void MainWindow::displayInfoAccel(QString renglonDatos)
+{
+    //** Control info
+    buscarExpresionRegular_returnNextInt("A_p: (\\d+)", renglonDatos, A_pos);
+    ui->aceleradorPos_lcd->display(A_pos);
+
+    Limits_update(A_pos, Accel_pos_min, Accel_pos_max,
+                  ui->Accel_PosLimits_Min_lbl, ui->Accel_PosLimits_Max_lbl);
+
+    buscarExpresionRegular_returnNextInt("A_t: (\\d+)", renglonDatos, A_tgt);
+    ui->aceleradorDes_lcd->display(A_tgt);
+
+    buscarExpresionRegular_returnNextInt("A_e: (-?(\\d+))", renglonDatos, A_Pos_Error);
+    ui->Acelerador_lcdError->display(A_Pos_Error);
+
+    buscarExpresionRegular_returnNextInt("A_c: (-?(\\d+))", renglonDatos, A_Ctrl);
+    ui->aceleradorControl_lcd->display(A_Ctrl);
+    ui->AceleradorControl_Slider->setValue(A_Ctrl);
+
+    //** Accel Activated
+    bool flagAccelAct = buscarExpresionRegular_returnNextInt(cadAcelActivado + ": (-?(\\d+))",
+                                                renglonDatos, A_Activado);
+    //qDbg << "statusAcelActivado" << statusAcelActivado;
+    checkBoxBouncing(ui->Acel_Activado_chk, flagAccelAct);
+    checkBoxColor(ui->Acel_Activado_chk);
+
+    //** Inhibido
+    buscarExpresionRegular_returnNextInt(cadAcelInhibido + ": (-?(\\d+))",
+                                                 renglonDatos, A_Inhibido);
+    checkBoxBouncing(ui->Acel_Inhibido_chk, A_Inhibido);
+    checkBoxColor_Error(ui->Acel_Inhibido_chk);
+
+    //** Accelerator Desconectado
+    bool LED_Acelerador_Desconectado = buscarExpresionRegular("(\\*\\*)(" + cadAcel_Desc + ")(\\*\\*)", renglonDatos);
+    checkBoxBouncing_Errors(ui->chk_LED_Acel_Desc, LED_Acelerador_Desconectado);
+    checkBoxColor_Error(ui->chk_LED_Acel_Desc);
 
     //bool LED_Acel_OutOfRange = buscarExpresionRegular("(\\*\\*)(Acelerador_OutOfRange)(\\*\\*)", renglonDatos);
     bool LED_Acel_OutOfRange = buscarExpresionRegular("(\\*\\*)(" + cadAcel_OutOfRange + ")(\\*\\*)", renglonDatos);
     checkBoxBouncing_Errors(ui->chk_LED_Acel_OutR, LED_Acel_OutOfRange);
+    checkBoxColor_Error(ui->chk_LED_Acel_OutR);
 
+    // **Info driver
+    driverValuesRow accel_row;
+    //QStringList accel_errors_list;
 
-    bool testingRestartingReceived = buscarExpresionRegular("(\\*\\*)(" + cadRestartTesting + ")(\\*\\*)", renglonDatos);
-    if(testingRestartingReceived)
+    bool A_Vin_found = buscarExpresionRegular_returnNextInt(cadAccel_VIN + ": (-?(\\d+))",
+                                                renglonDatos, A_Vin);
+    bool A_Temp_found  = buscarExpresionRegular_returnNextInt(cadAccel_Temp  + ": (-?(\\d+))",
+                                                renglonDatos, A_Temp);
+    bool A_Driver_Errors_found = buscarExpresionRegular_returnNextInt(cadAccel_Error + ": (-?(\\d+))",
+                                                renglonDatos, A_Driver_Errors);
+
+    if(A_Vin_found)
     {
-        apagarLEDsError();
+        float A_Vin_f = (float)A_Vin / 1000.0; // Received en mV.
+        ui->Accel_Vin_lbl->setText(QString::number(A_Vin_f));
+        accel_row.Vin = A_Vin_f;
     }
 
-    //int valorJx = Jx_s.toInt();
+    if(A_Temp_found)
+    {
+        float A_Temp_f = (float)A_Temp / 10.0; // Received in 0.1 °C
+        ui->Accel_Temp_lbl->setText(QString::number(A_Temp_f));
+        accel_row.Temperature = A_Temp_f;
+    }
+
+    if(A_Driver_Errors_found)
+    {
+        ui->Accel_Error_lbl->setText(QString::number(A_Driver_Errors));
+
+        decodeDriverError(A_Driver_Errors, accel_row);
+        driverMatrixValues_insert(accel_driverValuesMatrix, accel_row);
+
+        if(ui->accel_ShowInfo_rBtn->isChecked())
+        {
+            driverMatrixValues_gridLayoutDisplay(ui->driverErrorsHeaders_gridLayout,
+                                                 accel_driverValuesMatrix);
+
+            QString accel_MatrixString = driverMatrixValues_display(accel_driverValuesMatrix);
+            ui->driversValues_txt->insertPlainText(accel_MatrixString);
+        }
+
+    }
 
 }
+
+void MainWindow::displayInfoSteer(QString renglonDatos)
+{
+
+    buscarExpresionRegular_returnNextInt(cadVolanteControl + ": (-?(\\d+))",
+                                         renglonDatos, V_Ctrl);
+    //qDebug() << "V_Ctrl: " << V_Ctrl;
+    ui->volante_lcd->display(V_Ctrl);
+    ui->VolanteControl_Dial->setValue(V_Ctrl);
+
+
+    bool V_cadActiv_found = buscarExpresionRegular_returnNextInt(cadVolanteActivado + ": (-?(\\d+))",
+                                         renglonDatos, V_Activado);
+    checkBoxBouncing(ui->volante_Activado_chk, V_cadActiv_found);
+    checkBoxColor(ui->volante_Activado_chk);
+
+    buscarExpresionRegular_returnNextInt(cadVolanteModo + ": (-?(\\d+))",
+                                         renglonDatos, V_Mode);
+    ui->VolanteModo_cmb->setCurrentIndex(V_Mode);
+    if(V_Mode == 0)    { // Modo Inhibido.
+        checkBoxBouncing(ui->volante_Inhibido_chk, true);
+
+    } else {
+        checkBoxBouncing(ui->volante_Inhibido_chk, false);
+    }
+    checkBoxColor_Error(ui->volante_Inhibido_chk);
+
+    // **Info driver
+    driverValuesRow steer_row;
+
+    bool V_Vin_found = buscarExpresionRegular_returnNextInt(cadSteer_VIN + ": (-?(\\d+))",
+                                                    renglonDatos, V_Vin);
+    bool V_Temp_found = buscarExpresionRegular_returnNextInt(cadSteer_Temp  + ": (-?(\\d+))",
+                                                    renglonDatos, V_Temp);
+    bool V_Driver_Errors_found = buscarExpresionRegular_returnNextInt(cadSteer_Error + ": (-?(\\d+))",
+                                                    renglonDatos, V_Driver_Errors);
+
+
+    if(V_Vin_found)
+    {
+        float V_Vin_f = (float)V_Vin / 1000.0; // Received en mV.
+        ui->Steer_Vin_lbl->setText(QString::number(V_Vin_f));
+        steer_row.Vin = V_Vin_f;
+    }
+
+    if(V_Temp_found)
+    {
+        float V_Temp_f = (float)V_Temp / 10.0; // Received in 0.1 °C
+        ui->Steer_Temp_lbl->setText(QString::number(V_Temp_f));
+        steer_row.Temperature = V_Temp_f;
+        ui->Steer_Error_lbl->setText(QString::number(V_Driver_Errors));
+    }
+
+    if(V_Driver_Errors_found )
+    {
+        decodeDriverError(V_Driver_Errors, steer_row);
+        driverMatrixValues_insert(steer_driverValuesMatrix, steer_row);
+
+        if(ui->steer_ShowInfo_rBtn->isChecked())
+        {
+            driverMatrixValues_gridLayoutDisplay(ui->driverErrorsHeaders_gridLayout, steer_driverValuesMatrix);
+
+            QString steer_MatrixString = driverMatrixValues_display(steer_driverValuesMatrix);
+            ui->driversValues_txt->insertPlainText(steer_MatrixString);
+        }
+    }
+
+    //if(ui->steer_ShowInfo_rBtn->isChecked() && (!V_Vin_found || !))
+    //{
+}
+
+
+void MainWindow::displayInfoShiftGear(QString renglonDatos)
+{
+    bool shiftAct = buscarExpresionRegular_returnNextInt(cadPalancaActivada + ": (-?(\\d+))",
+                                            renglonDatos, ShiftGear_Activated);
+
+    checkBoxBouncing(ui->palanca_Activada_chk, shiftAct);
+    checkBoxColor(ui->palanca_Activada_chk);
+
+}
+void MainWindow::displaySystemInfo(QString renglonDatos)
+{
+
+    //** System Status
+    bool systemStatusFound =
+            buscarExpresionRegular_returnNextInt("edo: (\\d+)", renglonDatos, SystemStatusNum);
+    //qDebug() << "Edo Sistema: " << edoSistema;
+    if(!systemStatusFound)
+    {
+        SystemStatusNum = 7; // (NA)
+    }
+
+    QStringList estadosSistema = {"OK", "Mnt Req", "Return Home", "Safe Parking",
+                                  "Immediate Stop", "Emergency Stop", "Emergency Braking", "NA"};
+    QString edoSist = estadosSistema[SystemStatusNum];
+
+    QString edoSistema_str = QString::number(SystemStatusNum) + ": " + edoSist;
+    ui->estadoSistema_lbl->setText(edoSistema_str);
+
+    //** T, T_min and T_max
+    bool T_found = buscarExpresionRegular_returnNextInt(cadT + ":(\\d+)", renglonDatos, T_sys);
+    ui->T_lbl->setText(QString::number(T_sys));
+
+    if(T_found) {
+        Limits_update(T_sys, T_min, T_max,
+                  ui->T_min_lbl, ui->T_max_lbl);
+    }
+
+    //** Normal Defines
+    buscarExpresionRegular_returnNextInt(cadNormalDefines + ": (\\d+)",
+                                         renglonDatos, normalDefines);
+
+    checkBoxBouncing(ui->normalDefines_chk, normalDefines);
+    checkBoxColor(ui->normalDefines_chk);
+}
+
+
 
 void MainWindow::apagarLEDsError()
 {
@@ -385,17 +926,17 @@ void MainWindow::apagarLEDsError()
     ui->chk_LED_Freno_OutR->setChecked(false);
 }
 
-void MainWindow::checkBoxBouncing(QCheckBox *chkBox, int statusRcv)
+void MainWindow::checkBoxBouncing(QCheckBox *chkBox, bool statusRcv)
 {
     // Atención que -1 se considera true.
 
     bool chkStatus = chkBox->checkState();
 
-    if( (statusRcv > 0) && !chkStatus)
+    if(statusRcv && !chkStatus)
     {
         chkBox->setChecked(true);
     }
-    else if( (statusRcv <= 0) && chkStatus)
+    else if(!statusRcv && chkStatus)
     {
         chkBox->setChecked(false);
     }
@@ -409,6 +950,17 @@ void MainWindow::checkBoxColor(QCheckBox * chkBox)
         chkBox->setStyleSheet("background-color: rgb(0, 85, 255);\ncolor: rgb(255, 255, 0);");
     }else {
         chkBox->setStyleSheet("background-color: rgb(255, 85, 0);\ncolor: rgb(255, 255, 0);");
+    }
+}
+
+void MainWindow::checkBoxColor_Error(QCheckBox * chkBox)
+{
+    bool status = chkBox->isChecked();
+    if(status)
+    {
+        chkBox->setStyleSheet("background-color: rgb(255, 85, 0);\ncolor: rgb(255, 255, 0);");
+    }else {
+        chkBox->setStyleSheet("background-color: rgb(0, 85, 255);\ncolor: rgb(255, 255, 0);");
     }
 }
 
@@ -498,6 +1050,7 @@ void MainWindow::on_btnConectar_pressed()
         QMessageBox msg;
         msg.setText("Was an error while creating the Serial Port. btnConectar_pressed()");
         msg.exec();
+        fillPortsInfo();
     }
 }
 
@@ -655,22 +1208,6 @@ void MainWindow::fillPortsInfo()
     }
 }
 
-/*void MainWindow::llenarInfoPuertosManual()
-{
-    ui->cmbSerialPortSelector->clear();
-
-    ui->cmbSerialPortSelector->addItem(QStringLiteral("/dev/ttyACM0"), QStringLiteral("/dev/ttyACM0"));
-    ui->cmbSerialPortSelector->addItem(QStringLiteral("/dev/ttyACM1"), QStringLiteral("/dev/ttyACM1"));
-    ui->cmbSerialPortSelector->addItem(QStringLiteral("/dev/ttyACM2"), QStringLiteral("/dev/ttyACM2"));
-
-
-    ui->cmbSerialPortSelector->addItem(QStringLiteral("/dev/ttyUSB0"), QStringLiteral("/dev/ttyUSB0"));
-    ui->cmbSerialPortSelector->addItem(QStringLiteral("/dev/ttyUSB1"), QStringLiteral("/dev/ttyUSB1"));
-    ui->cmbSerialPortSelector->addItem(QStringLiteral("/dev/ttyUSB2"), QStringLiteral("/dev/ttyUSB2"));
-
-    ui->cmbSerialPortSelector->setCurrentIndex(0);
-}*/
-
 void MainWindow::showPortInfo(int idx)
 {
     // Mostrar la información del puerto en la etiqueta lblDescripción
@@ -684,42 +1221,6 @@ void MainWindow::showPortInfo(int idx)
 
 
 
-void MainWindow::on_cmbSerialPortSelector_currentTextChanged(const QString &arg1)
-{
-    /*
-    //serial.setPortName("/dev/ttyUSB1");
-    serial->setPortName(arg1);
-    serial->open(QIODevice::ReadWrite);
-    serial->setBaudRate(baudRate);
-    serial->setDataBits(QSerialPort::Data8);
-    serial->setParity(QSerialPort::NoParity);
-    serial->setStopBits(QSerialPort::OneStop);
-    serial->setFlowControl(QSerialPort::NoFlowControl);
-
-    if (serial->isOpen() && serial->isWritable())
-    {
-        //qDebug() << "Ready..." << endl;
-        qDebug() << "Conectado." << endl;
-        //QMessageBox msg;
-        //msg.setText("Conectado.");
-        //msg.exec();
-        //serial.write("R");
-
-        //if(serial.flush())
-        //{
-        //    qDebug() << "ok" << endl;
-        //}
-        //qDebug() <<"value sent!!! "<< endl;
-        //serial.close();
-    }
-    else
-    {
-        qDebug() << "Was an error while creating the Serial Port. cmbSerialPortSelector_currentTextChanged()";
-        QMessageBox msg;
-        msg.setText("Was an error while creating the Serial Port. cmbSerialPortSelector_currentTextChanged()");
-        msg.exec();
-    }*/
-}
 void MainWindow::on_cmbSerialPortSelector_currentIndexChanged(int index)
 {
         showPortInfo(index);
@@ -780,7 +1281,7 @@ void MainWindow::on_btnParoEmergencia_pressed()
 */
 
 
-void MainWindow::dibujarVolante(float anguloGrados)
+/*void MainWindow::dibujarVolante(float anguloGrados)
 {
     escena->clear();
 
@@ -807,14 +1308,8 @@ void MainWindow::dibujarVolante(float anguloGrados)
     escena->addLine(linea2, penRLines);
     escena->addLine(linea3, penHLines);
     escena->addEllipse(origen_x-largoLinea, origen_y-largoLinea, largoLinea*2, largoLinea*2, penHLines);
-}
+}*/
 
-void MainWindow::on_cmbSerialPortSelector_highlighted(int index)
-{
 
-}
 
-void MainWindow::on_btnDesconectar_clicked()
-{
 
-}

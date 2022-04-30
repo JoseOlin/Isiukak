@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1110</width>
-    <height>542</height>
+    <width>1276</width>
+    <height>677</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,7 +22,7 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QWidget" name="valores_y_Conexion_Widget" native="true">
+     <widget class="QWidget" name="SensorsInfo_Errors_and_Conn_Widget" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
@@ -31,92 +31,22 @@
       </property>
       <layout class="QHBoxLayout" name="Valores_Widget">
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout_7">
+        <layout class="QVBoxLayout" name="SensorsInfo_verLayout">
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_4">
-           <item>
-            <spacer name="horizontalSpacer">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>40</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item>
-            <widget class="QLabel" name="lblDescripcion">
-             <property name="layoutDirection">
-              <enum>Qt::RightToLeft</enum>
-             </property>
-             <property name="autoFillBackground">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string>Descripción:</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_2">
-             <item>
-              <widget class="QComboBox" name="cmbBaudRate">
-               <property name="currentIndex">
-                <number>-1</number>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="cmbSerialPortSelector">
-               <property name="currentIndex">
-                <number>1</number>
-               </property>
-               <item>
-                <property name="text">
-                 <string>/dev/ttyUSB0</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>/dev/ttyUSB1</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>/dev/ttyUSB2</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>/dev/ttyACM0</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>/dev/ttyACM1</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-            </layout>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout">
+          <layout class="QHBoxLayout" name="SensorsInfo_horLayout">
            <item>
             <widget class="QGroupBox" name="grp_Joystick">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>525</height>
+              </size>
              </property>
              <property name="title">
               <string>Joystick</string>
@@ -127,91 +57,89 @@
                 <property name="layoutDirection">
                  <enum>Qt::RightToLeft</enum>
                 </property>
-                <property name="styleSheet">
-                 <string notr="true">background-color: rgb(0, 85, 255);
-color: rgb(255, 255, 0);</string>
-                </property>
                 <property name="text">
                  <string>Activado </string>
                 </property>
                </widget>
               </item>
               <item>
+               <widget class="QCheckBox" name="chk_LED_Joy_Y_Desc">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>40</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>JY_Desc</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="chk_LED_Joy_X_Desc">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>20</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>JX_Desc</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="chk_LED_Joy_Y_OutR">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>40</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>JY_OutR</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="chk_LED_Joy_X_OutR">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>20</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>JX_OutR</string>
+                </property>
+               </widget>
+              </item>
+              <item>
                <layout class="QFormLayout" name="formLayout_2">
-                <item row="2" column="0">
-                 <widget class="QLabel" name="joystick_X_lbl">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>17</width>
-                    <height>50</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>J_ X:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="1">
-                 <widget class="QLCDNumber" name="joystick_X_lcd">
-                  <property name="enabled">
-                   <bool>true</bool>
-                  </property>
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>50</width>
-                    <height>40</height>
-                   </size>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>20</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="digitCount">
-                   <number>4</number>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="1">
-                 <widget class="QLCDNumber" name="joystick_Y_lcd">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>50</width>
-                    <height>50</height>
-                   </size>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>14</pointsize>
-                    <weight>75</weight>
-                    <bold>true</bold>
-                   </font>
-                  </property>
-                  <property name="digitCount">
-                   <number>4</number>
-                  </property>
-                 </widget>
-                </item>
                 <item row="1" column="0">
                  <widget class="QLabel" name="joystick_Y_lbl">
                   <property name="sizePolicy">
@@ -231,6 +159,160 @@ color: rgb(255, 255, 0);</string>
                   </property>
                  </widget>
                 </item>
+                <item row="1" column="1">
+                 <widget class="QLCDNumber" name="joystick_Y_lcd">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>50</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>60</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>14</pointsize>
+                    <weight>75</weight>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="digitCount">
+                   <number>4</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="0">
+                 <widget class="QLabel" name="joystick_X_lbl">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>17</width>
+                    <height>50</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>J_ X:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="1">
+                 <widget class="QLCDNumber" name="joystick_X_lcd">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>50</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>60</height>
+                   </size>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>20</pointsize>
+                    <weight>75</weight>
+                    <bold>true</bold>
+                   </font>
+                  </property>
+                  <property name="digitCount">
+                   <number>4</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="label_34">
+                  <property name="text">
+                   <string>Min</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QLabel" name="label_36">
+                  <property name="text">
+                   <string>Max</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="0">
+                 <widget class="QLabel" name="Jy_Min_lbl">
+                  <property name="text">
+                   <string>0</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QLabel" name="Jy_Max_lbl">
+                  <property name="text">
+                   <string>1024</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="0">
+                 <widget class="QLabel" name="label_39">
+                  <property name="text">
+                   <string>Min</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="1">
+                 <widget class="QLabel" name="label_40">
+                  <property name="text">
+                   <string>Max</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="0">
+                 <widget class="QLabel" name="Jx_Min_lbl">
+                  <property name="text">
+                   <string>0</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="6" column="1">
+                 <widget class="QLabel" name="Jx_Max_lbl">
+                  <property name="text">
+                   <string>1024</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
                </layout>
               </item>
               <item>
@@ -244,6 +326,12 @@ color: rgb(255, 255, 0);</string>
                    <size>
                     <width>0</width>
                     <height>60</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>100</height>
                    </size>
                   </property>
                   <property name="minimum">
@@ -398,7 +486,7 @@ color: rgb(255, 255, 0);</string>
             </widget>
            </item>
            <item>
-            <widget class="QGroupBox" name="grp_LEDs">
+            <widget class="QGroupBox" name="grp_Freno">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                <horstretch>0</horstretch>
@@ -408,220 +496,8 @@ color: rgb(255, 255, 0);</string>
              <property name="maximumSize">
               <size>
                <width>16777215</width>
-               <height>240</height>
+               <height>525</height>
               </size>
-             </property>
-             <property name="autoFillBackground">
-              <bool>true</bool>
-             </property>
-             <property name="title">
-              <string>LEDs Error</string>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_13">
-              <item>
-               <layout class="QGridLayout" name="gridLayout">
-                <item row="2" column="0">
-                 <widget class="QCheckBox" name="chk_LED_Joy_X_Desc">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>20</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>JX_Desc</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0">
-                 <widget class="QCheckBox" name="chk_LED_Joy_Y_Desc">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>40</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>JY_Desc</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="1">
-                 <widget class="QCheckBox" name="chk_LED_Joy_X_OutR">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Maximum" vsizetype="MinimumExpanding">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>20</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>JX_OutR</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="4" column="0">
-                 <widget class="QCheckBox" name="chk_LED_Freno_Desc">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>20</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Freno_Desc</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="4" column="1">
-                 <widget class="QCheckBox" name="chk_LED_Freno_OutR">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Maximum" vsizetype="MinimumExpanding">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>20</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Freno_OutR</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="5" column="0">
-                 <widget class="QCheckBox" name="chk_LED_Acel_Desc">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>20</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Acel_Desc</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="1">
-                 <widget class="QCheckBox" name="chk_LED_Joy_Y_OutR">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Maximum" vsizetype="MinimumExpanding">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>40</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>JY_OutR</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="5" column="1">
-                 <widget class="QCheckBox" name="chk_LED_Acel_OutR">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Maximum" vsizetype="MinimumExpanding">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>20</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Acel_OutR</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="0">
-                 <widget class="QLabel" name="lblLEDsError_Desc">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>20</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>Desc</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <widget class="QLabel" name="lblLEDsError_OutRange">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Maximum" vsizetype="MinimumExpanding">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>20</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="text">
-                   <string>OutR</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item>
-            <widget class="QGroupBox" name="grp_Freno">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
              </property>
              <property name="autoFillBackground">
               <bool>true</bool>
@@ -632,7 +508,7 @@ color: rgb(255, 255, 0);</string>
              <layout class="QVBoxLayout" name="verticalLayout_2">
               <item>
                <layout class="QFormLayout" name="frmLay_Freno">
-                <item row="3" column="0">
+                <item row="6" column="0">
                  <widget class="QLabel" name="valorFreno_lbl">
                   <property name="minimumSize">
                    <size>
@@ -645,7 +521,7 @@ color: rgb(255, 255, 0);</string>
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="1">
+                <item row="6" column="1">
                  <widget class="QLCDNumber" name="frenoPos_lcd">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
@@ -668,7 +544,7 @@ color: rgb(255, 255, 0);</string>
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="0">
+                <item row="7" column="0">
                  <widget class="QLabel" name="label">
                   <property name="minimumSize">
                    <size>
@@ -681,7 +557,7 @@ color: rgb(255, 255, 0);</string>
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="1">
+                <item row="7" column="1">
                  <widget class="QLCDNumber" name="frenoDes_lcd">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -704,7 +580,7 @@ color: rgb(255, 255, 0);</string>
                   </property>
                  </widget>
                 </item>
-                <item row="5" column="1">
+                <item row="8" column="1">
                  <widget class="QLCDNumber" name="Freno_lcdError">
                   <property name="minimumSize">
                    <size>
@@ -714,14 +590,14 @@ color: rgb(255, 255, 0);</string>
                   </property>
                  </widget>
                 </item>
-                <item row="5" column="0">
+                <item row="8" column="0">
                  <widget class="QLabel" name="Freno_lblError">
                   <property name="text">
                    <string>Error</string>
                   </property>
                  </widget>
                 </item>
-                <item row="6" column="1">
+                <item row="9" column="1">
                  <widget class="QLCDNumber" name="frenoControl_lcd">
                   <property name="enabled">
                    <bool>true</bool>
@@ -753,7 +629,7 @@ color: rgb(255, 255, 0);</string>
                   </property>
                  </widget>
                 </item>
-                <item row="6" column="0">
+                <item row="9" column="0">
                  <widget class="QLabel" name="label_2">
                   <property name="minimumSize">
                    <size>
@@ -800,6 +676,50 @@ color: rgb(255, 255, 0);</string>
                   </property>
                  </widget>
                 </item>
+                <item row="4" column="1">
+                 <widget class="QCheckBox" name="chk_LED_Freno_OutR">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>50</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="layoutDirection">
+                   <enum>Qt::RightToLeft</enum>
+                  </property>
+                  <property name="text">
+                   <string>OutRnge</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QCheckBox" name="chk_LED_Freno_Desc">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>20</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="layoutDirection">
+                   <enum>Qt::RightToLeft</enum>
+                  </property>
+                  <property name="text">
+                   <string>Desc</string>
+                  </property>
+                 </widget>
+                </item>
                </layout>
               </item>
               <item>
@@ -822,6 +742,63 @@ color: rgb(255, 255, 0);</string>
                 <property name="tickPosition">
                  <enum>QSlider::TicksAbove</enum>
                 </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QFrame" name="frame_2">
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_15">
+                 <item>
+                  <widget class="QLabel" name="label_26">
+                   <property name="text">
+                    <string>Position Limits</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <layout class="QFormLayout" name="formLayout_3">
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_29">
+                     <property name="text">
+                      <string>Min</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QLabel" name="label_28">
+                     <property name="text">
+                      <string>Max</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="brake_PosLimits_Min_lbl">
+                     <property name="text">
+                      <string>0</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QLabel" name="brake_PosLimits_Max_lbl">
+                     <property name="text">
+                      <string>1024</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
                </widget>
               </item>
               <item>
@@ -868,6 +845,22 @@ color: rgb(255, 255, 0);</string>
                   </property>
                  </widget>
                 </item>
+                <item row="3" column="1">
+                 <widget class="QRadioButton" name="brake_ShowInfo_rBtn">
+                  <property name="text">
+                   <string>Show Info</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                  <property name="autoExclusive">
+                   <bool>false</bool>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">driversShowInfoSelect</string>
+                  </attribute>
+                 </widget>
+                </item>
                </layout>
               </item>
              </layout>
@@ -876,10 +869,16 @@ color: rgb(255, 255, 0);</string>
            <item>
             <widget class="QGroupBox" name="grp_Acelerador">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>525</height>
+              </size>
              </property>
              <property name="autoFillBackground">
               <bool>true</bool>
@@ -893,14 +892,82 @@ color: rgb(255, 255, 0);</string>
              <layout class="QVBoxLayout" name="verticalLayout_4">
               <item>
                <layout class="QFormLayout" name="frmLay_Acelerador">
-                <item row="2" column="0">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="Acel_Activado_lbl">
+                  <property name="text">
+                   <string>Activado</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QCheckBox" name="Acel_Activado_chk">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="layoutDirection">
+                   <enum>Qt::RightToLeft</enum>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="Acel_Inhibido_lbl">
+                  <property name="text">
+                   <string>Inhibido</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QCheckBox" name="Acel_Inhibido_chk">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="layoutDirection">
+                   <enum>Qt::RightToLeft</enum>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="1">
+                 <widget class="QCheckBox" name="chk_LED_Acel_OutR">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>43</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="layoutDirection">
+                   <enum>Qt::RightToLeft</enum>
+                  </property>
+                  <property name="text">
+                   <string>OutRnge</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="5" column="0">
                  <widget class="QLabel" name="valorAcelerador_lbl">
                   <property name="text">
                    <string>Pos:</string>
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="1">
+                <item row="5" column="1">
                  <widget class="QLCDNumber" name="aceleradorPos_lcd">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -923,21 +990,14 @@ color: rgb(255, 255, 0);</string>
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="0">
+                <item row="6" column="0">
                  <widget class="QLabel" name="label_3">
                   <property name="text">
                    <string>Des:</string>
                   </property>
                  </widget>
                 </item>
-                <item row="5" column="0">
-                 <widget class="QLabel" name="label_4">
-                  <property name="text">
-                   <string>Ctrl:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="1">
+                <item row="6" column="1">
                  <widget class="QLCDNumber" name="aceleradorDes_lcd">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -958,7 +1018,37 @@ color: rgb(255, 255, 0);</string>
                   </property>
                  </widget>
                 </item>
-                <item row="5" column="1">
+                <item row="7" column="0">
+                 <widget class="QLabel" name="label_5">
+                  <property name="text">
+                   <string>Error</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="7" column="1">
+                 <widget class="QLCDNumber" name="Acelerador_lcdError">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>30</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item row="8" column="0">
+                 <widget class="QLabel" name="label_4">
+                  <property name="text">
+                   <string>Ctrl:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="8" column="1">
                  <widget class="QLCDNumber" name="aceleradorControl_lcd">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
@@ -979,60 +1069,25 @@ color: rgb(255, 255, 0);</string>
                   </property>
                  </widget>
                 </item>
-                <item row="4" column="0">
-                 <widget class="QLabel" name="label_5">
-                  <property name="text">
-                   <string>Error</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="4" column="1">
-                 <widget class="QLCDNumber" name="Acelerador_lcdError">
+                <item row="2" column="1">
+                 <widget class="QCheckBox" name="chk_LED_Acel_Desc">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>0</width>
-                    <height>30</height>
+                    <width>50</width>
+                    <height>0</height>
                    </size>
                   </property>
-                 </widget>
-                </item>
-                <item row="0" column="0">
-                 <widget class="QLabel" name="Acel_Activado_lbl">
-                  <property name="text">
-                   <string>Activado</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <widget class="QCheckBox" name="Acel_Activado_chk">
                   <property name="layoutDirection">
                    <enum>Qt::RightToLeft</enum>
                   </property>
                   <property name="text">
-                   <string/>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0">
-                 <widget class="QLabel" name="Acel_Inhibido_lbl">
-                  <property name="text">
-                   <string>Inhibido</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="1">
-                 <widget class="QCheckBox" name="Acel_Inhibido_chk">
-                  <property name="layoutDirection">
-                   <enum>Qt::RightToLeft</enum>
-                  </property>
-                  <property name="text">
-                   <string/>
+                   <string>Desc</string>
                   </property>
                  </widget>
                 </item>
@@ -1058,6 +1113,69 @@ color: rgb(255, 255, 0);</string>
                 <property name="tickPosition">
                  <enum>QSlider::TicksAbove</enum>
                 </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QFrame" name="frame">
+                <property name="layoutDirection">
+                 <enum>Qt::LeftToRight</enum>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_13">
+                 <item>
+                  <widget class="QLabel" name="label_30">
+                   <property name="text">
+                    <string>Position Limits</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <layout class="QFormLayout" name="formLayout_4">
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_31">
+                     <property name="text">
+                      <string>Min</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QLabel" name="label_32">
+                     <property name="layoutDirection">
+                      <enum>Qt::LeftToRight</enum>
+                     </property>
+                     <property name="text">
+                      <string>Max</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QLabel" name="Accel_PosLimits_Max_lbl">
+                     <property name="text">
+                      <string>1024</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="Accel_PosLimits_Min_lbl">
+                     <property name="text">
+                      <string>0</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
                </widget>
               </item>
               <item>
@@ -1104,6 +1222,19 @@ color: rgb(255, 255, 0);</string>
                   </property>
                  </widget>
                 </item>
+                <item row="3" column="1">
+                 <widget class="QRadioButton" name="accel_ShowInfo_rBtn">
+                  <property name="text">
+                   <string>Show Info</string>
+                  </property>
+                  <property name="autoExclusive">
+                   <bool>false</bool>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">driversShowInfoSelect</string>
+                  </attribute>
+                 </widget>
+                </item>
                </layout>
               </item>
              </layout>
@@ -1112,7 +1243,7 @@ color: rgb(255, 255, 0);</string>
            <item>
             <widget class="QGroupBox" name="grp_Volante">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
@@ -1120,7 +1251,7 @@ color: rgb(255, 255, 0);</string>
              <property name="maximumSize">
               <size>
                <width>150</width>
-               <height>336</height>
+               <height>525</height>
               </size>
              </property>
              <property name="autoFillBackground">
@@ -1260,6 +1391,19 @@ color: rgb(255, 255, 0);</string>
                </widget>
               </item>
               <item>
+               <spacer name="verticalSpacer_2">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
                <layout class="QFormLayout" name="formLayout_5">
                 <item row="0" column="0">
                  <widget class="QLabel" name="label_13">
@@ -1303,86 +1447,185 @@ color: rgb(255, 255, 0);</string>
                   </property>
                  </widget>
                 </item>
+                <item row="3" column="1">
+                 <widget class="QRadioButton" name="steer_ShowInfo_rBtn">
+                  <property name="text">
+                   <string>Show Info</string>
+                  </property>
+                  <property name="autoExclusive">
+                   <bool>false</bool>
+                  </property>
+                  <attribute name="buttonGroup">
+                   <string notr="true">driversShowInfoSelect</string>
+                  </attribute>
+                 </widget>
+                </item>
                </layout>
               </item>
              </layout>
             </widget>
            </item>
            <item>
-            <widget class="QGroupBox" name="palanca_grp">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
+            <widget class="QWidget" name="ShiftGear_and_SystemInfo" native="true">
+             <property name="maximumSize">
               <size>
-               <width>104</width>
-               <height>336</height>
+               <width>16777215</width>
+               <height>525</height>
               </size>
              </property>
-             <property name="layoutDirection">
-              <enum>Qt::LeftToRight</enum>
-             </property>
-             <property name="autoFillBackground">
-              <bool>true</bool>
-             </property>
-             <property name="title">
-              <string>Palanca</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout_10">
+             <layout class="QVBoxLayout" name="shiftGear_and_DefaultDefines">
               <item>
-               <layout class="QVBoxLayout" name="verticalLayout_14">
-                <item>
-                 <widget class="QCheckBox" name="palanca_Activada_chk">
-                  <property name="sizePolicy">
-                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="minimumSize">
-                   <size>
-                    <width>50</width>
-                    <height>0</height>
-                   </size>
-                  </property>
-                  <property name="layoutDirection">
-                   <enum>Qt::RightToLeft</enum>
-                  </property>
-                  <property name="text">
-                   <string>Activada</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QCheckBox" name="palanca_Inhibida_chk">
-                  <property name="layoutDirection">
-                   <enum>Qt::RightToLeft</enum>
-                  </property>
-                  <property name="text">
-                   <string>Inhibida</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <spacer name="verticalSpacer">
-                  <property name="orientation">
-                   <enum>Qt::Vertical</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>20</width>
-                    <height>40</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-               </layout>
+               <widget class="QGroupBox" name="palanca_grp">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>104</width>
+                  <height>200</height>
+                 </size>
+                </property>
+                <property name="layoutDirection">
+                 <enum>Qt::LeftToRight</enum>
+                </property>
+                <property name="autoFillBackground">
+                 <bool>true</bool>
+                </property>
+                <property name="title">
+                 <string>Palanca</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_10">
+                 <item>
+                  <layout class="QVBoxLayout" name="verticalLayout_14">
+                   <item>
+                    <widget class="QCheckBox" name="palanca_Activada_chk">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>50</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="layoutDirection">
+                      <enum>Qt::RightToLeft</enum>
+                     </property>
+                     <property name="text">
+                      <string>Activada</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QCheckBox" name="palanca_Inhibida_chk">
+                     <property name="layoutDirection">
+                      <enum>Qt::RightToLeft</enum>
+                     </property>
+                     <property name="text">
+                      <string>Inhibida</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <spacer name="verticalSpacer">
+                     <property name="orientation">
+                      <enum>Qt::Vertical</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QFrame" name="frame_3">
+                <property name="frameShape">
+                 <enum>QFrame::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Raised</enum>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_7">
+                 <item>
+                  <layout class="QFormLayout" name="formLayout_6">
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_27">
+                     <property name="text">
+                      <string>T:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QLabel" name="T_lbl">
+                     <property name="text">
+                      <string>0</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QLabel" name="T_max_lbl">
+                     <property name="text">
+                      <string>100</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QLabel" name="label_35">
+                     <property name="text">
+                      <string>T_max</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_33">
+                     <property name="text">
+                      <string>T_min</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="T_min_lbl">
+                     <property name="text">
+                      <string>25</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="normalDefines_chk">
+                   <property name="layoutDirection">
+                    <enum>Qt::RightToLeft</enum>
+                   </property>
+                   <property name="text">
+                    <string>Normal Defines</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
               </item>
              </layout>
             </widget>
@@ -1392,7 +1635,7 @@ color: rgb(255, 255, 0);</string>
         </layout>
        </item>
        <item>
-        <widget class="QWidget" name="ConexionConfigForm_Widget" native="true">
+        <widget class="QWidget" name="Edo_ConexionConfig_and_Error_vertWidget" native="true">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -1401,13 +1644,13 @@ color: rgb(255, 255, 0);</string>
          </property>
          <property name="maximumSize">
           <size>
-           <width>350</width>
-           <height>16777215</height>
+           <width>400</width>
+           <height>525</height>
           </size>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_12">
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <layout class="QHBoxLayout" name="EstadoIsiukak_horLayout">
             <item>
              <widget class="QLabel" name="lblEstadoSistema">
               <property name="font">
@@ -1463,6 +1706,143 @@ color: rgb(255, 255, 0);</string>
            </layout>
           </item>
           <item>
+           <layout class="QGridLayout" name="driverErrorsHeaders_gridLayout">
+            <item row="0" column="6">
+             <widget class="QLabel" name="label_21">
+              <property name="toolTip">
+               <string>Limit/Kill Switch</string>
+              </property>
+              <property name="text">
+               <string>LSw</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="10">
+             <widget class="QLabel" name="label_25">
+              <property name="toolTip">
+               <string>Motor Driver Error</string>
+              </property>
+              <property name="text">
+               <string>DEr</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="9">
+             <widget class="QLabel" name="label_24">
+              <property name="toolTip">
+               <string>Over Temperature</string>
+              </property>
+              <property name="text">
+               <string>OvT</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="5">
+             <widget class="QLabel" name="label_20">
+              <property name="toolTip">
+               <string>Comm TimeOut</string>
+              </property>
+              <property name="text">
+               <string>CTO</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_38">
+              <property name="text">
+               <string>Vin</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="7">
+             <widget class="QLabel" name="label_22">
+              <property name="toolTip">
+               <string>Low Vin</string>
+              </property>
+              <property name="text">
+               <string>LwV</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="8">
+             <widget class="QLabel" name="label_23">
+              <property name="toolTip">
+               <string>High Vin</string>
+              </property>
+              <property name="text">
+               <string>HgV</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QLabel" name="label_17">
+              <property name="toolTip">
+               <string>Safe Start Violation</string>
+              </property>
+              <property name="text">
+               <string>SSV</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="QLabel" name="label_18">
+              <property name="toolTip">
+               <string>Required Channel Invalid</string>
+              </property>
+              <property name="text">
+               <string>RCI</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="4">
+             <widget class="QLabel" name="label_19">
+              <property name="toolTip">
+               <string>Serial Error</string>
+              </property>
+              <property name="text">
+               <string>SEr</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QLabel" name="label_37">
+              <property name="text">
+               <string>°C</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="11">
+             <widget class="QLabel" name="label_41">
+              <property name="toolTip">
+               <string>ERR Line  High</string>
+              </property>
+              <property name="text">
+               <string>LHg</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QGridLayout" name="driverErrorsValues_gridLayout"/>
+          </item>
+          <item>
+           <widget class="QPlainTextEdit" name="driversValues_txt">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>220</height>
+             </size>
+            </property>
+            <property name="plainText">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPlainTextEdit" name="erroresSalida_txt">
             <property name="sizePolicy">
              <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
@@ -1488,6 +1868,82 @@ color: rgb(255, 255, 0);</string>
            </widget>
           </item>
           <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QLabel" name="lblDescripcion">
+              <property name="layoutDirection">
+               <enum>Qt::RightToLeft</enum>
+              </property>
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Descripción:</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <item>
+               <widget class="QComboBox" name="cmbBaudRate">
+                <property name="currentIndex">
+                 <number>-1</number>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="cmbSerialPortSelector">
+                <property name="currentIndex">
+                 <number>1</number>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>/dev/ttyUSB0</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>/dev/ttyUSB1</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>/dev/ttyUSB2</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>/dev/ttyACM0</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>/dev/ttyACM1</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+          <item>
            <layout class="QHBoxLayout" name="horizontalLayout_3">
             <item>
              <widget class="QPushButton" name="btnParoEmergencia">
@@ -1498,7 +1954,7 @@ color: rgb(255, 255, 0);</string>
                </sizepolicy>
               </property>
               <property name="text">
-               <string>Paro de emergencia</string>
+               <string>Prueba de funciones</string>
               </property>
              </widget>
             </item>
@@ -1550,11 +2006,17 @@ color: rgb(255, 255, 0);</string>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>25</height>
+       </size>
+      </property>
       <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
         <widget class="QPlainTextEdit" name="InfoSalida_txt">
          <property name="enabled">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -1565,13 +2027,13 @@ color: rgb(255, 255, 0);</string>
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>30</height>
+           <height>84</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
            <width>16777215</width>
-           <height>200</height>
+           <height>400</height>
           </size>
          </property>
          <property name="plainText">
@@ -1589,7 +2051,7 @@ color: rgb(255, 255, 0);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1110</width>
+     <width>1276</width>
      <height>22</height>
     </rect>
    </property>
@@ -1638,4 +2100,7 @@ color: rgb(255, 255, 0);</string>
   <include location="Resources.qrc"/>
  </resources>
  <connections/>
+ <buttongroups>
+  <buttongroup name="driversShowInfoSelect"/>
+ </buttongroups>
 </ui>

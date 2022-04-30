@@ -1,6 +1,6 @@
 # Sistema Conducción Joystick
 
-El archivo principal es **ControlActuadoresJoystick_Retro.cpp**
+El archivo principal es  **ControlActuadoresJoystick_Retro.cpp**
 
 ## Joystick
 
@@ -32,6 +32,7 @@ BajarPalanca
 ModoCarretera
 
 # Referencia de pines
+![](../../../assets/imgs/morpho_pinout.png)
 
 ## Pines analógicos:
 
@@ -51,24 +52,49 @@ En el ST NUCLEO la referencia para el ADC debe configurarse AVDD = VDDVirtual, A
 
 ## Pines digitales:
 
-**1:** Serial Tx
-**0:** Serial Rx
+### Comunicación serial con el Monitor
+**0 (PA3):** Serial Rx
 
+**1 (PA2):** Serial Tx
+
+### Comunicación serial con los puentes
+**2 (PA10): INPUT.**  **smcSerial RX**. Hacia los Drivers de los motores.
+
+**8 (PA9): OUTPUT**. **smcSerial TX**. Hacia los Drivers de los motores.  
+
+### Voltaje digital para corroborar conexión de potenciómetros
 **3: OUTPUT**. **5V Virtual**. Para Validación de potenciómetros conectados.
-**2: INPUT.**  **smcSerial RX**. Hacia los Drivers de los motores.
 
-6: **Not used** 
-**5: OUTPUT. pinPalanca_Bajar.** Pin para controlar el puebte H de la palanca.
-**4: OUTPUT. pinPalanca_Bajar.** Pin para controlar el puente H de la palanca.
-
-**9: INPUT_PULLUP. PinParoManualEmergencia.**
-**8: OUTPUT**. **smcSerial TX**. Hacia los Drivers de los motores.  
 **7: OUTPUT.** **GND Virtual**.
 
-**13: OUTPUT**: V_DDA Volt referencia ADC VDD
-**12: OUTPUT.** V_SSA Voltaje referencia ADC GND
-**11: INPUT.** Switch Modo Carretera.
+
+### Pines de control de la palanca
+**4: OUTPUT. pinPalanca_Bajar.** Pin para controlar el puente H de la palanca.
+
+**5: OUTPUT. pinPalanca_Bajar.** Pin para controlar el puebte H de la palanca.
+
+
+### Botones y switches
 **10: INPUT.** Botón Bajar Palanca.
+
+**11: INPUT.** Switch Modo Carretera.
+
+
+### Voltaje de referencia para el ADC.
+**12: OUTPUT.** V_SSA Voltaje referencia ADC GND.
+
+**13: OUTPUT**: V_DDA Volt referencia ADC VDD.
+
+
+### Otros
+**6**: **Not used** 
+
+**9: INPUT_PULLUP. PinParoManualEmergencia.**
+
+
+
+
+
 
 
 

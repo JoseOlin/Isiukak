@@ -16,18 +16,7 @@ act3: Volante.         0x04  (0000 0100)
 se define una constante de mapeo.***/
 ////Encontrar valores con pruebas en ControlActuadores_Joystick_NoRetro
 
-/// Freno
-// (Valores Actuador ServoCity).
-/* Extendido 28 - 1009 Retraido.
-//Diferencia 1009 - 28 = 981
-// Primero considerar carrera completa.
-// Despues considerar carrera de 8 cm en lugar de los 10 posibles (1009/10*8 = 807.2)
-int actFreno_valorExtendido = 313; //Buscar la extensión máxima que puede tener el actuador sin forzar el pedal.
-int actFreno_valorRetraido = 974;
-
-int actFreno_valorParoEmergencia = 313;
-*/
-
+///* Freno
 // (Valores Actuador GoBilda).
 int ActuadorFreno_ValorLimitSwitchRetraido = 200;
 int ActuadorFreno_ValorLimitSwitchExtendido = 1009;
@@ -36,9 +25,18 @@ int ActuadorFreno_ValorLimitSwitchExtendido = 1009;
 int ActuadorFreno_valorRetraido = 250;
 int ActuadorFreno_valorExtendido = 805;
 
-int ActuadorFreno_valorParoEmergencia = 800; // TODO: Buscar la extensión máxima que puede tener el actuador sin forzar el pedal.
+int ActuadorFreno_valorParoEmergencia = 800; // TODO: A. Buscar la extensión máxima que puede tener el actuador sin forzar el pedal.
 
-///Acelerador.
+//** Valores de umbral para aplicar control.
+uint8_t ActuadorFreno_ComportamientoControlDirecto = true;
+int ActuadorFreno_umbralError_Ctrl = 9;
+int ActuadorFreno_umbralErrorArranque = ActuadorFreno_umbralError_Ctrl * 5;
+int ActuadorFreno_tiempoLlegada = 1500;
+
+//int ActuadorFreno_umbralError_Rango = 20;
+int ActuadorFreno_umbralError_Rango = 35;
+
+///* Acelerador.
 // Extendido  28  -  965 Retraido.
 //Diferencia 1009 - 28 = 937
 //#define ACELERADOR_MAPEO_MEDIO 650
@@ -51,18 +49,15 @@ int ActuadorAcelerador_valorRetraido = 985; //Retraido. El acelerador esta inici
                             //extendido, para que quede en contacto con el acelerador.
 
 /// Valores de umbral para aplicar control.
+uint8_t ActuadorAcelerador_ComportamientoControlDirecto = false;
+//uint8_t ActuadorAcelerador_ComportamientoControlDirecto = true; //FIXME: Cambiado sólo para pruebas
 int Actuadores_umbralError;
 int ActuadorAcelerador_umbralError_Ctrl = 3; // Error aceptable en la posición de los actuadores de los pedales.
 int ActuadorAcelerador_tiempoLlegada = 2000;
 // Umbral para evaluar si el actuador está en un rango válido
 int ActuadorAcelerador_umbralError_Rango = 20;
 
-int ActuadorFreno_umbralError_Ctrl = 9;
-int ActuadorFreno_umbralErrorArranque = ActuadorFreno_umbralError_Ctrl * 5;
-int ActuadorFreno_tiempoLlegada = 1500;
 
-//int ActuadorFreno_umbralError_Rango = 20;
-int ActuadorFreno_umbralError_Rango = 35;
 
 ///************************ Fin Variables configuración*******************************///
 
@@ -216,7 +211,6 @@ void ControlarPedales(int Joystick_Y,
     }
 
     moverActuador(TipoActuador::Freno, ActuadorFreno_ErrorPosicion);
-
 #endif
 
   //Controlar el acelerador.
@@ -245,12 +239,12 @@ void moverActuador(TipoActuador tipoActuador, int ErrorPosicion)
     int address;
 
     bool ComportamientoDirecto; //Este comportamiento tiene que ver con la posición de los engranes del motor.
-    // Comportamiento Directo: Valores de control positivos EXTIENDEN el actuador.
-    // Comportamiento inverso: Valores de control positivos RETRAEN el actuador.
+    // Comportamiento Directo: Valores de control Positivos EXTIENDEN el actuador.
+    // Comportamiento INVERSO: Valores de control Positivos RETRAEN el actuador.
 
     if(tipoActuador == TipoActuador::Freno)
     {
-        ComportamientoDirecto = true;
+        ComportamientoDirecto = ActuadorFreno_ComportamientoControlDirecto;
         Kp = ActuadorFreno_Kp;
         address = ActuatorBrake_Address;
         Actuadores_umbralError = ActuadorFreno_umbralError_Ctrl;
@@ -258,7 +252,7 @@ void moverActuador(TipoActuador tipoActuador, int ErrorPosicion)
     }
     else if(tipoActuador == TipoActuador::Acelerador)
     {
-        ComportamientoDirecto = false;
+        ComportamientoDirecto = ActuadorAcelerador_ComportamientoControlDirecto;
         Kp = ActuadorAcelerador_Kp;
         address = ActuatorAccel_Address;
         Actuadores_umbralError = ActuadorAcelerador_umbralError_Ctrl;
@@ -363,9 +357,6 @@ void desplegarInfoPedales()
         Serial.print(", B_c: ");  Serial.print(ActuadorFreno_Control);
         Serial.print(", B_inh: "); Serial.print(ActuadorFreno_EstaInhibido);
     #endif
-    #if INFO_MOTOR_DRIVERS
-        ActuatorBrake_Driver.displayInfo();
-    #endif
 #endif
 
 
@@ -382,11 +373,22 @@ void desplegarInfoPedales()
         Serial.print(",  A_c: ");  Serial.print(ActuadorAcelerador_Control); //Valor de control aplicado al actuador de acelerador.
         Serial.print(", A_inh: "); Serial.print(ActuadorAcelerador_EstaInhibido);
     #endif
-    #if INFO_MOTOR_DRIVERS
-        ActuatorAccel_Driver.displayInfo();
-    #endif
 #endif
+}
 
+
+void desplegarInfoMotorDrivers()
+{
+#if INFO_MOTOR_DRIVERS
+    if(counterIterationsToDriversReading >= IterationsToDriversReading)
+    {
+        ActuatorBrake_Driver.displayInfo();
+        ActuatorAccel_Driver.displayInfo();
+        ActuatorSteer_Driver.displayInfo();
+
+        counterIterationsToDriversReading = 0; //Reset here, increment in Actuators_Drivers_Read()
+    }
+#endif
 
 }
 

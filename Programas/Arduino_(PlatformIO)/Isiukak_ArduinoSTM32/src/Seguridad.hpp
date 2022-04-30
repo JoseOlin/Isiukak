@@ -46,7 +46,8 @@ unsigned int cantidadIteracionesParaVerificacion = periodoVerificacion / periodo
 
 unsigned int contadorIteraciones = 0;
 
-int delayLecturaRapida = 1; // TODO: 1 ms. Probar si el delay es necesario en el ST.
+
+int delayLecturaRapida = 1;
 ///************************** Fin Variables configuración ************************///
 
 
@@ -157,6 +158,8 @@ enum ErrorCodes { OK,                   // F0: OK
                   EmergencyBraking };   // F6: Emergency braking. Immediate stopping of the vehicle by activating the brakes
 
 ErrorCodes EstadoDelSistema;
+
+bool definesNormalUse = false;
 
 enum NivelesDigitales {BAJO, ALTO};
 ///*************************** Fin Variables de programa *****************************///
@@ -433,9 +436,9 @@ uint8_t Potenciometro_VerificarConexionSingular(
      * \return  true si el potenciómetro está conectado, false si está desconectado.
      ***************************************************************************************/
 
-    /// TODO: Verificar que la variable mensajesEmergenciaDesplegados no esté evitando que se muestre
+    /// TODO: A. Verificar que la variable mensajesEmergenciaDesplegados no esté evitando que se muestre
     /// el mensaje de error para algunos pots (por ejemplo, si el primero está desconectado y no se muestra
-    /// el erro de que el segundo también está desconectado.
+    /// el error de que el segundo también está desconectado.
     unsigned int valorPot;
 
 #if TESTING_MODE
@@ -547,7 +550,7 @@ uint8_t Potenciometros_VerificarConexion (
 
     Pots_verificacion_ponerExtremosEnAlto();
 
-    delay(delayLectura);
+    delay(delayLectura); // TODO: B. 1 ms. Probar si el delay es necesario en el ST.
 
     // Validar que al poner los dos extremos del potenciómetro en ALTO
     // el valor del wiper esté arriba del umbral umbralPotJoy_Superior.
@@ -587,7 +590,7 @@ uint8_t Potenciometros_VerificarConexion (
     pots_high = actuadores_high  && joystick_high;
 
     #if DEBUG_POTS_ERROR
-    if(!pots_high)
+    if(!pots_high && flagDisplayInfo)
     {
         Serial.print("**Falla ");
         if(!Joystick_Conectado) {
@@ -647,7 +650,7 @@ uint8_t Potenciometros_VerificarConexion (
     ///**************************************************************///
 
     #if DEBUG_POTS_ERROR
-    if(!pots_low)
+    if(!pots_low && flagDisplayInfo)
     {
         Serial.print("**Falla: ");
         if(!joystick_low) {
@@ -688,8 +691,8 @@ void aplicarRutinasSeguridad(
 
         ErrorCodes &estadoDelSistema,
         uint8_t &acelerador_estaInhibido, uint8_t &freno_estaInhibido)
-{   /*! Aplicar las medidas de seguridad en función del error.  */
-
+{
+    /*! Aplicar las medidas de seguridad en función del error.  */
 
     /// Validación de potenciómetros conectados.
     if(!Joystick_X_Conectado)
@@ -792,6 +795,8 @@ void aplicarRutinasSeguridad(
 
 
     /// Validación de Potenciómetros dentro del rango válido
+    /// Potenciometros_EstanEnRango() Valida si el define VALIDAR_LIMITES_JOYSTICK
+    /// is set.
     if(!Joystick_X_EnRango)
     {
         if(estadoDelSistema < ErrorCodes::EmergencyStop)
@@ -898,7 +903,11 @@ void aplicarRutinasSeguridad(
 
     if(Joystick_X_Conectado && Joystick_X_EnRango)
     {
+        /* FIXME: B. Si el joystick está desactivado y el volante activado,el volante recibe valores de control.
+         *  por la forma en la que se valida conexióny se aplican las rutinas de seguridad, */
+    #if VOLANTE_ACTIVADO
         volante_Desinhibir();
+    #endif
     }
 
 
@@ -922,8 +931,8 @@ void aplicarRutinasSeguridad(
     }
 
     /// TODO: A. Validar las acciones de aplicarRutinasSeguridad.
-    // TODO: Agregar incidencia en el log.
-    // TODO: Optimizar las funciones de seguridad por desconexión.
+    // TODO: A. Optimizar las funciones de seguridad por desconexión.
+    // TODO: B. Implementar log para almacenar incidencias.
     // TODO: C. Encender luces preventivas.
     // TODO: C. Automatizar la palanca de cambios y ponerla en Neutral.
 }
@@ -1015,7 +1024,7 @@ void verificacionSeguridad_Periodica(uint8_t &Potenciometros_Conectados)
         || !Potenciometros_Conectados )
     {
 
-        #if DEBUG_POTS_ERROR_VALUES
+        #if DEBUG_POTS_ERROR_VALUES_EVERY_PERIOD
             bool flagDisplayValues = true;
         #else
             bool flagDisplayValues = false;
@@ -1033,10 +1042,13 @@ void verificacionSeguridad_Periodica(uint8_t &Potenciometros_Conectados)
 
         // Esto se realiza cada cantidadIteracionesParaVerificacion cuando los pots están conectados
         // y cada iteración cuando los Pots se detectan desconectados.
-        Potenciometros_Conectados  = Potenciometros_VerificarConexion(
+        Potenciometros_Conectados  =
+                Potenciometros_VerificarConexion(
             Joystick_X_Conectado,           Joystick_Y_Conectado,       Joystick_Conectado,
             ActuadorAcelerador_Conectado,   ActuadorFreno_Conectado,    Actuadores_Conectados,
             delayLecturaRapida, flagDisplayValues);
+
+        flagDisplayValues = false;
     }
 }
 
@@ -1075,7 +1087,8 @@ void verificacionSeguridad_Constante(uint8_t &Potenciometros_EnRangoValido)
 
 void desplegarInfoEstadoSistema()
 {
-    Serial.print(", edo: "); Serial.print(EstadoDelSistema);
+    Serial.print(", edo: ");  Serial.print(EstadoDelSistema);
+    Serial.print(", nDef: "); Serial.print(definesNormalUse);
 }
 
 
@@ -1239,12 +1252,11 @@ uint8_t verificacionSeguridad_Boot()
     return errores_Boot;
 }
 
-
-/*!  * \brief aplicarRutinasSeguridad_boot
- *
- *                                      */
 void aplicarRutinasSeguridad_boot(uint8_t &JoystickCentrado, ErrorCodes &estadoDelSistema)
 {
+    /*!  * \brief aplicarRutinasSeguridad_boot
+     *
+     *                                      */
     if(!JoystickCentrado)
     {
         if(estadoDelSistema < ErrorCodes::EmergencyBraking)

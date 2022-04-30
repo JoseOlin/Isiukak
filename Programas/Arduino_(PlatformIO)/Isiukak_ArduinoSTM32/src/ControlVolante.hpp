@@ -14,9 +14,8 @@
                               //->//#include "DriversMotores.hpp"
 
 
-int valMin_CtrlVolante = 200; //Por debajo de este valor el motor no se mueve, aún si ya estaba en movimiento.
-// TODO: Homogeneizar la nomenclatura de estas dos variables.
-int controlVolanteMaximo = 3200;
+int CtrlVolante_valMin = 200; //Por debajo de este valor el motor no se mueve, aún si ya estaba en movimiento.
+int CtrlVolante_valMax = 3200;
 //int controlVolanteMaximo = 2400;
 
 //*****************************Variables configuración**************************
@@ -118,12 +117,6 @@ uint8_t contadorLEDEncoderDesconectado = 0;
 //*************************Fin Variables del programa**************************//
 
 
-//**************Prototipos*******************//
-int ControlPosicionVolante(float posicionMotorDeseada, float posicionMotorActual, float* errorMotorDireccion, int controlMaximo);
-//**************Fin Prototipos*******************//
-
-
-
 void ControlarVolante(int Joystick_X, TiposControlVolante tipoControlVolante)
 {
 
@@ -137,21 +130,22 @@ void ControlarVolante(int Joystick_X, TiposControlVolante tipoControlVolante)
     if(tipoControlVolante == TiposControlVolante::MODO_INHIBIDO)
     {
         Volante_Velocidad = 0;
-#if VOLANTE_ACTIVADO
+    #if VOLANTE_ACTIVADO
         setMotorSpeed_Protocol(ActuatorSteer_Address, Volante_Velocidad);
-#endif
+    #endif
     }
     else if(tipoControlVolante == TiposControlVolante::MODO_OPENLOOP_PORPARTES)
     {
-#if DEBUG_VOLANTE
+    #if DEBUG_VOLANTE
         Serial.println("tipoCtrl: OLpP");
-#endif
-        /* Para mejorar la sensibilidad del volante (menos sensible cerca del centro y más sensible
- * hacia los extremos, se definen segmentos del joystick y de control. El 60% del joystick (definido en
- * joy_percentSegmento1) se mapea en el 30% del control del volante (definido en porcentControlPuente_Seg1)
- *                              Joystick X
+    #endif
+        /* Para mejorar la sensibilidad del volante (menos sensible cerca del centro
+         * y más sensible hacia los extremos, se definen segmentos del joystick
+         * y de control. El 60% del joystick (definido en joy_percentSegmento1) se mapea
+         * en el 30% del control del volante (definido en porcentControlPuente_Seg1)
+                                  Joystick X
        387               60%          512       60%       . 40%    643
-     Mínimo    Izq_Segm1        umb_I     umb_D       Der_Segm1    Máximo
+   Mínimo     Izq_Segm1        umb_I      umb_D       Der_Segm1    Máximo
         |---------.----------------.---|---.--------------.--------|     */
         int umbralLecturaIzq = joyX_Center - umbral_Lectura_JoyX;
         int umbralLecturaDer = joyX_Center + umbral_Lectura_JoyX;
@@ -162,7 +156,7 @@ void ControlarVolante(int Joystick_X, TiposControlVolante tipoControlVolante)
             {
                 Volante_Velocidad = map(Joystick_X,
                                         joyX_Center,          joyIzq_Segmento1,
-                                        valMin_CtrlVolante,   ControlVolante_IzqSegm1);
+                                        CtrlVolante_valMin,   ControlVolante_IzqSegm1);
             }
             else if(Joystick_X < joyIzq_Segmento1)
             {
@@ -173,7 +167,7 @@ void ControlarVolante(int Joystick_X, TiposControlVolante tipoControlVolante)
             else if (Joystick_X > umbralLecturaDer && Joystick_X <= joyDer_Segmento1){
                 Volante_Velocidad = map(Joystick_X,
                                         joyX_Center,           joyDer_Segmento1,
-                                        -valMin_CtrlVolante,   ControlVolante_DerSegm1);
+                                        -CtrlVolante_valMin,   ControlVolante_DerSegm1);
             }
             else if(Joystick_X > joyDer_Segmento1){
                 Volante_Velocidad = map(Joystick_X,
@@ -189,6 +183,7 @@ void ControlarVolante(int Joystick_X, TiposControlVolante tipoControlVolante)
         setMotorSpeed_Protocol(ActuatorSteer_Address, Volante_Velocidad);
     #endif
     }
+
     else if(tipoControlVolante == TiposControlVolante::MODO_OPENLOOP_EXPONENCIAL)
     {
         //int umbralLecturaIzq = joyDirectionCenter-umbral_lectura_joystick;
@@ -400,16 +395,13 @@ void desplegarInfoVolante()
 {
 #if INFO_VOLANTE
     Serial.print(",\tVol_c: "); Serial.print(Volante_Velocidad);
-    Serial.print(", Vol_m: "); Serial.print(TipoControlVolante);
+    Serial.print(", V_m: ");    Serial.print(TipoControlVolante);
 
     #if VOLANTE_ACTIVADO
-        Serial.print(", Vol_ac: 1");
+        Serial.print(", V_ac: 1");
     #endif
 
-    #if INFO_MOTOR_DRIVERS
-        ActuatorSteer_Driver.displayInfo();
-    #endif
-    //Serial.print(valorControlVolante); //Esta activarla con el modo exponencial.
+
 #endif
 }
 
