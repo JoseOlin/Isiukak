@@ -23,7 +23,7 @@ unsigned long timeOut = 2; // in ms. To use in setTimeOut
 unsigned long timeOutSetted;
 //****Variables para comunicacin serial.****//
 
-unsigned int DriversReading_Period = 1000;
+unsigned int DriversReading_Period = 500;
 unsigned int IterationsToDriversReading;
 unsigned int counterIterationsToDriversReading = 0;
 

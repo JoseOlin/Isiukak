@@ -82,7 +82,8 @@ int MotorDriver::getVariable_Protocol(byte address, unsigned char variableID)
     smcSerial.write(0xAA); // Using Pololu Protocol Command Byte.
     smcSerial.write(address);
 
-    smcSerial.write(0xA1); // Get Variable Command Byte
+    //smcSerial.write(0xA1); // Get Variable Command Byte
+    smcSerial.write(0x21); //  GetVariable Command Byte with MSB cleared.
     smcSerial.write(variableID);
     //delayMicroseconds(10);
     //return readByte() + 256 * readByte();
