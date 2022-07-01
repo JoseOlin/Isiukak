@@ -2,8 +2,8 @@
 #define CONFIG_HPP
 
 // Constantes para definición de los actuadores a utilizar
-#define JOYSTICK_ACTIVADO 0
-#define FRENO_ACTIVADO 0
+#define JOYSTICK_ACTIVADO 1
+#define FRENO_ACTIVADO 1
 #define ACELERADOR_ACTIVADO 0 //Para definir si se usará el actuador de acelerador
 #define VOLANTE_ACTIVADO 0  //Para especificar que se controlará el volante.
 #define PALANCA_ACTIVADA 0

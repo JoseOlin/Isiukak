@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1276</width>
-    <height>677</height>
+    <width>1024</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -15,6 +15,12 @@
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1024</width>
+    <height>600</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Monitor Serial Isiukak</string>
@@ -384,7 +390,7 @@
            <item>
             <widget class="QGroupBox" name="grp_Botones">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
@@ -407,14 +413,14 @@
                 <item>
                  <widget class="QCheckBox" name="FixFreno_chk">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>20</width>
+                    <width>10</width>
                     <height>0</height>
                    </size>
                   </property>
@@ -426,14 +432,14 @@
                 <item>
                  <widget class="QCheckBox" name="PalUp_chk">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>20</width>
+                    <width>0</width>
                     <height>0</height>
                    </size>
                   </property>
@@ -445,14 +451,14 @@
                 <item>
                  <widget class="QCheckBox" name="PalDown_chk">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>20</width>
+                    <width>0</width>
                     <height>0</height>
                    </size>
                   </property>
@@ -464,14 +470,14 @@
                 <item>
                  <widget class="QCheckBox" name="RoadMode_chk">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>20</width>
+                    <width>0</width>
                     <height>0</height>
                    </size>
                   </property>
@@ -531,7 +537,7 @@
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>55</width>
+                    <width>40</width>
                     <height>40</height>
                    </size>
                   </property>
@@ -977,7 +983,7 @@
                   </property>
                   <property name="minimumSize">
                    <size>
-                    <width>55</width>
+                    <width>40</width>
                     <height>40</height>
                    </size>
                   </property>
@@ -1366,7 +1372,7 @@
                <widget class="QDial" name="VolanteControl_Dial">
                 <property name="minimumSize">
                  <size>
-                  <width>100</width>
+                  <width>80</width>
                   <height>83</height>
                  </size>
                 </property>
@@ -1484,7 +1490,7 @@
                 </property>
                 <property name="minimumSize">
                  <size>
-                  <width>104</width>
+                  <width>90</width>
                   <height>200</height>
                  </size>
                 </property>
@@ -1644,7 +1650,7 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>400</width>
+           <width>300</width>
            <height>525</height>
           </size>
          </property>
@@ -1668,7 +1674,7 @@
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>50</height>
+                <height>30</height>
                </size>
               </property>
               <property name="font">
@@ -1685,8 +1691,8 @@
              <widget class="QLabel" name="label_6">
               <property name="maximumSize">
                <size>
-                <width>100</width>
-                <height>100</height>
+                <width>80</width>
+                <height>80</height>
                </size>
               </property>
               <property name="autoFillBackground">
@@ -1831,6 +1837,12 @@
             <property name="enabled">
              <bool>false</bool>
             </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="maximumSize">
              <size>
               <width>16777215</width>
@@ -1845,14 +1857,14 @@
           <item>
            <widget class="QPlainTextEdit" name="erroresSalida_txt">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
             <property name="minimumSize">
              <size>
-              <width>265</width>
+              <width>100</width>
               <height>0</height>
              </size>
             </property>
@@ -1965,6 +1977,12 @@
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="text">
                  <string/>
                 </property>
@@ -1978,6 +1996,12 @@
                <widget class="QPushButton" name="btnDesconectar">
                 <property name="enabled">
                  <bool>false</bool>
+                </property>
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
                 </property>
                 <property name="text">
                  <string/>
@@ -2051,8 +2075,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1276</width>
-     <height>22</height>
+     <width>1024</width>
+     <height>23</height>
     </rect>
    </property>
    <property name="sizePolicy">

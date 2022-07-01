@@ -6,8 +6,8 @@ else {
     HOMEDIR += $$(HOME)
 }
 
-INCLUDEPATH += "/media/Ext4/Proyectos/Autonomia/Sistema Conducción Joystick/Documentación/Programas/Isiukak_ST/Isiukak_STM32_PlatformIO/include"
-INCLUDEPATH += "/media/Ext4/Proyectos/Autonomia/Sistema Conducción Joystick/Documentación/Programas/Isiukak_ST/Isiukak_STM32_PlatformIO/src"
+INCLUDEPATH += "/media/Ext4/JoseLuis/Proyectos/1_Olin_Robotics/1_Sistema_Conducción_Joystick/Repositorio_Github_Isiukak/Programas/Arduino_(PlatformIO)/Isiukak_ArduinoSTM32/include"
+INCLUDEPATH += "/media/Ext4/JoseLuis/Proyectos/1_Olin_Robotics/1_Sistema_Conducción_Joystick/Repositorio_Github_Isiukak/Programas/Arduino_(PlatformIO)/Isiukak_ArduinoSTM32/src"
 INCLUDEPATH += "$${HOMEDIR}/.platformio/packages/framework-arduinoststm32/cores/arduino/avr"
 INCLUDEPATH += "$${HOMEDIR}/.platformio/packages/framework-arduinoststm32/cores/arduino/stm32"
 INCLUDEPATH += "$${HOMEDIR}/.platformio/packages/framework-arduinoststm32/cores/arduino/stm32/LL"

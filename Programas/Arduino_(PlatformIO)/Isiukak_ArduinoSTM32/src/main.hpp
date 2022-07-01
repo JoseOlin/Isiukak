@@ -213,8 +213,8 @@ void configurarPines()
     // The buttons have external pullup resistors
     pinMode(pinFijarPosicionFreno, INPUT);  //D10; //PB6
     pinMode(pinBajarPalanca,  INPUT);       //D11; //PA7
-    pinMode(pinSubirPalanca,  INPUT);       //       PC2 (Morpho only);
-    pinMode(pinModoCarretera, INPUT);       //       PC3 (Morpho only);
+    pinMode(pinSubirPalanca,  INPUT);       //       PC3 (Morpho only);
+    pinMode(pinModoCarretera, INPUT);       //       PC2 (Morpho only);
     // FIXME: A. Validar si activar PullUps internas modifica la lectura del ADC.
 
     //TODO: C. //setUnusedPins_input_pullDown();
@@ -240,7 +240,7 @@ void displayInfo()
     desplegarInfoBotones();
 
     desplegarInfoPedales();
-    desplegarInfoMotorDrivers();
+    desplegarInfoMotorDrivers(); //FIXME: Reactivar
 
     desplegarInfoVolante();
     desplegarInfoPalanca(ActuadorFreno_Posicion);
@@ -341,6 +341,7 @@ void displayInfoTime()
     Serial.print(",\tT:"); Serial.print(diferencia);
     #endif
     Serial.println(" ");
+
     tiempoAnterior = tiempoActual;
 }
 

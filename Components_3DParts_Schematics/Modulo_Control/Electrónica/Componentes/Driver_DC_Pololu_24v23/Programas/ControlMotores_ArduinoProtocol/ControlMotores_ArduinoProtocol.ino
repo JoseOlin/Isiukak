@@ -46,7 +46,7 @@ void setup()
   smcSerial.begin(19200);
   delay (5);
   exitSafeStart_Protocol(0x1D); //Cambiar direccion segun corresponda
-  exitSafeStart_Protocol(0x1F);
+  //exitSafeStart_Protocol(0x1F);
   //sendValue(0xAA); //Para activar Pololu protocol en los puentes.
 }
 
@@ -60,10 +60,11 @@ void loop()
     j = Serial.read()-'0';
     k = Serial.read()-'0';
     l = Serial.read()-'0';
+    
     csp = l + k*10 + j*100 + i*1000;
     
     setMotorSpeed_Protocol(0x1D, csp);
-    setMotorSpeed_Protocol(0x1F, csp);
+    //setMotorSpeed_Protocol(0x1F, csp);
     
   }
 }

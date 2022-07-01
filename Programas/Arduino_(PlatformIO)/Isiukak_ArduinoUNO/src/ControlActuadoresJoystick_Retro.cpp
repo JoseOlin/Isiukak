@@ -238,7 +238,7 @@ void loop()
             verificacionSeguridad_Periodica(Potenciometros_Conectados);    // VerificarConexionPotenciometros
         #endif
 
-            aplicarRutinasSeguridad(
+            /*aplicarRutinasSeguridad(
                         Joystick_X_Conectado, Joystick_Y_Conectado,
                         ActuadorAcelerador_Conectado, ActuadorFreno_Conectado,
 
@@ -247,6 +247,8 @@ void loop()
 
                         EstadoDelSistema,
                         ActuadorAcelerador_EstaInhibido, ActuadorFreno_EstaInhibido);
+            */
+            // FIXME: Desactivadas para pruebas con los drivers
 
             Control(Joystick_X, Joystick_Y,
                     ActuadorFreno_EstaInhibido, ActuadorAcelerador_EstaInhibido, TipoControlVolante);

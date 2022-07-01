@@ -10,8 +10,8 @@ int valorMaximoControlPuente = 3200;
 
 
 
-int ActuadorFreno_Address = 0x0D; //13 = 1101
-int ActuadorAcelerador_Address = 0x0A; //10 = 1010
+int ActuadorFreno_Address = 0x0A; //10 = 1010
+int ActuadorAcelerador_Address = 0x03; // = 0011
 int ActuadorVolante_Address = 0x04; // 4 = 0100
 
 

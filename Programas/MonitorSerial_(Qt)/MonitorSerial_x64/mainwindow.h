@@ -15,6 +15,7 @@
 #include <string.h>
 #include <vector>
 #include <algorithm> // To use rotate
+
 #include <iostream>     // std::cout
 using namespace std;
 

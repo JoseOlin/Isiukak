@@ -53,8 +53,8 @@ int delayLecturaRapida = 1;
 
 ///************************ Variables de programa ********************************///
 
-int pinGNDVirtual = D7; //PA8;
 int pinVDDVirtual = D3; //PB3;
+int pinGNDVirtual = D7; //PA8;
 int pinAVDD = D13; //PA5
 int pinAGND = D12; //PA6
 

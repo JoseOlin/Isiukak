@@ -9,14 +9,19 @@
 #include "Debug.hpp"
 
 #define COMM_MONITOR_SPEED 115200
-#define COMM_DRIVERS_SPEED 19200 // Se probó con 19200 y 9600.
+#define COMM_DRIVERS_SPEED 19200
+// Se probó con 19200 y 9600.
 
 
 #define rxPin D2  // RX pin D2, PA_10
 #define txPin D8  // TX pin D8, PA_9
 
-//HardwareSerial Serial(PA3, PA2);
+#define USART6_rxPin PA_12
+#define USART6_txPin PA_11
+
 HardwareSerial smcSerial(rxPin, txPin);
+//HardwareSerial smcSerial(USART6_rxPin, USART6_txPin); //TODO: Probar si son los pines correctos
+
 // SERIAL_8N1. 8 data bits, No parity bit, 1 stop bit
 
 unsigned long timeOut = 2; // in ms. To use in setTimeOut
@@ -28,9 +33,9 @@ unsigned int IterationsToDriversReading;
 unsigned int counterIterationsToDriversReading = 0;
 
 
-void setIterationsToDriversRead(unsigned int systemPeriod)
+void Drivers_setIterationsToRead(unsigned int systemPeriod)
 {
-    assert(DriversReading_Period >= systemPeriod);
+    //assert(DriversReading_Period >= systemPeriod);
 
     IterationsToDriversReading = DriversReading_Period / systemPeriod;
     Serial.print("**IterationsToDriveReadig: ");
@@ -43,9 +48,11 @@ uint8_t commInit()
 {
     uint8_t InitSuccess = true;
 
-    Serial.begin(COMM_MONITOR_SPEED);
+    //Serial.begin(COMM_MONITOR_SPEED);
+    Serial.begin(115200);
     Serial.println("Comunicación Serial Iniciada.");
-    smcSerial.begin(COMM_DRIVERS_SPEED);
+    //smcSerial.begin(COMM_DRIVERS_SPEED);
+    smcSerial.begin(19200);
     smcSerial.setTimeout(timeOut);
     timeOutSetted = smcSerial.getTimeout();
 

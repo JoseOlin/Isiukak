@@ -1007,6 +1007,8 @@ QStringList MainWindow::buscarPuertos()
 }
 */
 
+
+/// Communication functions
 void MainWindow::on_btnConectar_pressed()
 {
     //serial.setPortName("/dev/ttyUSB0");
@@ -1070,8 +1072,6 @@ void MainWindow::on_btnDesconectar_pressed()
     }
 }
 
-
-
 void MainWindow::readData()
 {
     if(!ui->btnConectar->isEnabled())
@@ -1109,13 +1109,6 @@ void MainWindow::readData()
             {
                 renglonDatos_s.append(data);
             }
-            /*if(indSalto  != -1)
-                renglonDatos.append(data);
-            else
-            {
-                qDebug() << renglonDatos;
-                renglonDatos.clear();
-            }*/
         }
     }
 }
@@ -1160,7 +1153,6 @@ void MainWindow::escribirCadena(const QByteArray &datos)
     else
         qDebug() << "Error: Puerto cerrado.";
 }
-
 
 void MainWindow::fillPortsParameters()
 {
@@ -1217,9 +1209,6 @@ void MainWindow::showPortInfo(int idx)
         ui->lblDescripcion->setText(tr("Descripción: %1").arg(list.at(1)));
     }
 }
-
-
-
 
 void MainWindow::on_cmbSerialPortSelector_currentIndexChanged(int index)
 {
