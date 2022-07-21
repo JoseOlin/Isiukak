@@ -34,10 +34,16 @@ bool validateDefinesNormalUse()
         INFO_TIME
     };
 
-    uint8_t mustBeDeactivated[8] = {
-        JOYSTICK_VIRTUAL, TESTING_EMBEDDED, TESTING_FUNCTIONS,
-        ENTRADAS_VIRTUALES, VERIFICACION_ADC,
-        DEBUG_BOOT, DEBUG_POTS_VALUES, DEBUG_POTS_ERROR_VALUES
+    uint8_t mustBeDeactivated[7] = {
+        JOYSTICK_VIRTUAL,
+        TESTING_EMBEDDED,
+        TESTING_FUNCTIONS,
+
+        ENTRADAS_VIRTUALES,
+        VERIFICACION_ADC,
+        DEBUG_BOOT,
+        DEBUG_POTS_VALUES,
+        //DEBUG_POTS_ERROR_VALUES
     };
 
     uint activatedsArrayLenght  = sizeof(mustBeActivated);
@@ -52,16 +58,6 @@ bool validateDefinesNormalUse()
         }
     }
 
-    /*if(!JOYSTICK_ACTIVADO) {
-        definesNormalUse = false;
-        Serial.println("**Joystick Desactivado"); Serial.println("**");
-    }
-
-    if(!FRENO_ACTIVADO )
-    {
-
-    }*/
-
     uint deactivatedsArrayLenght  = sizeof(mustBeDeactivated);
     for(uint cont = 0; cont < deactivatedsArrayLenght; cont++)
     {
@@ -73,42 +69,6 @@ bool validateDefinesNormalUse()
             Serial.println(" of MustBeDeactivated Array is Activated**");
         }
     }
-
-    /*
-    if(JOYSTICK_VIRTUAL) // 0 in normal use.
-    {
-        definesNormalUse = false;
-        Serial.println("**JOYSTICK_VIRTUAL ACTIVATED**");
-    }
-
-    if(EMBEDDED_TESTING) // 0 in normal use.
-    {
-        definesNormalUse = false;
-        Serial.println("**EMBEDDED_TESTING ACTIVATED**");
-    }
-
-    bool testingModeDisabled = !TESTING_MODE;
-    //assert(testingModeDisabled);
-    if(!testingModeDisabled)
-    {
-        definesNormalUse = false;
-        Serial.println("**TESTING_MODE ACTIVATED!!!**");
-    }
-
-    bool entradasVirtualesDesactivadas = !ENTRADAS_VIRTUALES;
-    //assert(entradasVirtualesDesactivadas);
-    if(!entradasVirtualesDesactivadas)
-    {
-        definesNormalUse = false;
-        Serial.println("**ENTRADAS_VIRTUALES ACTIVATED!!!**");
-    }
-
-    bool debugBootDisabled = !DEBUG_BOOT;
-    if(!debugBootDisabled)
-    {
-        definesNormalUse = false;
-        Serial.println("**DEBUG_BOOT_ACTIVATED!!!**");
-    }*/
 
 
     if(timeOutSetted > timeOut) {

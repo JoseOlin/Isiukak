@@ -394,14 +394,14 @@ void ControlarVolante(int Joystick_X, TiposControlVolante tipoControlVolante)
 void desplegarInfoVolante()
 {
 #if INFO_VOLANTE
-    Serial.print(",\tVol_c: "); Serial.print(Volante_Velocidad);
-    Serial.print(", V_m: ");    Serial.print(TipoControlVolante);
-
     #if VOLANTE_ACTIVADO
-        Serial.print(", V_ac: 1");
+        Serial.print(",\tV_ac: 1");
+    #else
+    Serial.print("\t");
     #endif
 
-
+    Serial.print(", Vol_c: "); Serial.print(Volante_Velocidad);
+    Serial.print(", V_m: ");    Serial.print(TipoControlVolante);
 #endif
 }
 

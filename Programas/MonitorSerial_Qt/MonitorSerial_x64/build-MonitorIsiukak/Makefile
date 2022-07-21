@@ -136,7 +136,8 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		../../MonitorIsiukak.pro ../mainwindow.h ../main.cpp \
+		../../MonitorIsiukak.pro ../logging.hpp \
+		../mainwindow.h ../main.cpp \
 		../mainwindow.cpp
 QMAKE_TARGET  = MonitorIsiukak
 DESTDIR       = 
@@ -324,7 +325,7 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../Resources.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../mainwindow.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../logging.hpp ../mainwindow.h $(DISTDIR)/
 	$(COPY_FILE) --parents ../main.cpp ../mainwindow.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../mainwindow.ui $(DISTDIR)/
 
@@ -374,6 +375,7 @@ compiler_moc_header_clean:
 	-$(DEL_FILE) moc_mainwindow.cpp
 moc_mainwindow.cpp: ../mainwindow.h \
 		ui_mainwindow.h \
+		../logging.hpp \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include /media/Ext4/Proyectos/Autonomia/Isiukak_Sistema_Conduccion/Repositorio_Github_Isiukak/Programas/MonitorSerial_Qt/MonitorSerial_x64/build-MonitorIsiukak/moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/media/Ext4/Proyectos/Autonomia/Isiukak_Sistema_Conduccion/Repositorio_Github_Isiukak/Programas/MonitorSerial_Qt/MonitorSerial_x64 -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtSerialPort -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/4.9 -I/usr/include/x86_64-linux-gnu/c++/4.9 -I/usr/include/c++/4.9/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.9/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.9/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../mainwindow.h -o moc_mainwindow.cpp
@@ -400,11 +402,13 @@ compiler_clean: compiler_rcc_clean compiler_moc_predefs_clean compiler_moc_heade
 ####### Compile
 
 main.o: ../main.cpp ../mainwindow.h \
-		ui_mainwindow.h
+		ui_mainwindow.h \
+		../logging.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../main.cpp
 
 mainwindow.o: ../mainwindow.cpp ../mainwindow.h \
-		ui_mainwindow.h
+		ui_mainwindow.h \
+		../logging.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../mainwindow.cpp
 
 qrc_Resources.o: qrc_Resources.cpp 

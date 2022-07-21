@@ -16,6 +16,8 @@
 #include <vector>
 #include <algorithm> // To use rotate
 
+#include "logging.hpp"
+
 #include <iostream>     // std::cout
 using namespace std;
 
@@ -24,7 +26,6 @@ using namespace std;
 #include <chrono>
 #include <thread>
 
-//#include "logging.cpp"
 
 #define CERRAR_PUERTO_SERIAL 0
 
@@ -78,6 +79,9 @@ private:
     void displaySystemInfo(QString renglonDatos);
     void displayInfoShiftGear(QString renglonDatos);
 
+    void displayPotsErrors(QString renglonDatos);
+
+
     bool Limits_update(int currentValue, int& min, int& max,
                                    QLabel *min_lbl, QLabel *max_lbl);
 
@@ -95,7 +99,7 @@ private:
 
     bool buscarExpresionRegular_returnNextInt(QString expReg, QString fuente, int& match_int);
     bool buscarExpresionRegular(QString expReg, QString fuente);
-
+    bool buscarExpresionRegular_PotError(QString fuente, QString &matchString, int &match_int);
 
     void checkBoxBouncing(QCheckBox *chkBox, bool statusRcv);
     void checkBoxColor(QCheckBox * chkBox);
@@ -152,6 +156,7 @@ private:
     int Accel_pos_max = 0; // Max value of accelerator position readed.
     int Accel_pos_min = 10000;
 
+    // Min and max values start at opposites
     int Joy_Y_max = 0;
     int Joy_Y_min = 4096;
 

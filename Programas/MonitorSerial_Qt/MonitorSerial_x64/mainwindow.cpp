@@ -33,6 +33,8 @@ QString cadBrakeActivado = "B_ac";
 QString cadBrakeInhibido = "B_inh";
 QString cadBrakeDesc = "Freno_Desc";
 QString cadBrake_OutOfRange = "Brake_OutOfRange";
+
+QString PotError_header = "EPot_";
 QString cadBrake_VIN = "B_Vin";
 QString cadBrake_Temp = "B_Tmp";
 QString cadBrake_Error = "B_Err";
@@ -125,6 +127,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     //escena = new QGraphicsScene(0,0, 250,250);
     //ui->joystick_graphics->setScene(escena);
+    qDbg << "       Inicio sesión Logging" << QDate::currentDate() << ", " << QTime::currentTime();
+    qWarning() << "Prueba warning";
+    qInfo() << "Prueba Info";
 }
 
 MainWindow::~MainWindow()
@@ -171,6 +176,7 @@ void MainWindow::desplegarValores(QString renglonDatos)
 
     ///* System status
     displaySystemInfo(renglonDatos);
+
 
 
     ///* Test restarting string when running embedded Testing
@@ -430,13 +436,13 @@ bool MainWindow::buscarExpresionRegular_returnNextInt(QString expReg, QString fu
 
     //QRegularExpression expRegInt_R("J_Y: (\\d+)");
 
-    QRegularExpression expRegInt_R(expReg);
-    QRegularExpressionMatch RegExMatch = expRegInt_R.match(fuente);
+    QRegularExpression RegExp(expReg);
+    QRegularExpressionMatch RegExpMatch = RegExp.match(fuente);
     //int indiceJy_Fin
     //int indiceJy_Ini = expRegInt.indexIn(renglonDatos_s);
-    if(RegExMatch.hasMatch() )
+    if(RegExpMatch.hasMatch() )
     {
-        QString match_s = RegExMatch.captured(1);
+        QString match_s = RegExpMatch.captured(1);
         //int match_int = match_s.toInt();
         match_int = match_s.toInt();
         return true;
@@ -445,6 +451,25 @@ bool MainWindow::buscarExpresionRegular_returnNextInt(QString expReg, QString fu
     {
         return false;
     }
+}
+
+bool MainWindow::buscarExpresionRegular_PotError(QString fuente, QString& matchString, int& match_int)
+{
+    // **EPot_I_L: V**"
+    // Donde:
+    // I: Índice del pot de 0 a 3.
+    // L: Puede ser "L" o "H".
+    // V: Valor del pot con índice N (Entero positivo).
+    QString RegExpTarget = "(\\*\\*" + PotError_header + ")(.+)(\\*\\*)";
+    QRegularExpression RegExp(RegExpTarget);
+    QRegularExpressionMatch RegExpMatch = RegExp.match(fuente);
+    if(RegExpMatch.hasMatch() )
+    {
+       matchString = RegExpMatch.captured(0);
+       /// TODO: B. Definir el índice del pot y ponerlo en la sección correspondiente.
+       return true;
+    }
+    return false;
 }
 
 bool MainWindow::buscarExpresionRegular(QString expReg_str, QString fuente)
@@ -512,8 +537,8 @@ void MainWindow::decodeDriverError(const uint16_t errorRaw, driverValuesRow& row
     }
 }
 
-bool MainWindow::Limits_update(int currentValue,    int& min, int& max,
-                               QLabel* min_lbl, QLabel* max_lbl)
+bool MainWindow::Limits_update(int currentValue,    int& min,        int& max,
+                                                    QLabel* min_lbl, QLabel* max_lbl)
 {
     if(currentValue < 0 || currentValue > 1023)
     {
@@ -521,13 +546,13 @@ bool MainWindow::Limits_update(int currentValue,    int& min, int& max,
     }
     else
     {
-        if(currentValue < min && currentValue > -1)
+        if( currentValue < min )
         {
             min = currentValue;
             min_lbl->setText(QString::number(min));
         }
 
-        if(currentValue > max && currentValue > -1)
+        if( currentValue > max )
         {
             max = currentValue;
             max_lbl->setText(QString::number(max));
@@ -540,34 +565,50 @@ void MainWindow::displayInfoJoystick(QString renglonDatos)
 {
     //** Joystick Y
 
-    buscarExpresionRegular_returnNextInt("J_Y: (\\d+)", renglonDatos, valorJy);
-    ui->joystick_Y_lcd->display(valorJy);
-    ui->joystickVertical_sld->setValue(valorJy);
+    bool jy_Received = buscarExpresionRegular_returnNextInt("J_Y: (\\d+)", renglonDatos, valorJy);
 
-    bool limitsValid_Jy = Limits_update(valorJy, Joy_Y_min, Joy_Y_max, ui->Jy_Min_lbl, ui->Jy_Max_lbl);
-    if(!limitsValid_Jy)
+    if(jy_Received)
     {
-        ui->erroresSalida_txt->insertPlainText(QString("J_y. Valor rcv fuera de valores lógicos (0, 1023)"));
-        ui->erroresSalida_txt->insertPlainText(renglonDatos);
+        ui->joystick_Y_lcd->display(valorJy);
+        ui->joystickVertical_sld->setValue(valorJy);
+
+        bool limitsValid_Jy = Limits_update(valorJy,    Joy_Y_min,      Joy_Y_max,
+                                                        ui->Jy_Min_lbl, ui->Jy_Max_lbl);
+        if(!limitsValid_Jy)
+        {
+            QString msg = "J_y. Valor rcv fuera de valores lógicos (0, 1023)";
+            ui->erroresSalida_txt->insertPlainText(msg);
+            ui->erroresSalida_txt->insertPlainText(renglonDatos);
+
+            qDebug() << msg;
+            qDebug() << "Renglón datos: " << renglonDatos;
+        }
     }
     //** Joystick X
     //int valorJx = buscarExpresionRegular_returnNextInt("J_X: (\\d+)", renglonDatos);
-    buscarExpresionRegular_returnNextInt("J_X: (\\d+)", renglonDatos, valorJx);
-    ui->joystick_X_lcd->display(valorJx);
-    ui->joystickHorizontal_Sld->setValue(valorJx);
-
-    bool limitsValid_Jx = Limits_update(valorJx, Joy_X_min, Joy_X_max, ui->Jx_Min_lbl, ui->Jx_Max_lbl);
-    if(!limitsValid_Jx)
+    bool Jx_received = buscarExpresionRegular_returnNextInt("J_X: (\\d+)", renglonDatos, valorJx);
+    if(Jx_received)
     {
-        ui->erroresSalida_txt->insertPlainText(QString("J_x. Valor rcv fuera de valores lógicos (0, 1023)"));
-        ui->erroresSalida_txt->insertPlainText(renglonDatos);
-    }
+        ui->joystick_X_lcd->display(valorJx);
+        ui->joystickHorizontal_Sld->setValue(valorJx);
 
+        bool limitsValid_Jx = Limits_update(valorJx,    Joy_X_min,      Joy_X_max,
+                                                        ui->Jx_Min_lbl, ui->Jx_Max_lbl);
+        if(!limitsValid_Jx)
+        {
+            ui->erroresSalida_txt->insertPlainText(QString("J_x. Valor rcv fuera de valores lógicos (0, 1023)"));
+            ui->erroresSalida_txt->insertPlainText(renglonDatos);
+        }
+    }
     //** Activado
-    bool statusJoystickActivado = buscarExpresionRegular_returnNextInt(cadJoystickActivado+ ": (-?(\\d+))",
+    bool statusJoystickActivado_Received =
+            buscarExpresionRegular_returnNextInt(cadJoystickActivado+ ": (-?(\\d+))",
                                          renglonDatos, Joystick_Activado);
-    checkBoxBouncing(ui->joystick_Activado_chk, statusJoystickActivado);
-    checkBoxColor(ui->joystick_Activado_chk);
+    if(statusJoystickActivado_Received)
+    {
+        checkBoxBouncing(ui->joystick_Activado_chk, statusJoystickActivado_Received);
+        checkBoxColor(ui->joystick_Activado_chk);
+    }
 
     //** Desconectado
     QString cadJyDescFull = "(\\*\\*)(" + cadJy_Desc + ")(\\*\\*)";
@@ -614,14 +655,18 @@ void MainWindow::displayInfoBrake(QString renglonDatos)
     buscarExpresionRegular_returnNextInt("B_p: (-?(\\d+))", renglonDatos, B_pos);
     ui->frenoPos_lcd->display(B_pos);
 
-    bool limitsValid = Limits_update(B_pos,
+    bool BPosValid = Limits_update(B_pos,
                   Brake_pos_min,                Brake_pos_max,
                   ui->brake_PosLimits_Min_lbl,  ui->brake_PosLimits_Max_lbl);
 
-    if(!limitsValid)
+    if(!BPosValid)
     {
-        ui->erroresSalida_txt->insertPlainText(QString("Brake. Valor rcv fuera de valores lógicos (0, 1023)"));
+        QString msg = "Brake. Valor rcv fuera de valores lógicos (0, 1023)";
+        ui->erroresSalida_txt->insertPlainText(msg);
         ui->erroresSalida_txt->insertPlainText(renglonDatos);
+        //customMessageHandler(QtMsgType::QtInfoMsg, msg );
+        qDebug() << msg;
+        qDebug() << "Renglón datos: " << renglonDatos;
     }
 
     buscarExpresionRegular_returnNextInt("B_t: (-?(\\d+))", renglonDatos, B_tgt);
@@ -738,13 +783,17 @@ void MainWindow::displayInfoAccel(QString renglonDatos)
     buscarExpresionRegular_returnNextInt("A_p: (-?(\\d+))", renglonDatos, A_pos);
     ui->aceleradorPos_lcd->display(A_pos);
 
-     bool limitsValid = Limits_update(A_pos, Accel_pos_min, Accel_pos_max,
+    bool AccPosValid = Limits_update(A_pos, Accel_pos_min, Accel_pos_max,
                   ui->Accel_PosLimits_Min_lbl, ui->Accel_PosLimits_Max_lbl);
 
-     if(!limitsValid)
+     if(!AccPosValid)
      {
-         ui->erroresSalida_txt->insertPlainText(QString("Accel. Valor rcv fuera de valores lógicos (0, 1023)"));
+         QString msg = "Accel. Valor rcv fuera de valores lógicos (0, 1023)";
+         ui->erroresSalida_txt->insertPlainText(msg);
          ui->erroresSalida_txt->insertPlainText(renglonDatos);
+
+         qDebug() << msg;
+         qDebug() << "Renglón datos: " << renglonDatos;
      }
 
     buscarExpresionRegular_returnNextInt("A_t: (-?(\\d+))", renglonDatos, A_tgt);
@@ -940,7 +989,18 @@ void MainWindow::displaySystemInfo(QString renglonDatos)
     checkBoxBouncing(ui->normalDefines_chk, normalDefines);
     checkBoxColor(ui->normalDefines_chk);
 }
-
+void MainWindow::displayPotsErrors(QString renglonDatos)
+{
+    QString matchPotError;
+    int potIndex;
+    bool potError = buscarExpresionRegular_PotError(renglonDatos, matchPotError, potIndex);
+    if(potError)
+    {
+        ui->erroresSalida_txt->insertPlainText(matchPotError);
+        ui->erroresSalida_txt->insertPlainText("\n");
+        qDebug() << "ErrorPot:" << matchPotError;
+    }
+}
 
 
 void MainWindow::apagarLEDsError()

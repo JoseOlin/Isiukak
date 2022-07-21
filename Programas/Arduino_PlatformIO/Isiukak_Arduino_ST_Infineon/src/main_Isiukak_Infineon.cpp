@@ -91,7 +91,9 @@ void loop()
             //Testing_VerificacionSeguridad_SetValues(); //Se hace dedntro de EmbeddedTest_SetInputs()
 
             leerFeedback_Virtual(LOW, LOW, LOW, LOW);
-            Actuators_Feedback_Read(); ///TODO: B. Checar si esto es necesario en Testing embedded.
+            Actuators_Feedback_Read(); // Esto es necesario en Testing embedded para verificar posiciones de los actuadores.
+            Actuators_Drivers_Read();
+
         #else
             leerFeedback();
             aplicarModoCarretera(ModoCarreteraActivado);
@@ -111,7 +113,9 @@ void loop()
                 ActuadorAcelerador_EstaInhibido, ActuadorFreno_EstaInhibido);
 
             Control(Joystick_X, Joystick_Y,
-                ActuadorFreno_EstaInhibido, ActuadorAcelerador_EstaInhibido, TipoControlVolante);
+                ActuadorFreno_EstaInhibido,
+                ActuadorAcelerador_EstaInhibido,
+                TipoControlVolante);
 
             displayInfo();
         }

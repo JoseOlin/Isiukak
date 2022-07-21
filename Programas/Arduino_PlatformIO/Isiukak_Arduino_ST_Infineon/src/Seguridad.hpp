@@ -333,14 +333,13 @@ uint8_t Potenciometros_EstanEnRango(
     */
     uint8_t potenciometros_EnRango = false;
 
-/// TODO: A. Cambiar la implementación de la compilación selectiva para que esta función NUNCA devuelva un falso positivo.
+/// TODO: A. Revisar si devolver valores por compilación selectiva puede ser problemático.
 #if VALIDAR_LIMITES_JOYSTICK
     Joystick_EstaEnRango(joystick_X, joystick_Y,
                          joystick_EnRango, joystickY_EnRango, joystickX_EnRango);
 #else
     joystickX_EnRango = true;
     joystickY_EnRango = true;
-
 #endif
 
 
@@ -350,6 +349,7 @@ uint8_t Potenciometros_EstanEnRango(
     #else
         actuadorAcelerador_EnRango = true;
     #endif
+
     #if FRENO_ACTIVADO
         Actuador_Freno_EstaEnRango(actuadorFreno_Posicion, actuadorFreno_EnRango);
     #else
@@ -433,7 +433,7 @@ uint8_t Potenciometro_VerificarConexionSingular(
      * \return  true si el potenciómetro está conectado, false si está desconectado.
      ***************************************************************************************/
 
-    /// TODO: A. Verificar que la variable mensajesEmergenciaDesplegados no esté evitando que se muestre
+    /// TODO: A. Verificar que la variable mensajesEmergenciaDesplegados no esté evitando que se muestre...
     /// el mensaje de error para algunos pots (por ejemplo, si el primero está desconectado y no se muestra
     /// el error de que el segundo también está desconectado.
     unsigned int valorPot;
@@ -926,8 +926,8 @@ void aplicarRutinasSeguridad(
     }
 
     /// TODO: A. Validar las acciones de aplicarRutinasSeguridad.
-    // TODO: A. Optimizar las funciones de seguridad por desconexión.
-    // TODO: A. Implementar log para almacenar incidencias.
+    /// TODO: A. Optimizar las funciones de seguridad por desconexión.
+    /// TODO: A. Implementar log para almacenar incidencias.
     // TODO: C. Encender luces preventivas.
     // TODO: C. Automatizar la palanca de cambios y ponerla en Neutral.
 }

@@ -32,7 +32,6 @@
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QSlider>
 #include <QtWidgets/QSpacerItem>
-#include <QtWidgets/QToolBar>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
@@ -47,7 +46,9 @@ public:
     QVBoxLayout *verticalLayout;
     QWidget *SensorsInfo_Errors_and_Conn_Widget;
     QHBoxLayout *Valores_Widget;
+    QFrame *Joystick_and_Actuators_ext_hotLayout;
     QVBoxLayout *SensorsInfo_verLayout;
+    QFrame *Joystick_and_Actuators_hotLayout;
     QHBoxLayout *SensorsInfo_horLayout;
     QGroupBox *grp_Joystick;
     QVBoxLayout *verticalLayout_6;
@@ -69,11 +70,13 @@ public:
     QLabel *label_40;
     QLabel *Jx_Min_lbl;
     QLabel *Jx_Max_lbl;
+    QFrame *gridLayout_3;
     QGridLayout *gridLayout_2;
     QSlider *joystickVertical_sld;
     QSlider *joystickHorizontal_Sld;
     QGroupBox *grp_Botones;
     QVBoxLayout *verticalLayout_9;
+    QFrame *frame;
     QVBoxLayout *verticalLayout_8;
     QCheckBox *FixFreno_chk;
     QCheckBox *PalUp_chk;
@@ -81,6 +84,7 @@ public:
     QCheckBox *RoadMode_chk;
     QGroupBox *grp_Freno;
     QVBoxLayout *verticalLayout_2;
+    QFrame *frame_5;
     QFormLayout *frmLay_Freno;
     QLabel *valorFreno_lbl;
     QLCDNumber *frenoPos_lcd;
@@ -105,6 +109,7 @@ public:
     QLabel *label_28;
     QLabel *brake_PosLimits_Min_lbl;
     QLabel *brake_PosLimits_Max_lbl;
+    QFrame *Brake_Driver_lay_2;
     QFormLayout *Brake_Driver_lay;
     QLabel *label_8;
     QLabel *Brake_VIN_lbl;
@@ -115,6 +120,7 @@ public:
     QRadioButton *brake_ShowInfo_rBtn;
     QGroupBox *grp_Acelerador;
     QVBoxLayout *verticalLayout_4;
+    QFrame *frame1;
     QFormLayout *frmLay_Acelerador;
     QLabel *Acel_Activado_lbl;
     QCheckBox *Acel_Activado_chk;
@@ -131,7 +137,7 @@ public:
     QLCDNumber *aceleradorControl_lcd;
     QCheckBox *chk_LED_Acel_Desc;
     QSlider *AceleradorControl_Slider;
-    QFrame *frame;
+    QFrame *frame2;
     QVBoxLayout *verticalLayout_13;
     QLabel *label_30;
     QFormLayout *formLayout_4;
@@ -153,7 +159,6 @@ public:
     QCheckBox *volante_Inhibido_chk;
     QComboBox *VolanteModo_cmb;
     QVBoxLayout *verticalLayout_11;
-    QFormLayout *formLayout;
     QLabel *valorVolante_lbl;
     QLCDNumber *volante_lcd;
     QDial *VolanteControl_Dial;
@@ -166,7 +171,7 @@ public:
     QLabel *Steer_Temp_lbl;
     QLabel *Steer_Error_lbl;
     QRadioButton *steer_ShowInfo_rBtn;
-    QWidget *ShiftGear_and_SystemInfo;
+    QWidget *grp_ShiftGear_and_SystemInfo;
     QVBoxLayout *shiftGear_and_DefaultDefines;
     QGroupBox *palanca_grp;
     QVBoxLayout *verticalLayout_10;
@@ -174,7 +179,7 @@ public:
     QCheckBox *palanca_Activada_chk;
     QCheckBox *palanca_Inhibida_chk;
     QSpacerItem *verticalSpacer;
-    QFrame *frame_3;
+    QFrame *time_frame;
     QVBoxLayout *verticalLayout_7;
     QFormLayout *formLayout_6;
     QLabel *label_27;
@@ -186,10 +191,13 @@ public:
     QCheckBox *normalDefines_chk;
     QWidget *Edo_ConexionConfig_and_Error_vertWidget;
     QVBoxLayout *verticalLayout_12;
+    QHBoxLayout *horizontalLayout;
+    QLabel *logoOlin_lbl;
+    QFrame *Status_horLay;
     QHBoxLayout *EstadoIsiukak_horLayout;
     QLabel *lblEstadoSistema;
     QLabel *estadoSistema_lbl;
-    QLabel *label_6;
+    QFrame *driverErrorsHeaders_gridLayout_2;
     QGridLayout *driverErrorsHeaders_gridLayout;
     QLabel *label_21;
     QLabel *label_25;
@@ -203,17 +211,21 @@ public:
     QLabel *label_19;
     QLabel *label_37;
     QLabel *label_41;
+    QFrame *driverErrorsValues_gridLayout_2;
     QGridLayout *driverErrorsValues_gridLayout;
     QPlainTextEdit *driversValues_txt;
     QPlainTextEdit *erroresSalida_txt;
+    QFrame *frame_4;
     QHBoxLayout *horizontalLayout_4;
     QSpacerItem *horizontalSpacer;
     QLabel *lblDescripcion;
     QHBoxLayout *horizontalLayout_2;
     QComboBox *cmbBaudRate;
     QComboBox *cmbSerialPortSelector;
+    QFrame *Connection_horLay;
     QHBoxLayout *horizontalLayout_3;
     QPushButton *btnParoEmergencia;
+    QFrame *buttonsConnection_verLay;
     QVBoxLayout *verticalLayout_3;
     QPushButton *btnConectar;
     QPushButton *btnDesconectar;
@@ -222,14 +234,14 @@ public:
     QPlainTextEdit *InfoSalida_txt;
     QMenuBar *menuBar;
     QMenu *menuConfiguraci_n;
-    QToolBar *mainToolBar;
     QButtonGroup *driversShowInfoSelect;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(1024, 600);
+        MainWindow->setEnabled(true);
+        MainWindow->resize(1195, 753);
         QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -243,86 +255,107 @@ public:
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         verticalLayout = new QVBoxLayout(centralWidget);
-        verticalLayout->setSpacing(6);
+        verticalLayout->setSpacing(2);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        verticalLayout->setContentsMargins(5, 1, 5, 1);
         SensorsInfo_Errors_and_Conn_Widget = new QWidget(centralWidget);
         SensorsInfo_Errors_and_Conn_Widget->setObjectName(QString::fromUtf8("SensorsInfo_Errors_and_Conn_Widget"));
         sizePolicy.setHeightForWidth(SensorsInfo_Errors_and_Conn_Widget->sizePolicy().hasHeightForWidth());
         SensorsInfo_Errors_and_Conn_Widget->setSizePolicy(sizePolicy);
         Valores_Widget = new QHBoxLayout(SensorsInfo_Errors_and_Conn_Widget);
-        Valores_Widget->setSpacing(6);
+        Valores_Widget->setSpacing(1);
         Valores_Widget->setContentsMargins(11, 11, 11, 11);
         Valores_Widget->setObjectName(QString::fromUtf8("Valores_Widget"));
-        SensorsInfo_verLayout = new QVBoxLayout();
-        SensorsInfo_verLayout->setSpacing(6);
+        Valores_Widget->setContentsMargins(3, 1, 3, 1);
+        Joystick_and_Actuators_ext_hotLayout = new QFrame(SensorsInfo_Errors_and_Conn_Widget);
+        Joystick_and_Actuators_ext_hotLayout->setObjectName(QString::fromUtf8("Joystick_and_Actuators_ext_hotLayout"));
+        SensorsInfo_verLayout = new QVBoxLayout(Joystick_and_Actuators_ext_hotLayout);
+        SensorsInfo_verLayout->setSpacing(0);
+        SensorsInfo_verLayout->setContentsMargins(11, 11, 11, 11);
         SensorsInfo_verLayout->setObjectName(QString::fromUtf8("SensorsInfo_verLayout"));
-        SensorsInfo_horLayout = new QHBoxLayout();
-        SensorsInfo_horLayout->setSpacing(6);
+        Joystick_and_Actuators_hotLayout = new QFrame(Joystick_and_Actuators_ext_hotLayout);
+        Joystick_and_Actuators_hotLayout->setObjectName(QString::fromUtf8("Joystick_and_Actuators_hotLayout"));
+        SensorsInfo_horLayout = new QHBoxLayout(Joystick_and_Actuators_hotLayout);
+        SensorsInfo_horLayout->setSpacing(1);
+        SensorsInfo_horLayout->setContentsMargins(11, 11, 11, 11);
         SensorsInfo_horLayout->setObjectName(QString::fromUtf8("SensorsInfo_horLayout"));
-        grp_Joystick = new QGroupBox(SensorsInfo_Errors_and_Conn_Widget);
+        grp_Joystick = new QGroupBox(Joystick_and_Actuators_hotLayout);
         grp_Joystick->setObjectName(QString::fromUtf8("grp_Joystick"));
         sizePolicy.setHeightForWidth(grp_Joystick->sizePolicy().hasHeightForWidth());
         grp_Joystick->setSizePolicy(sizePolicy);
-        grp_Joystick->setMaximumSize(QSize(16777215, 525));
+        grp_Joystick->setMinimumSize(QSize(140, 0));
+        grp_Joystick->setMaximumSize(QSize(160, 525));
+        grp_Joystick->setLayoutDirection(Qt::LeftToRight);
         verticalLayout_6 = new QVBoxLayout(grp_Joystick);
         verticalLayout_6->setSpacing(6);
         verticalLayout_6->setContentsMargins(11, 11, 11, 11);
         verticalLayout_6->setObjectName(QString::fromUtf8("verticalLayout_6"));
+        verticalLayout_6->setContentsMargins(-1, 1, -1, 1);
         joystick_Activado_chk = new QCheckBox(grp_Joystick);
         joystick_Activado_chk->setObjectName(QString::fromUtf8("joystick_Activado_chk"));
+        QSizePolicy sizePolicy1(QSizePolicy::Minimum, QSizePolicy::Preferred);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(joystick_Activado_chk->sizePolicy().hasHeightForWidth());
+        joystick_Activado_chk->setSizePolicy(sizePolicy1);
         joystick_Activado_chk->setLayoutDirection(Qt::RightToLeft);
 
         verticalLayout_6->addWidget(joystick_Activado_chk);
 
         chk_LED_Joy_Y_Desc = new QCheckBox(grp_Joystick);
         chk_LED_Joy_Y_Desc->setObjectName(QString::fromUtf8("chk_LED_Joy_Y_Desc"));
-        QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Fixed);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(chk_LED_Joy_Y_Desc->sizePolicy().hasHeightForWidth());
-        chk_LED_Joy_Y_Desc->setSizePolicy(sizePolicy1);
+        QSizePolicy sizePolicy2(QSizePolicy::Preferred, QSizePolicy::Fixed);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(chk_LED_Joy_Y_Desc->sizePolicy().hasHeightForWidth());
+        chk_LED_Joy_Y_Desc->setSizePolicy(sizePolicy2);
         chk_LED_Joy_Y_Desc->setMinimumSize(QSize(40, 0));
+        chk_LED_Joy_Y_Desc->setLayoutDirection(Qt::RightToLeft);
 
         verticalLayout_6->addWidget(chk_LED_Joy_Y_Desc);
 
         chk_LED_Joy_X_Desc = new QCheckBox(grp_Joystick);
         chk_LED_Joy_X_Desc->setObjectName(QString::fromUtf8("chk_LED_Joy_X_Desc"));
-        sizePolicy1.setHeightForWidth(chk_LED_Joy_X_Desc->sizePolicy().hasHeightForWidth());
-        chk_LED_Joy_X_Desc->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(chk_LED_Joy_X_Desc->sizePolicy().hasHeightForWidth());
+        chk_LED_Joy_X_Desc->setSizePolicy(sizePolicy2);
         chk_LED_Joy_X_Desc->setMinimumSize(QSize(20, 0));
+        chk_LED_Joy_X_Desc->setLayoutDirection(Qt::RightToLeft);
 
         verticalLayout_6->addWidget(chk_LED_Joy_X_Desc);
 
         chk_LED_Joy_Y_OutR = new QCheckBox(grp_Joystick);
         chk_LED_Joy_Y_OutR->setObjectName(QString::fromUtf8("chk_LED_Joy_Y_OutR"));
-        QSizePolicy sizePolicy2(QSizePolicy::Maximum, QSizePolicy::Fixed);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(chk_LED_Joy_Y_OutR->sizePolicy().hasHeightForWidth());
-        chk_LED_Joy_Y_OutR->setSizePolicy(sizePolicy2);
+        QSizePolicy sizePolicy3(QSizePolicy::Maximum, QSizePolicy::Fixed);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(chk_LED_Joy_Y_OutR->sizePolicy().hasHeightForWidth());
+        chk_LED_Joy_Y_OutR->setSizePolicy(sizePolicy3);
         chk_LED_Joy_Y_OutR->setMinimumSize(QSize(40, 0));
+        chk_LED_Joy_Y_OutR->setLayoutDirection(Qt::RightToLeft);
 
         verticalLayout_6->addWidget(chk_LED_Joy_Y_OutR);
 
         chk_LED_Joy_X_OutR = new QCheckBox(grp_Joystick);
         chk_LED_Joy_X_OutR->setObjectName(QString::fromUtf8("chk_LED_Joy_X_OutR"));
-        sizePolicy2.setHeightForWidth(chk_LED_Joy_X_OutR->sizePolicy().hasHeightForWidth());
-        chk_LED_Joy_X_OutR->setSizePolicy(sizePolicy2);
+        sizePolicy3.setHeightForWidth(chk_LED_Joy_X_OutR->sizePolicy().hasHeightForWidth());
+        chk_LED_Joy_X_OutR->setSizePolicy(sizePolicy3);
         chk_LED_Joy_X_OutR->setMinimumSize(QSize(20, 0));
+        chk_LED_Joy_X_OutR->setLayoutDirection(Qt::RightToLeft);
 
         verticalLayout_6->addWidget(chk_LED_Joy_X_OutR);
 
         formLayout_2 = new QFormLayout();
         formLayout_2->setSpacing(6);
         formLayout_2->setObjectName(QString::fromUtf8("formLayout_2"));
+        formLayout_2->setContentsMargins(2, -1, 2, -1);
         joystick_Y_lbl = new QLabel(grp_Joystick);
         joystick_Y_lbl->setObjectName(QString::fromUtf8("joystick_Y_lbl"));
-        QSizePolicy sizePolicy3(QSizePolicy::Maximum, QSizePolicy::Preferred);
-        sizePolicy3.setHorizontalStretch(0);
-        sizePolicy3.setVerticalStretch(0);
-        sizePolicy3.setHeightForWidth(joystick_Y_lbl->sizePolicy().hasHeightForWidth());
-        joystick_Y_lbl->setSizePolicy(sizePolicy3);
+        QSizePolicy sizePolicy4(QSizePolicy::Maximum, QSizePolicy::Preferred);
+        sizePolicy4.setHorizontalStretch(0);
+        sizePolicy4.setVerticalStretch(0);
+        sizePolicy4.setHeightForWidth(joystick_Y_lbl->sizePolicy().hasHeightForWidth());
+        joystick_Y_lbl->setSizePolicy(sizePolicy4);
         joystick_Y_lbl->setMinimumSize(QSize(18, 50));
 
         formLayout_2->setWidget(1, QFormLayout::LabelRole, joystick_Y_lbl);
@@ -344,8 +377,8 @@ public:
 
         joystick_X_lbl = new QLabel(grp_Joystick);
         joystick_X_lbl->setObjectName(QString::fromUtf8("joystick_X_lbl"));
-        sizePolicy3.setHeightForWidth(joystick_X_lbl->sizePolicy().hasHeightForWidth());
-        joystick_X_lbl->setSizePolicy(sizePolicy3);
+        sizePolicy4.setHeightForWidth(joystick_X_lbl->sizePolicy().hasHeightForWidth());
+        joystick_X_lbl->setSizePolicy(sizePolicy4);
         joystick_X_lbl->setMinimumSize(QSize(17, 50));
 
         formLayout_2->setWidget(4, QFormLayout::LabelRole, joystick_X_lbl);
@@ -413,11 +446,15 @@ public:
 
         verticalLayout_6->addLayout(formLayout_2);
 
-        gridLayout_2 = new QGridLayout();
+        gridLayout_3 = new QFrame(grp_Joystick);
+        gridLayout_3->setObjectName(QString::fromUtf8("gridLayout_3"));
+        gridLayout_2 = new QGridLayout(gridLayout_3);
         gridLayout_2->setSpacing(6);
+        gridLayout_2->setContentsMargins(11, 11, 11, 11);
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
-        gridLayout_2->setContentsMargins(0, -1, -1, -1);
-        joystickVertical_sld = new QSlider(grp_Joystick);
+        gridLayout_2->setVerticalSpacing(6);
+        gridLayout_2->setContentsMargins(1, -1, -1, -1);
+        joystickVertical_sld = new QSlider(gridLayout_3);
         joystickVertical_sld->setObjectName(QString::fromUtf8("joystickVertical_sld"));
         joystickVertical_sld->setMinimumSize(QSize(0, 60));
         joystickVertical_sld->setMaximumSize(QSize(16777215, 100));
@@ -430,7 +467,7 @@ public:
 
         gridLayout_2->addWidget(joystickVertical_sld, 2, 0, 1, 1);
 
-        joystickHorizontal_Sld = new QSlider(grp_Joystick);
+        joystickHorizontal_Sld = new QSlider(gridLayout_3);
         joystickHorizontal_Sld->setObjectName(QString::fromUtf8("joystickHorizontal_Sld"));
         joystickHorizontal_Sld->setMinimum(374);
         joystickHorizontal_Sld->setMaximum(640);
@@ -442,25 +479,32 @@ public:
         gridLayout_2->addWidget(joystickHorizontal_Sld, 3, 0, 1, 1);
 
 
-        verticalLayout_6->addLayout(gridLayout_2);
+        verticalLayout_6->addWidget(gridLayout_3);
 
 
         SensorsInfo_horLayout->addWidget(grp_Joystick);
 
-        grp_Botones = new QGroupBox(SensorsInfo_Errors_and_Conn_Widget);
+        grp_Botones = new QGroupBox(Joystick_and_Actuators_hotLayout);
         grp_Botones->setObjectName(QString::fromUtf8("grp_Botones"));
         sizePolicy.setHeightForWidth(grp_Botones->sizePolicy().hasHeightForWidth());
         grp_Botones->setSizePolicy(sizePolicy);
-        grp_Botones->setMaximumSize(QSize(16777215, 256));
+        grp_Botones->setMinimumSize(QSize(70, 0));
+        grp_Botones->setMaximumSize(QSize(104, 256));
         grp_Botones->setAutoFillBackground(true);
         verticalLayout_9 = new QVBoxLayout(grp_Botones);
-        verticalLayout_9->setSpacing(6);
+        verticalLayout_9->setSpacing(4);
         verticalLayout_9->setContentsMargins(11, 11, 11, 11);
         verticalLayout_9->setObjectName(QString::fromUtf8("verticalLayout_9"));
-        verticalLayout_8 = new QVBoxLayout();
-        verticalLayout_8->setSpacing(6);
+        verticalLayout_9->setContentsMargins(1, 1, 1, 2);
+        frame = new QFrame(grp_Botones);
+        frame->setObjectName(QString::fromUtf8("frame"));
+        frame->setMinimumSize(QSize(35, 0));
+        frame->setMaximumSize(QSize(115, 16777215));
+        verticalLayout_8 = new QVBoxLayout(frame);
+        verticalLayout_8->setSpacing(2);
+        verticalLayout_8->setContentsMargins(11, 11, 11, 11);
         verticalLayout_8->setObjectName(QString::fromUtf8("verticalLayout_8"));
-        FixFreno_chk = new QCheckBox(grp_Botones);
+        FixFreno_chk = new QCheckBox(frame);
         FixFreno_chk->setObjectName(QString::fromUtf8("FixFreno_chk"));
         sizePolicy.setHeightForWidth(FixFreno_chk->sizePolicy().hasHeightForWidth());
         FixFreno_chk->setSizePolicy(sizePolicy);
@@ -468,7 +512,7 @@ public:
 
         verticalLayout_8->addWidget(FixFreno_chk);
 
-        PalUp_chk = new QCheckBox(grp_Botones);
+        PalUp_chk = new QCheckBox(frame);
         PalUp_chk->setObjectName(QString::fromUtf8("PalUp_chk"));
         sizePolicy.setHeightForWidth(PalUp_chk->sizePolicy().hasHeightForWidth());
         PalUp_chk->setSizePolicy(sizePolicy);
@@ -476,7 +520,7 @@ public:
 
         verticalLayout_8->addWidget(PalUp_chk);
 
-        PalDown_chk = new QCheckBox(grp_Botones);
+        PalDown_chk = new QCheckBox(frame);
         PalDown_chk->setObjectName(QString::fromUtf8("PalDown_chk"));
         sizePolicy.setHeightForWidth(PalDown_chk->sizePolicy().hasHeightForWidth());
         PalDown_chk->setSizePolicy(sizePolicy);
@@ -484,7 +528,7 @@ public:
 
         verticalLayout_8->addWidget(PalDown_chk);
 
-        RoadMode_chk = new QCheckBox(grp_Botones);
+        RoadMode_chk = new QCheckBox(frame);
         RoadMode_chk->setObjectName(QString::fromUtf8("RoadMode_chk"));
         sizePolicy.setHeightForWidth(RoadMode_chk->sizePolicy().hasHeightForWidth());
         RoadMode_chk->setSizePolicy(sizePolicy);
@@ -493,131 +537,139 @@ public:
         verticalLayout_8->addWidget(RoadMode_chk);
 
 
-        verticalLayout_9->addLayout(verticalLayout_8);
+        verticalLayout_9->addWidget(frame);
 
 
         SensorsInfo_horLayout->addWidget(grp_Botones);
 
-        grp_Freno = new QGroupBox(SensorsInfo_Errors_and_Conn_Widget);
+        grp_Freno = new QGroupBox(Joystick_and_Actuators_hotLayout);
         grp_Freno->setObjectName(QString::fromUtf8("grp_Freno"));
         sizePolicy.setHeightForWidth(grp_Freno->sizePolicy().hasHeightForWidth());
         grp_Freno->setSizePolicy(sizePolicy);
-        grp_Freno->setMaximumSize(QSize(16777215, 525));
+        grp_Freno->setMinimumSize(QSize(170, 450));
+        grp_Freno->setMaximumSize(QSize(180, 525));
         grp_Freno->setAutoFillBackground(true);
         verticalLayout_2 = new QVBoxLayout(grp_Freno);
-        verticalLayout_2->setSpacing(6);
+        verticalLayout_2->setSpacing(3);
         verticalLayout_2->setContentsMargins(11, 11, 11, 11);
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
-        frmLay_Freno = new QFormLayout();
+        verticalLayout_2->setContentsMargins(3, 1, 5, 1);
+        frame_5 = new QFrame(grp_Freno);
+        frame_5->setObjectName(QString::fromUtf8("frame_5"));
+        frame_5->setMinimumSize(QSize(136, 0));
+        frmLay_Freno = new QFormLayout(frame_5);
         frmLay_Freno->setSpacing(6);
+        frmLay_Freno->setContentsMargins(11, 11, 11, 11);
         frmLay_Freno->setObjectName(QString::fromUtf8("frmLay_Freno"));
-        valorFreno_lbl = new QLabel(grp_Freno);
+        frmLay_Freno->setHorizontalSpacing(1);
+        frmLay_Freno->setVerticalSpacing(3);
+        valorFreno_lbl = new QLabel(frame_5);
         valorFreno_lbl->setObjectName(QString::fromUtf8("valorFreno_lbl"));
         valorFreno_lbl->setMinimumSize(QSize(20, 0));
 
         frmLay_Freno->setWidget(6, QFormLayout::LabelRole, valorFreno_lbl);
 
-        frenoPos_lcd = new QLCDNumber(grp_Freno);
+        frenoPos_lcd = new QLCDNumber(frame_5);
         frenoPos_lcd->setObjectName(QString::fromUtf8("frenoPos_lcd"));
-        QSizePolicy sizePolicy4(QSizePolicy::Preferred, QSizePolicy::Minimum);
-        sizePolicy4.setHorizontalStretch(0);
-        sizePolicy4.setVerticalStretch(0);
-        sizePolicy4.setHeightForWidth(frenoPos_lcd->sizePolicy().hasHeightForWidth());
-        frenoPos_lcd->setSizePolicy(sizePolicy4);
-        frenoPos_lcd->setMinimumSize(QSize(40, 40));
+        sizePolicy.setHeightForWidth(frenoPos_lcd->sizePolicy().hasHeightForWidth());
+        frenoPos_lcd->setSizePolicy(sizePolicy);
+        frenoPos_lcd->setMinimumSize(QSize(75, 40));
         frenoPos_lcd->setFont(font);
+        frenoPos_lcd->setDigitCount(4);
 
         frmLay_Freno->setWidget(6, QFormLayout::FieldRole, frenoPos_lcd);
 
-        label = new QLabel(grp_Freno);
+        label = new QLabel(frame_5);
         label->setObjectName(QString::fromUtf8("label"));
         label->setMinimumSize(QSize(20, 0));
 
         frmLay_Freno->setWidget(7, QFormLayout::LabelRole, label);
 
-        frenoDes_lcd = new QLCDNumber(grp_Freno);
+        frenoDes_lcd = new QLCDNumber(frame_5);
         frenoDes_lcd->setObjectName(QString::fromUtf8("frenoDes_lcd"));
-        QSizePolicy sizePolicy5(QSizePolicy::Minimum, QSizePolicy::Preferred);
-        sizePolicy5.setHorizontalStretch(0);
-        sizePolicy5.setVerticalStretch(0);
-        sizePolicy5.setHeightForWidth(frenoDes_lcd->sizePolicy().hasHeightForWidth());
-        frenoDes_lcd->setSizePolicy(sizePolicy5);
+        sizePolicy.setHeightForWidth(frenoDes_lcd->sizePolicy().hasHeightForWidth());
+        frenoDes_lcd->setSizePolicy(sizePolicy);
         frenoDes_lcd->setMinimumSize(QSize(0, 30));
         frenoDes_lcd->setFont(font);
+        frenoDes_lcd->setDigitCount(4);
 
         frmLay_Freno->setWidget(7, QFormLayout::FieldRole, frenoDes_lcd);
 
-        Freno_lcdError = new QLCDNumber(grp_Freno);
+        Freno_lcdError = new QLCDNumber(frame_5);
         Freno_lcdError->setObjectName(QString::fromUtf8("Freno_lcdError"));
+        sizePolicy.setHeightForWidth(Freno_lcdError->sizePolicy().hasHeightForWidth());
+        Freno_lcdError->setSizePolicy(sizePolicy);
         Freno_lcdError->setMinimumSize(QSize(0, 30));
 
         frmLay_Freno->setWidget(8, QFormLayout::FieldRole, Freno_lcdError);
 
-        Freno_lblError = new QLabel(grp_Freno);
+        Freno_lblError = new QLabel(frame_5);
         Freno_lblError->setObjectName(QString::fromUtf8("Freno_lblError"));
 
         frmLay_Freno->setWidget(8, QFormLayout::LabelRole, Freno_lblError);
 
-        frenoControl_lcd = new QLCDNumber(grp_Freno);
+        frenoControl_lcd = new QLCDNumber(frame_5);
         frenoControl_lcd->setObjectName(QString::fromUtf8("frenoControl_lcd"));
         frenoControl_lcd->setEnabled(true);
-        sizePolicy5.setHeightForWidth(frenoControl_lcd->sizePolicy().hasHeightForWidth());
-        frenoControl_lcd->setSizePolicy(sizePolicy5);
+        sizePolicy.setHeightForWidth(frenoControl_lcd->sizePolicy().hasHeightForWidth());
+        frenoControl_lcd->setSizePolicy(sizePolicy);
         frenoControl_lcd->setMinimumSize(QSize(30, 30));
         frenoControl_lcd->setFont(font);
         frenoControl_lcd->setSmallDecimalPoint(false);
-        frenoControl_lcd->setDigitCount(5);
+        frenoControl_lcd->setDigitCount(6);
 
         frmLay_Freno->setWidget(9, QFormLayout::FieldRole, frenoControl_lcd);
 
-        label_2 = new QLabel(grp_Freno);
+        label_2 = new QLabel(frame_5);
         label_2->setObjectName(QString::fromUtf8("label_2"));
         label_2->setMinimumSize(QSize(20, 0));
 
         frmLay_Freno->setWidget(9, QFormLayout::LabelRole, label_2);
 
-        Freno_Inhibido_chk = new QCheckBox(grp_Freno);
+        Freno_Inhibido_chk = new QCheckBox(frame_5);
         Freno_Inhibido_chk->setObjectName(QString::fromUtf8("Freno_Inhibido_chk"));
         Freno_Inhibido_chk->setLayoutDirection(Qt::RightToLeft);
 
         frmLay_Freno->setWidget(2, QFormLayout::FieldRole, Freno_Inhibido_chk);
 
-        label_7 = new QLabel(grp_Freno);
+        label_7 = new QLabel(frame_5);
         label_7->setObjectName(QString::fromUtf8("label_7"));
+        label_7->setMinimumSize(QSize(20, 0));
 
         frmLay_Freno->setWidget(2, QFormLayout::LabelRole, label_7);
 
-        Freno_Activado_chk = new QCheckBox(grp_Freno);
+        Freno_Activado_chk = new QCheckBox(frame_5);
         Freno_Activado_chk->setObjectName(QString::fromUtf8("Freno_Activado_chk"));
         Freno_Activado_chk->setLayoutDirection(Qt::RightToLeft);
 
         frmLay_Freno->setWidget(1, QFormLayout::FieldRole, Freno_Activado_chk);
 
-        FrenoActivado_lbl = new QLabel(grp_Freno);
+        FrenoActivado_lbl = new QLabel(frame_5);
         FrenoActivado_lbl->setObjectName(QString::fromUtf8("FrenoActivado_lbl"));
+        FrenoActivado_lbl->setMinimumSize(QSize(20, 0));
 
         frmLay_Freno->setWidget(1, QFormLayout::LabelRole, FrenoActivado_lbl);
 
-        chk_LED_Freno_OutR = new QCheckBox(grp_Freno);
+        chk_LED_Freno_OutR = new QCheckBox(frame_5);
         chk_LED_Freno_OutR->setObjectName(QString::fromUtf8("chk_LED_Freno_OutR"));
-        sizePolicy1.setHeightForWidth(chk_LED_Freno_OutR->sizePolicy().hasHeightForWidth());
-        chk_LED_Freno_OutR->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(chk_LED_Freno_OutR->sizePolicy().hasHeightForWidth());
+        chk_LED_Freno_OutR->setSizePolicy(sizePolicy2);
         chk_LED_Freno_OutR->setMinimumSize(QSize(50, 0));
         chk_LED_Freno_OutR->setLayoutDirection(Qt::RightToLeft);
 
         frmLay_Freno->setWidget(4, QFormLayout::FieldRole, chk_LED_Freno_OutR);
 
-        chk_LED_Freno_Desc = new QCheckBox(grp_Freno);
+        chk_LED_Freno_Desc = new QCheckBox(frame_5);
         chk_LED_Freno_Desc->setObjectName(QString::fromUtf8("chk_LED_Freno_Desc"));
-        sizePolicy1.setHeightForWidth(chk_LED_Freno_Desc->sizePolicy().hasHeightForWidth());
-        chk_LED_Freno_Desc->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(chk_LED_Freno_Desc->sizePolicy().hasHeightForWidth());
+        chk_LED_Freno_Desc->setSizePolicy(sizePolicy2);
         chk_LED_Freno_Desc->setMinimumSize(QSize(20, 0));
         chk_LED_Freno_Desc->setLayoutDirection(Qt::RightToLeft);
 
         frmLay_Freno->setWidget(3, QFormLayout::FieldRole, chk_LED_Freno_Desc);
 
 
-        verticalLayout_2->addLayout(frmLay_Freno);
+        verticalLayout_2->addWidget(frame_5);
 
         FrenoControl_Slider = new QSlider(grp_Freno);
         FrenoControl_Slider->setObjectName(QString::fromUtf8("FrenoControl_Slider"));
@@ -632,12 +684,14 @@ public:
 
         frame_2 = new QFrame(grp_Freno);
         frame_2->setObjectName(QString::fromUtf8("frame_2"));
+        frame_2->setMaximumSize(QSize(16777215, 72));
         frame_2->setFrameShape(QFrame::StyledPanel);
         frame_2->setFrameShadow(QFrame::Raised);
         verticalLayout_15 = new QVBoxLayout(frame_2);
-        verticalLayout_15->setSpacing(6);
+        verticalLayout_15->setSpacing(3);
         verticalLayout_15->setContentsMargins(11, 11, 11, 11);
         verticalLayout_15->setObjectName(QString::fromUtf8("verticalLayout_15"));
+        verticalLayout_15->setContentsMargins(3, 2, 3, 0);
         label_26 = new QLabel(frame_2);
         label_26->setObjectName(QString::fromUtf8("label_26"));
 
@@ -674,40 +728,50 @@ public:
 
         verticalLayout_2->addWidget(frame_2);
 
-        Brake_Driver_lay = new QFormLayout();
+        Brake_Driver_lay_2 = new QFrame(grp_Freno);
+        Brake_Driver_lay_2->setObjectName(QString::fromUtf8("Brake_Driver_lay_2"));
+        Brake_Driver_lay = new QFormLayout(Brake_Driver_lay_2);
         Brake_Driver_lay->setSpacing(6);
+        Brake_Driver_lay->setContentsMargins(11, 11, 11, 11);
         Brake_Driver_lay->setObjectName(QString::fromUtf8("Brake_Driver_lay"));
-        label_8 = new QLabel(grp_Freno);
+        Brake_Driver_lay->setHorizontalSpacing(3);
+        Brake_Driver_lay->setVerticalSpacing(6);
+        Brake_Driver_lay->setContentsMargins(-1, 3, 1, 3);
+        label_8 = new QLabel(Brake_Driver_lay_2);
         label_8->setObjectName(QString::fromUtf8("label_8"));
 
         Brake_Driver_lay->setWidget(0, QFormLayout::LabelRole, label_8);
 
-        Brake_VIN_lbl = new QLabel(grp_Freno);
+        Brake_VIN_lbl = new QLabel(Brake_Driver_lay_2);
         Brake_VIN_lbl->setObjectName(QString::fromUtf8("Brake_VIN_lbl"));
+        QFont font2;
+        font2.setPointSize(14);
+        Brake_VIN_lbl->setFont(font2);
 
         Brake_Driver_lay->setWidget(0, QFormLayout::FieldRole, Brake_VIN_lbl);
 
-        label_10 = new QLabel(grp_Freno);
+        label_10 = new QLabel(Brake_Driver_lay_2);
         label_10->setObjectName(QString::fromUtf8("label_10"));
 
         Brake_Driver_lay->setWidget(1, QFormLayout::LabelRole, label_10);
 
-        Brake_Temp_lbl = new QLabel(grp_Freno);
+        Brake_Temp_lbl = new QLabel(Brake_Driver_lay_2);
         Brake_Temp_lbl->setObjectName(QString::fromUtf8("Brake_Temp_lbl"));
+        Brake_Temp_lbl->setFont(font2);
 
         Brake_Driver_lay->setWidget(1, QFormLayout::FieldRole, Brake_Temp_lbl);
 
-        label_12 = new QLabel(grp_Freno);
+        label_12 = new QLabel(Brake_Driver_lay_2);
         label_12->setObjectName(QString::fromUtf8("label_12"));
 
         Brake_Driver_lay->setWidget(2, QFormLayout::LabelRole, label_12);
 
-        Brake_Error_lbl = new QLabel(grp_Freno);
+        Brake_Error_lbl = new QLabel(Brake_Driver_lay_2);
         Brake_Error_lbl->setObjectName(QString::fromUtf8("Brake_Error_lbl"));
 
         Brake_Driver_lay->setWidget(2, QFormLayout::FieldRole, Brake_Error_lbl);
 
-        brake_ShowInfo_rBtn = new QRadioButton(grp_Freno);
+        brake_ShowInfo_rBtn = new QRadioButton(Brake_Driver_lay_2);
         driversShowInfoSelect = new QButtonGroup(MainWindow);
         driversShowInfoSelect->setObjectName(QString::fromUtf8("driversShowInfoSelect"));
         driversShowInfoSelect->addButton(brake_ShowInfo_rBtn);
@@ -718,96 +782,105 @@ public:
         Brake_Driver_lay->setWidget(3, QFormLayout::FieldRole, brake_ShowInfo_rBtn);
 
 
-        verticalLayout_2->addLayout(Brake_Driver_lay);
+        verticalLayout_2->addWidget(Brake_Driver_lay_2);
 
 
         SensorsInfo_horLayout->addWidget(grp_Freno);
 
-        grp_Acelerador = new QGroupBox(SensorsInfo_Errors_and_Conn_Widget);
+        grp_Acelerador = new QGroupBox(Joystick_and_Actuators_hotLayout);
         grp_Acelerador->setObjectName(QString::fromUtf8("grp_Acelerador"));
         sizePolicy.setHeightForWidth(grp_Acelerador->sizePolicy().hasHeightForWidth());
         grp_Acelerador->setSizePolicy(sizePolicy);
-        grp_Acelerador->setMaximumSize(QSize(16777215, 525));
+        grp_Acelerador->setMinimumSize(QSize(170, 450));
+        grp_Acelerador->setMaximumSize(QSize(180, 525));
         grp_Acelerador->setAutoFillBackground(true);
         grp_Acelerador->setFlat(false);
         verticalLayout_4 = new QVBoxLayout(grp_Acelerador);
-        verticalLayout_4->setSpacing(6);
+        verticalLayout_4->setSpacing(3);
         verticalLayout_4->setContentsMargins(11, 11, 11, 11);
         verticalLayout_4->setObjectName(QString::fromUtf8("verticalLayout_4"));
-        frmLay_Acelerador = new QFormLayout();
+        verticalLayout_4->setContentsMargins(3, 1, 3, 1);
+        frame1 = new QFrame(grp_Acelerador);
+        frame1->setObjectName(QString::fromUtf8("frame1"));
+        frame1->setMinimumSize(QSize(136, 0));
+        frmLay_Acelerador = new QFormLayout(frame1);
         frmLay_Acelerador->setSpacing(6);
+        frmLay_Acelerador->setContentsMargins(11, 11, 11, 11);
         frmLay_Acelerador->setObjectName(QString::fromUtf8("frmLay_Acelerador"));
-        Acel_Activado_lbl = new QLabel(grp_Acelerador);
+        frmLay_Acelerador->setHorizontalSpacing(1);
+        frmLay_Acelerador->setVerticalSpacing(3);
+        frmLay_Acelerador->setContentsMargins(-1, 3, -1, 5);
+        Acel_Activado_lbl = new QLabel(frame1);
         Acel_Activado_lbl->setObjectName(QString::fromUtf8("Acel_Activado_lbl"));
 
         frmLay_Acelerador->setWidget(0, QFormLayout::LabelRole, Acel_Activado_lbl);
 
-        Acel_Activado_chk = new QCheckBox(grp_Acelerador);
+        Acel_Activado_chk = new QCheckBox(frame1);
         Acel_Activado_chk->setObjectName(QString::fromUtf8("Acel_Activado_chk"));
-        sizePolicy1.setHeightForWidth(Acel_Activado_chk->sizePolicy().hasHeightForWidth());
-        Acel_Activado_chk->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(Acel_Activado_chk->sizePolicy().hasHeightForWidth());
+        Acel_Activado_chk->setSizePolicy(sizePolicy2);
         Acel_Activado_chk->setLayoutDirection(Qt::RightToLeft);
 
         frmLay_Acelerador->setWidget(0, QFormLayout::FieldRole, Acel_Activado_chk);
 
-        Acel_Inhibido_lbl = new QLabel(grp_Acelerador);
+        Acel_Inhibido_lbl = new QLabel(frame1);
         Acel_Inhibido_lbl->setObjectName(QString::fromUtf8("Acel_Inhibido_lbl"));
 
         frmLay_Acelerador->setWidget(1, QFormLayout::LabelRole, Acel_Inhibido_lbl);
 
-        Acel_Inhibido_chk = new QCheckBox(grp_Acelerador);
+        Acel_Inhibido_chk = new QCheckBox(frame1);
         Acel_Inhibido_chk->setObjectName(QString::fromUtf8("Acel_Inhibido_chk"));
-        sizePolicy1.setHeightForWidth(Acel_Inhibido_chk->sizePolicy().hasHeightForWidth());
-        Acel_Inhibido_chk->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(Acel_Inhibido_chk->sizePolicy().hasHeightForWidth());
+        Acel_Inhibido_chk->setSizePolicy(sizePolicy2);
         Acel_Inhibido_chk->setLayoutDirection(Qt::RightToLeft);
 
         frmLay_Acelerador->setWidget(1, QFormLayout::FieldRole, Acel_Inhibido_chk);
 
-        chk_LED_Acel_OutR = new QCheckBox(grp_Acelerador);
+        chk_LED_Acel_OutR = new QCheckBox(frame1);
         chk_LED_Acel_OutR->setObjectName(QString::fromUtf8("chk_LED_Acel_OutR"));
-        sizePolicy1.setHeightForWidth(chk_LED_Acel_OutR->sizePolicy().hasHeightForWidth());
-        chk_LED_Acel_OutR->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(chk_LED_Acel_OutR->sizePolicy().hasHeightForWidth());
+        chk_LED_Acel_OutR->setSizePolicy(sizePolicy2);
         chk_LED_Acel_OutR->setMinimumSize(QSize(43, 0));
         chk_LED_Acel_OutR->setLayoutDirection(Qt::RightToLeft);
 
         frmLay_Acelerador->setWidget(3, QFormLayout::FieldRole, chk_LED_Acel_OutR);
 
-        valorAcelerador_lbl = new QLabel(grp_Acelerador);
+        valorAcelerador_lbl = new QLabel(frame1);
         valorAcelerador_lbl->setObjectName(QString::fromUtf8("valorAcelerador_lbl"));
 
         frmLay_Acelerador->setWidget(5, QFormLayout::LabelRole, valorAcelerador_lbl);
 
-        aceleradorPos_lcd = new QLCDNumber(grp_Acelerador);
+        aceleradorPos_lcd = new QLCDNumber(frame1);
         aceleradorPos_lcd->setObjectName(QString::fromUtf8("aceleradorPos_lcd"));
         sizePolicy.setHeightForWidth(aceleradorPos_lcd->sizePolicy().hasHeightForWidth());
         aceleradorPos_lcd->setSizePolicy(sizePolicy);
-        aceleradorPos_lcd->setMinimumSize(QSize(40, 40));
+        aceleradorPos_lcd->setMinimumSize(QSize(75, 40));
         aceleradorPos_lcd->setFont(font);
+        aceleradorPos_lcd->setDigitCount(4);
 
         frmLay_Acelerador->setWidget(5, QFormLayout::FieldRole, aceleradorPos_lcd);
 
-        label_3 = new QLabel(grp_Acelerador);
+        label_3 = new QLabel(frame1);
         label_3->setObjectName(QString::fromUtf8("label_3"));
 
         frmLay_Acelerador->setWidget(6, QFormLayout::LabelRole, label_3);
 
-        aceleradorDes_lcd = new QLCDNumber(grp_Acelerador);
+        aceleradorDes_lcd = new QLCDNumber(frame1);
         aceleradorDes_lcd->setObjectName(QString::fromUtf8("aceleradorDes_lcd"));
         sizePolicy.setHeightForWidth(aceleradorDes_lcd->sizePolicy().hasHeightForWidth());
         aceleradorDes_lcd->setSizePolicy(sizePolicy);
         aceleradorDes_lcd->setMinimumSize(QSize(0, 30));
-        QFont font2;
-        font2.setPointSize(14);
         aceleradorDes_lcd->setFont(font2);
+        aceleradorDes_lcd->setDigitCount(4);
 
         frmLay_Acelerador->setWidget(6, QFormLayout::FieldRole, aceleradorDes_lcd);
 
-        label_5 = new QLabel(grp_Acelerador);
+        label_5 = new QLabel(frame1);
         label_5->setObjectName(QString::fromUtf8("label_5"));
 
         frmLay_Acelerador->setWidget(7, QFormLayout::LabelRole, label_5);
 
-        Acelerador_lcdError = new QLCDNumber(grp_Acelerador);
+        Acelerador_lcdError = new QLCDNumber(frame1);
         Acelerador_lcdError->setObjectName(QString::fromUtf8("Acelerador_lcdError"));
         sizePolicy.setHeightForWidth(Acelerador_lcdError->sizePolicy().hasHeightForWidth());
         Acelerador_lcdError->setSizePolicy(sizePolicy);
@@ -815,34 +888,35 @@ public:
 
         frmLay_Acelerador->setWidget(7, QFormLayout::FieldRole, Acelerador_lcdError);
 
-        label_4 = new QLabel(grp_Acelerador);
+        label_4 = new QLabel(frame1);
         label_4->setObjectName(QString::fromUtf8("label_4"));
 
         frmLay_Acelerador->setWidget(8, QFormLayout::LabelRole, label_4);
 
-        aceleradorControl_lcd = new QLCDNumber(grp_Acelerador);
+        aceleradorControl_lcd = new QLCDNumber(frame1);
         aceleradorControl_lcd->setObjectName(QString::fromUtf8("aceleradorControl_lcd"));
-        QSizePolicy sizePolicy6(QSizePolicy::Minimum, QSizePolicy::Minimum);
-        sizePolicy6.setHorizontalStretch(0);
-        sizePolicy6.setVerticalStretch(0);
-        sizePolicy6.setHeightForWidth(aceleradorControl_lcd->sizePolicy().hasHeightForWidth());
-        aceleradorControl_lcd->setSizePolicy(sizePolicy6);
+        QSizePolicy sizePolicy5(QSizePolicy::Minimum, QSizePolicy::Minimum);
+        sizePolicy5.setHorizontalStretch(0);
+        sizePolicy5.setVerticalStretch(0);
+        sizePolicy5.setHeightForWidth(aceleradorControl_lcd->sizePolicy().hasHeightForWidth());
+        aceleradorControl_lcd->setSizePolicy(sizePolicy5);
         aceleradorControl_lcd->setMinimumSize(QSize(0, 30));
         aceleradorControl_lcd->setFont(font2);
+        aceleradorControl_lcd->setDigitCount(6);
 
         frmLay_Acelerador->setWidget(8, QFormLayout::FieldRole, aceleradorControl_lcd);
 
-        chk_LED_Acel_Desc = new QCheckBox(grp_Acelerador);
+        chk_LED_Acel_Desc = new QCheckBox(frame1);
         chk_LED_Acel_Desc->setObjectName(QString::fromUtf8("chk_LED_Acel_Desc"));
-        sizePolicy1.setHeightForWidth(chk_LED_Acel_Desc->sizePolicy().hasHeightForWidth());
-        chk_LED_Acel_Desc->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(chk_LED_Acel_Desc->sizePolicy().hasHeightForWidth());
+        chk_LED_Acel_Desc->setSizePolicy(sizePolicy2);
         chk_LED_Acel_Desc->setMinimumSize(QSize(50, 0));
         chk_LED_Acel_Desc->setLayoutDirection(Qt::RightToLeft);
 
         frmLay_Acelerador->setWidget(2, QFormLayout::FieldRole, chk_LED_Acel_Desc);
 
 
-        verticalLayout_4->addLayout(frmLay_Acelerador);
+        verticalLayout_4->addWidget(frame1);
 
         AceleradorControl_Slider = new QSlider(grp_Acelerador);
         AceleradorControl_Slider->setObjectName(QString::fromUtf8("AceleradorControl_Slider"));
@@ -855,16 +929,17 @@ public:
 
         verticalLayout_4->addWidget(AceleradorControl_Slider);
 
-        frame = new QFrame(grp_Acelerador);
-        frame->setObjectName(QString::fromUtf8("frame"));
-        frame->setLayoutDirection(Qt::LeftToRight);
-        frame->setFrameShape(QFrame::StyledPanel);
-        frame->setFrameShadow(QFrame::Raised);
-        verticalLayout_13 = new QVBoxLayout(frame);
-        verticalLayout_13->setSpacing(6);
+        frame2 = new QFrame(grp_Acelerador);
+        frame2->setObjectName(QString::fromUtf8("frame2"));
+        frame2->setLayoutDirection(Qt::LeftToRight);
+        frame2->setFrameShape(QFrame::StyledPanel);
+        frame2->setFrameShadow(QFrame::Raised);
+        verticalLayout_13 = new QVBoxLayout(frame2);
+        verticalLayout_13->setSpacing(2);
         verticalLayout_13->setContentsMargins(11, 11, 11, 11);
         verticalLayout_13->setObjectName(QString::fromUtf8("verticalLayout_13"));
-        label_30 = new QLabel(frame);
+        verticalLayout_13->setContentsMargins(3, 2, 3, 1);
+        label_30 = new QLabel(frame2);
         label_30->setObjectName(QString::fromUtf8("label_30"));
 
         verticalLayout_13->addWidget(label_30);
@@ -872,25 +947,25 @@ public:
         formLayout_4 = new QFormLayout();
         formLayout_4->setSpacing(6);
         formLayout_4->setObjectName(QString::fromUtf8("formLayout_4"));
-        label_31 = new QLabel(frame);
+        label_31 = new QLabel(frame2);
         label_31->setObjectName(QString::fromUtf8("label_31"));
 
         formLayout_4->setWidget(0, QFormLayout::LabelRole, label_31);
 
-        label_32 = new QLabel(frame);
+        label_32 = new QLabel(frame2);
         label_32->setObjectName(QString::fromUtf8("label_32"));
         label_32->setLayoutDirection(Qt::LeftToRight);
         label_32->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
         formLayout_4->setWidget(0, QFormLayout::FieldRole, label_32);
 
-        Accel_PosLimits_Max_lbl = new QLabel(frame);
+        Accel_PosLimits_Max_lbl = new QLabel(frame2);
         Accel_PosLimits_Max_lbl->setObjectName(QString::fromUtf8("Accel_PosLimits_Max_lbl"));
         Accel_PosLimits_Max_lbl->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
         formLayout_4->setWidget(1, QFormLayout::FieldRole, Accel_PosLimits_Max_lbl);
 
-        Accel_PosLimits_Min_lbl = new QLabel(frame);
+        Accel_PosLimits_Min_lbl = new QLabel(frame2);
         Accel_PosLimits_Min_lbl->setObjectName(QString::fromUtf8("Accel_PosLimits_Min_lbl"));
 
         formLayout_4->setWidget(1, QFormLayout::LabelRole, Accel_PosLimits_Min_lbl);
@@ -899,11 +974,13 @@ public:
         verticalLayout_13->addLayout(formLayout_4);
 
 
-        verticalLayout_4->addWidget(frame);
+        verticalLayout_4->addWidget(frame2);
 
         Accel_Driver_lay = new QFormLayout();
         Accel_Driver_lay->setSpacing(6);
         Accel_Driver_lay->setObjectName(QString::fromUtf8("Accel_Driver_lay"));
+        Accel_Driver_lay->setVerticalSpacing(6);
+        Accel_Driver_lay->setContentsMargins(-1, 3, -1, 3);
         label_9 = new QLabel(grp_Acelerador);
         label_9->setObjectName(QString::fromUtf8("label_9"));
 
@@ -911,11 +988,13 @@ public:
 
         Accel_Vin_lbl = new QLabel(grp_Acelerador);
         Accel_Vin_lbl->setObjectName(QString::fromUtf8("Accel_Vin_lbl"));
+        Accel_Vin_lbl->setFont(font2);
 
         Accel_Driver_lay->setWidget(0, QFormLayout::FieldRole, Accel_Vin_lbl);
 
         Accel_Temp_lbl = new QLabel(grp_Acelerador);
         Accel_Temp_lbl->setObjectName(QString::fromUtf8("Accel_Temp_lbl"));
+        Accel_Temp_lbl->setFont(font2);
 
         Accel_Driver_lay->setWidget(1, QFormLayout::FieldRole, Accel_Temp_lbl);
 
@@ -947,18 +1026,22 @@ public:
 
         SensorsInfo_horLayout->addWidget(grp_Acelerador);
 
-        grp_Volante = new QGroupBox(SensorsInfo_Errors_and_Conn_Widget);
+        grp_Volante = new QGroupBox(Joystick_and_Actuators_hotLayout);
         grp_Volante->setObjectName(QString::fromUtf8("grp_Volante"));
         sizePolicy.setHeightForWidth(grp_Volante->sizePolicy().hasHeightForWidth());
         grp_Volante->setSizePolicy(sizePolicy);
-        grp_Volante->setMaximumSize(QSize(150, 525));
+        grp_Volante->setMinimumSize(QSize(110, 450));
+        grp_Volante->setMaximumSize(QSize(110, 525));
         grp_Volante->setAutoFillBackground(true);
         verticalLayout_5 = new QVBoxLayout(grp_Volante);
-        verticalLayout_5->setSpacing(6);
+        verticalLayout_5->setSpacing(4);
         verticalLayout_5->setContentsMargins(11, 11, 11, 11);
         verticalLayout_5->setObjectName(QString::fromUtf8("verticalLayout_5"));
+        verticalLayout_5->setContentsMargins(3, 3, 3, 3);
         volante_Activado_chk = new QCheckBox(grp_Volante);
         volante_Activado_chk->setObjectName(QString::fromUtf8("volante_Activado_chk"));
+        sizePolicy.setHeightForWidth(volante_Activado_chk->sizePolicy().hasHeightForWidth());
+        volante_Activado_chk->setSizePolicy(sizePolicy);
         volante_Activado_chk->setLayoutDirection(Qt::RightToLeft);
 
         verticalLayout_5->addWidget(volante_Activado_chk);
@@ -982,35 +1065,31 @@ public:
         verticalLayout_5->addWidget(VolanteModo_cmb);
 
         verticalLayout_11 = new QVBoxLayout();
-        verticalLayout_11->setSpacing(6);
+        verticalLayout_11->setSpacing(3);
         verticalLayout_11->setObjectName(QString::fromUtf8("verticalLayout_11"));
-        formLayout = new QFormLayout();
-        formLayout->setSpacing(6);
-        formLayout->setObjectName(QString::fromUtf8("formLayout"));
         valorVolante_lbl = new QLabel(grp_Volante);
         valorVolante_lbl->setObjectName(QString::fromUtf8("valorVolante_lbl"));
-        valorVolante_lbl->setMinimumSize(QSize(28, 0));
+        valorVolante_lbl->setMinimumSize(QSize(25, 0));
+        valorVolante_lbl->setAlignment(Qt::AlignCenter);
 
-        formLayout->setWidget(0, QFormLayout::LabelRole, valorVolante_lbl);
+        verticalLayout_11->addWidget(valorVolante_lbl);
 
         volante_lcd = new QLCDNumber(grp_Volante);
         volante_lcd->setObjectName(QString::fromUtf8("volante_lcd"));
         sizePolicy.setHeightForWidth(volante_lcd->sizePolicy().hasHeightForWidth());
         volante_lcd->setSizePolicy(sizePolicy);
-        volante_lcd->setMinimumSize(QSize(65, 50));
+        volante_lcd->setMinimumSize(QSize(40, 30));
         volante_lcd->setFont(font2);
 
-        formLayout->setWidget(0, QFormLayout::FieldRole, volante_lcd);
-
-
-        verticalLayout_11->addLayout(formLayout);
+        verticalLayout_11->addWidget(volante_lcd);
 
 
         verticalLayout_5->addLayout(verticalLayout_11);
 
         VolanteControl_Dial = new QDial(grp_Volante);
         VolanteControl_Dial->setObjectName(QString::fromUtf8("VolanteControl_Dial"));
-        VolanteControl_Dial->setMinimumSize(QSize(80, 83));
+        VolanteControl_Dial->setMinimumSize(QSize(50, 50));
+        VolanteControl_Dial->setMaximumSize(QSize(90, 90));
         VolanteControl_Dial->setAutoFillBackground(false);
         VolanteControl_Dial->setMinimum(-3200);
         VolanteControl_Dial->setMaximum(3200);
@@ -1044,11 +1123,13 @@ public:
 
         Steer_Vin_lbl = new QLabel(grp_Volante);
         Steer_Vin_lbl->setObjectName(QString::fromUtf8("Steer_Vin_lbl"));
+        Steer_Vin_lbl->setFont(font2);
 
         formLayout_5->setWidget(0, QFormLayout::FieldRole, Steer_Vin_lbl);
 
         Steer_Temp_lbl = new QLabel(grp_Volante);
         Steer_Temp_lbl->setObjectName(QString::fromUtf8("Steer_Temp_lbl"));
+        Steer_Temp_lbl->setFont(font2);
 
         formLayout_5->setWidget(1, QFormLayout::FieldRole, Steer_Temp_lbl);
 
@@ -1070,17 +1151,18 @@ public:
 
         SensorsInfo_horLayout->addWidget(grp_Volante);
 
-        ShiftGear_and_SystemInfo = new QWidget(SensorsInfo_Errors_and_Conn_Widget);
-        ShiftGear_and_SystemInfo->setObjectName(QString::fromUtf8("ShiftGear_and_SystemInfo"));
-        ShiftGear_and_SystemInfo->setMaximumSize(QSize(16777215, 525));
-        shiftGear_and_DefaultDefines = new QVBoxLayout(ShiftGear_and_SystemInfo);
+        grp_ShiftGear_and_SystemInfo = new QWidget(Joystick_and_Actuators_hotLayout);
+        grp_ShiftGear_and_SystemInfo->setObjectName(QString::fromUtf8("grp_ShiftGear_and_SystemInfo"));
+        grp_ShiftGear_and_SystemInfo->setMinimumSize(QSize(56, 450));
+        grp_ShiftGear_and_SystemInfo->setMaximumSize(QSize(160, 525));
+        shiftGear_and_DefaultDefines = new QVBoxLayout(grp_ShiftGear_and_SystemInfo);
         shiftGear_and_DefaultDefines->setSpacing(6);
         shiftGear_and_DefaultDefines->setContentsMargins(11, 11, 11, 11);
         shiftGear_and_DefaultDefines->setObjectName(QString::fromUtf8("shiftGear_and_DefaultDefines"));
-        palanca_grp = new QGroupBox(ShiftGear_and_SystemInfo);
+        palanca_grp = new QGroupBox(grp_ShiftGear_and_SystemInfo);
         palanca_grp->setObjectName(QString::fromUtf8("palanca_grp"));
-        sizePolicy1.setHeightForWidth(palanca_grp->sizePolicy().hasHeightForWidth());
-        palanca_grp->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(palanca_grp->sizePolicy().hasHeightForWidth());
+        palanca_grp->setSizePolicy(sizePolicy2);
         palanca_grp->setMinimumSize(QSize(90, 200));
         palanca_grp->setLayoutDirection(Qt::LeftToRight);
         palanca_grp->setAutoFillBackground(true);
@@ -1094,8 +1176,8 @@ public:
         verticalLayout_14->setObjectName(QString::fromUtf8("verticalLayout_14"));
         palanca_Activada_chk = new QCheckBox(palanca_grp);
         palanca_Activada_chk->setObjectName(QString::fromUtf8("palanca_Activada_chk"));
-        sizePolicy1.setHeightForWidth(palanca_Activada_chk->sizePolicy().hasHeightForWidth());
-        palanca_Activada_chk->setSizePolicy(sizePolicy1);
+        sizePolicy2.setHeightForWidth(palanca_Activada_chk->sizePolicy().hasHeightForWidth());
+        palanca_Activada_chk->setSizePolicy(sizePolicy2);
         palanca_Activada_chk->setMinimumSize(QSize(50, 0));
         palanca_Activada_chk->setLayoutDirection(Qt::RightToLeft);
 
@@ -1117,45 +1199,46 @@ public:
 
         shiftGear_and_DefaultDefines->addWidget(palanca_grp);
 
-        frame_3 = new QFrame(ShiftGear_and_SystemInfo);
-        frame_3->setObjectName(QString::fromUtf8("frame_3"));
-        frame_3->setFrameShape(QFrame::StyledPanel);
-        frame_3->setFrameShadow(QFrame::Raised);
-        verticalLayout_7 = new QVBoxLayout(frame_3);
+        time_frame = new QFrame(grp_ShiftGear_and_SystemInfo);
+        time_frame->setObjectName(QString::fromUtf8("time_frame"));
+        time_frame->setFrameShape(QFrame::StyledPanel);
+        time_frame->setFrameShadow(QFrame::Raised);
+        verticalLayout_7 = new QVBoxLayout(time_frame);
         verticalLayout_7->setSpacing(6);
         verticalLayout_7->setContentsMargins(11, 11, 11, 11);
         verticalLayout_7->setObjectName(QString::fromUtf8("verticalLayout_7"));
+        verticalLayout_7->setContentsMargins(7, 7, 7, 7);
         formLayout_6 = new QFormLayout();
         formLayout_6->setSpacing(6);
         formLayout_6->setObjectName(QString::fromUtf8("formLayout_6"));
-        label_27 = new QLabel(frame_3);
+        label_27 = new QLabel(time_frame);
         label_27->setObjectName(QString::fromUtf8("label_27"));
 
         formLayout_6->setWidget(0, QFormLayout::LabelRole, label_27);
 
-        T_lbl = new QLabel(frame_3);
+        T_lbl = new QLabel(time_frame);
         T_lbl->setObjectName(QString::fromUtf8("T_lbl"));
 
         formLayout_6->setWidget(0, QFormLayout::FieldRole, T_lbl);
 
-        T_max_lbl = new QLabel(frame_3);
+        T_max_lbl = new QLabel(time_frame);
         T_max_lbl->setObjectName(QString::fromUtf8("T_max_lbl"));
         T_max_lbl->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
         formLayout_6->setWidget(2, QFormLayout::FieldRole, T_max_lbl);
 
-        label_35 = new QLabel(frame_3);
+        label_35 = new QLabel(time_frame);
         label_35->setObjectName(QString::fromUtf8("label_35"));
         label_35->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
         formLayout_6->setWidget(1, QFormLayout::FieldRole, label_35);
 
-        label_33 = new QLabel(frame_3);
+        label_33 = new QLabel(time_frame);
         label_33->setObjectName(QString::fromUtf8("label_33"));
 
         formLayout_6->setWidget(1, QFormLayout::LabelRole, label_33);
 
-        T_min_lbl = new QLabel(frame_3);
+        T_min_lbl = new QLabel(time_frame);
         T_min_lbl->setObjectName(QString::fromUtf8("T_min_lbl"));
 
         formLayout_6->setWidget(2, QFormLayout::LabelRole, T_min_lbl);
@@ -1163,136 +1246,158 @@ public:
 
         verticalLayout_7->addLayout(formLayout_6);
 
-        normalDefines_chk = new QCheckBox(frame_3);
+        normalDefines_chk = new QCheckBox(time_frame);
         normalDefines_chk->setObjectName(QString::fromUtf8("normalDefines_chk"));
         normalDefines_chk->setLayoutDirection(Qt::RightToLeft);
 
         verticalLayout_7->addWidget(normalDefines_chk);
 
 
-        shiftGear_and_DefaultDefines->addWidget(frame_3);
+        shiftGear_and_DefaultDefines->addWidget(time_frame);
 
 
-        SensorsInfo_horLayout->addWidget(ShiftGear_and_SystemInfo);
+        SensorsInfo_horLayout->addWidget(grp_ShiftGear_and_SystemInfo);
 
 
-        SensorsInfo_verLayout->addLayout(SensorsInfo_horLayout);
+        SensorsInfo_verLayout->addWidget(Joystick_and_Actuators_hotLayout);
 
 
-        Valores_Widget->addLayout(SensorsInfo_verLayout);
+        Valores_Widget->addWidget(Joystick_and_Actuators_ext_hotLayout);
 
         Edo_ConexionConfig_and_Error_vertWidget = new QWidget(SensorsInfo_Errors_and_Conn_Widget);
         Edo_ConexionConfig_and_Error_vertWidget->setObjectName(QString::fromUtf8("Edo_ConexionConfig_and_Error_vertWidget"));
         sizePolicy.setHeightForWidth(Edo_ConexionConfig_and_Error_vertWidget->sizePolicy().hasHeightForWidth());
         Edo_ConexionConfig_and_Error_vertWidget->setSizePolicy(sizePolicy);
-        Edo_ConexionConfig_and_Error_vertWidget->setMaximumSize(QSize(300, 525));
+        Edo_ConexionConfig_and_Error_vertWidget->setMinimumSize(QSize(50, 0));
+        Edo_ConexionConfig_and_Error_vertWidget->setMaximumSize(QSize(300, 515));
+        Edo_ConexionConfig_and_Error_vertWidget->setLayoutDirection(Qt::LeftToRight);
         verticalLayout_12 = new QVBoxLayout(Edo_ConexionConfig_and_Error_vertWidget);
-        verticalLayout_12->setSpacing(6);
+        verticalLayout_12->setSpacing(3);
         verticalLayout_12->setContentsMargins(11, 11, 11, 11);
         verticalLayout_12->setObjectName(QString::fromUtf8("verticalLayout_12"));
-        EstadoIsiukak_horLayout = new QHBoxLayout();
-        EstadoIsiukak_horLayout->setSpacing(6);
+        verticalLayout_12->setContentsMargins(1, 1, 1, 1);
+        horizontalLayout = new QHBoxLayout();
+        horizontalLayout->setSpacing(6);
+        horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
+        logoOlin_lbl = new QLabel(Edo_ConexionConfig_and_Error_vertWidget);
+        logoOlin_lbl->setObjectName(QString::fromUtf8("logoOlin_lbl"));
+        logoOlin_lbl->setMaximumSize(QSize(80, 80));
+        logoOlin_lbl->setAutoFillBackground(false);
+        logoOlin_lbl->setPixmap(QPixmap(QString::fromUtf8(":/images/Isotipo.png")));
+        logoOlin_lbl->setScaledContents(true);
+        logoOlin_lbl->setAlignment(Qt::AlignCenter);
+
+        horizontalLayout->addWidget(logoOlin_lbl);
+
+
+        verticalLayout_12->addLayout(horizontalLayout);
+
+        Status_horLay = new QFrame(Edo_ConexionConfig_and_Error_vertWidget);
+        Status_horLay->setObjectName(QString::fromUtf8("Status_horLay"));
+        EstadoIsiukak_horLayout = new QHBoxLayout(Status_horLay);
+        EstadoIsiukak_horLayout->setSpacing(4);
+        EstadoIsiukak_horLayout->setContentsMargins(11, 11, 11, 11);
         EstadoIsiukak_horLayout->setObjectName(QString::fromUtf8("EstadoIsiukak_horLayout"));
-        lblEstadoSistema = new QLabel(Edo_ConexionConfig_and_Error_vertWidget);
+        lblEstadoSistema = new QLabel(Status_horLay);
         lblEstadoSistema->setObjectName(QString::fromUtf8("lblEstadoSistema"));
+        lblEstadoSistema->setMinimumSize(QSize(30, 0));
         QFont font3;
         font3.setPointSize(13);
         lblEstadoSistema->setFont(font3);
 
         EstadoIsiukak_horLayout->addWidget(lblEstadoSistema);
 
-        estadoSistema_lbl = new QLabel(Edo_ConexionConfig_and_Error_vertWidget);
+        estadoSistema_lbl = new QLabel(Status_horLay);
         estadoSistema_lbl->setObjectName(QString::fromUtf8("estadoSistema_lbl"));
-        estadoSistema_lbl->setMinimumSize(QSize(0, 30));
+        estadoSistema_lbl->setMinimumSize(QSize(217, 30));
         QFont font4;
         font4.setPointSize(16);
         estadoSistema_lbl->setFont(font4);
 
         EstadoIsiukak_horLayout->addWidget(estadoSistema_lbl);
 
-        label_6 = new QLabel(Edo_ConexionConfig_and_Error_vertWidget);
-        label_6->setObjectName(QString::fromUtf8("label_6"));
-        label_6->setMaximumSize(QSize(80, 80));
-        label_6->setAutoFillBackground(false);
-        label_6->setPixmap(QPixmap(QString::fromUtf8(":/images/Isotipo.png")));
-        label_6->setScaledContents(true);
 
-        EstadoIsiukak_horLayout->addWidget(label_6);
+        verticalLayout_12->addWidget(Status_horLay);
 
-
-        verticalLayout_12->addLayout(EstadoIsiukak_horLayout);
-
-        driverErrorsHeaders_gridLayout = new QGridLayout();
+        driverErrorsHeaders_gridLayout_2 = new QFrame(Edo_ConexionConfig_and_Error_vertWidget);
+        driverErrorsHeaders_gridLayout_2->setObjectName(QString::fromUtf8("driverErrorsHeaders_gridLayout_2"));
+        driverErrorsHeaders_gridLayout = new QGridLayout(driverErrorsHeaders_gridLayout_2);
         driverErrorsHeaders_gridLayout->setSpacing(6);
+        driverErrorsHeaders_gridLayout->setContentsMargins(11, 11, 11, 11);
         driverErrorsHeaders_gridLayout->setObjectName(QString::fromUtf8("driverErrorsHeaders_gridLayout"));
-        label_21 = new QLabel(Edo_ConexionConfig_and_Error_vertWidget);
+        label_21 = new QLabel(driverErrorsHeaders_gridLayout_2);
         label_21->setObjectName(QString::fromUtf8("label_21"));
 
         driverErrorsHeaders_gridLayout->addWidget(label_21, 0, 6, 1, 1);
 
-        label_25 = new QLabel(Edo_ConexionConfig_and_Error_vertWidget);
+        label_25 = new QLabel(driverErrorsHeaders_gridLayout_2);
         label_25->setObjectName(QString::fromUtf8("label_25"));
 
         driverErrorsHeaders_gridLayout->addWidget(label_25, 0, 10, 1, 1);
 
-        label_24 = new QLabel(Edo_ConexionConfig_and_Error_vertWidget);
+        label_24 = new QLabel(driverErrorsHeaders_gridLayout_2);
         label_24->setObjectName(QString::fromUtf8("label_24"));
 
         driverErrorsHeaders_gridLayout->addWidget(label_24, 0, 9, 1, 1);
 
-        label_20 = new QLabel(Edo_ConexionConfig_and_Error_vertWidget);
+        label_20 = new QLabel(driverErrorsHeaders_gridLayout_2);
         label_20->setObjectName(QString::fromUtf8("label_20"));
 
         driverErrorsHeaders_gridLayout->addWidget(label_20, 0, 5, 1, 1);
 
-        label_38 = new QLabel(Edo_ConexionConfig_and_Error_vertWidget);
+        label_38 = new QLabel(driverErrorsHeaders_gridLayout_2);
         label_38->setObjectName(QString::fromUtf8("label_38"));
+        label_38->setMinimumSize(QSize(18, 0));
 
         driverErrorsHeaders_gridLayout->addWidget(label_38, 0, 0, 1, 1);
 
-        label_22 = new QLabel(Edo_ConexionConfig_and_Error_vertWidget);
+        label_22 = new QLabel(driverErrorsHeaders_gridLayout_2);
         label_22->setObjectName(QString::fromUtf8("label_22"));
 
         driverErrorsHeaders_gridLayout->addWidget(label_22, 0, 7, 1, 1);
 
-        label_23 = new QLabel(Edo_ConexionConfig_and_Error_vertWidget);
+        label_23 = new QLabel(driverErrorsHeaders_gridLayout_2);
         label_23->setObjectName(QString::fromUtf8("label_23"));
 
         driverErrorsHeaders_gridLayout->addWidget(label_23, 0, 8, 1, 1);
 
-        label_17 = new QLabel(Edo_ConexionConfig_and_Error_vertWidget);
+        label_17 = new QLabel(driverErrorsHeaders_gridLayout_2);
         label_17->setObjectName(QString::fromUtf8("label_17"));
 
         driverErrorsHeaders_gridLayout->addWidget(label_17, 0, 2, 1, 1);
 
-        label_18 = new QLabel(Edo_ConexionConfig_and_Error_vertWidget);
+        label_18 = new QLabel(driverErrorsHeaders_gridLayout_2);
         label_18->setObjectName(QString::fromUtf8("label_18"));
 
         driverErrorsHeaders_gridLayout->addWidget(label_18, 0, 3, 1, 1);
 
-        label_19 = new QLabel(Edo_ConexionConfig_and_Error_vertWidget);
+        label_19 = new QLabel(driverErrorsHeaders_gridLayout_2);
         label_19->setObjectName(QString::fromUtf8("label_19"));
 
         driverErrorsHeaders_gridLayout->addWidget(label_19, 0, 4, 1, 1);
 
-        label_37 = new QLabel(Edo_ConexionConfig_and_Error_vertWidget);
+        label_37 = new QLabel(driverErrorsHeaders_gridLayout_2);
         label_37->setObjectName(QString::fromUtf8("label_37"));
+        label_37->setMinimumSize(QSize(18, 0));
 
         driverErrorsHeaders_gridLayout->addWidget(label_37, 0, 1, 1, 1);
 
-        label_41 = new QLabel(Edo_ConexionConfig_and_Error_vertWidget);
+        label_41 = new QLabel(driverErrorsHeaders_gridLayout_2);
         label_41->setObjectName(QString::fromUtf8("label_41"));
 
         driverErrorsHeaders_gridLayout->addWidget(label_41, 0, 11, 1, 1);
 
 
-        verticalLayout_12->addLayout(driverErrorsHeaders_gridLayout);
+        verticalLayout_12->addWidget(driverErrorsHeaders_gridLayout_2);
 
-        driverErrorsValues_gridLayout = new QGridLayout();
-        driverErrorsValues_gridLayout->setSpacing(6);
+        driverErrorsValues_gridLayout_2 = new QFrame(Edo_ConexionConfig_and_Error_vertWidget);
+        driverErrorsValues_gridLayout_2->setObjectName(QString::fromUtf8("driverErrorsValues_gridLayout_2"));
+        driverErrorsValues_gridLayout = new QGridLayout(driverErrorsValues_gridLayout_2);
+        driverErrorsValues_gridLayout->setSpacing(1);
+        driverErrorsValues_gridLayout->setContentsMargins(11, 11, 11, 11);
         driverErrorsValues_gridLayout->setObjectName(QString::fromUtf8("driverErrorsValues_gridLayout"));
 
-        verticalLayout_12->addLayout(driverErrorsValues_gridLayout);
+        verticalLayout_12->addWidget(driverErrorsValues_gridLayout_2);
 
         driversValues_txt = new QPlainTextEdit(Edo_ConexionConfig_and_Error_vertWidget);
         driversValues_txt->setObjectName(QString::fromUtf8("driversValues_txt"));
@@ -1307,19 +1412,22 @@ public:
         erroresSalida_txt->setObjectName(QString::fromUtf8("erroresSalida_txt"));
         sizePolicy.setHeightForWidth(erroresSalida_txt->sizePolicy().hasHeightForWidth());
         erroresSalida_txt->setSizePolicy(sizePolicy);
-        erroresSalida_txt->setMinimumSize(QSize(100, 0));
-        erroresSalida_txt->setBaseSize(QSize(300, 0));
+        erroresSalida_txt->setMinimumSize(QSize(60, 0));
+        erroresSalida_txt->setBaseSize(QSize(70, 0));
 
         verticalLayout_12->addWidget(erroresSalida_txt);
 
-        horizontalLayout_4 = new QHBoxLayout();
+        frame_4 = new QFrame(Edo_ConexionConfig_and_Error_vertWidget);
+        frame_4->setObjectName(QString::fromUtf8("frame_4"));
+        horizontalLayout_4 = new QHBoxLayout(frame_4);
         horizontalLayout_4->setSpacing(6);
+        horizontalLayout_4->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
         horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout_4->addItem(horizontalSpacer);
 
-        lblDescripcion = new QLabel(Edo_ConexionConfig_and_Error_vertWidget);
+        lblDescripcion = new QLabel(frame_4);
         lblDescripcion->setObjectName(QString::fromUtf8("lblDescripcion"));
         lblDescripcion->setLayoutDirection(Qt::RightToLeft);
         lblDescripcion->setAutoFillBackground(false);
@@ -1330,18 +1438,19 @@ public:
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setSpacing(6);
         horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
-        cmbBaudRate = new QComboBox(Edo_ConexionConfig_and_Error_vertWidget);
+        cmbBaudRate = new QComboBox(frame_4);
         cmbBaudRate->setObjectName(QString::fromUtf8("cmbBaudRate"));
 
         horizontalLayout_2->addWidget(cmbBaudRate);
 
-        cmbSerialPortSelector = new QComboBox(Edo_ConexionConfig_and_Error_vertWidget);
+        cmbSerialPortSelector = new QComboBox(frame_4);
         cmbSerialPortSelector->addItem(QString());
         cmbSerialPortSelector->addItem(QString());
         cmbSerialPortSelector->addItem(QString());
         cmbSerialPortSelector->addItem(QString());
         cmbSerialPortSelector->addItem(QString());
         cmbSerialPortSelector->setObjectName(QString::fromUtf8("cmbSerialPortSelector"));
+        cmbSerialPortSelector->setMinimumSize(QSize(0, 25));
 
         horizontalLayout_2->addWidget(cmbSerialPortSelector);
 
@@ -1349,37 +1458,47 @@ public:
         horizontalLayout_4->addLayout(horizontalLayout_2);
 
 
-        verticalLayout_12->addLayout(horizontalLayout_4);
+        verticalLayout_12->addWidget(frame_4);
 
-        horizontalLayout_3 = new QHBoxLayout();
-        horizontalLayout_3->setSpacing(6);
+        Connection_horLay = new QFrame(Edo_ConexionConfig_and_Error_vertWidget);
+        Connection_horLay->setObjectName(QString::fromUtf8("Connection_horLay"));
+        horizontalLayout_3 = new QHBoxLayout(Connection_horLay);
+        horizontalLayout_3->setSpacing(3);
+        horizontalLayout_3->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
-        btnParoEmergencia = new QPushButton(Edo_ConexionConfig_and_Error_vertWidget);
+        btnParoEmergencia = new QPushButton(Connection_horLay);
         btnParoEmergencia->setObjectName(QString::fromUtf8("btnParoEmergencia"));
         sizePolicy.setHeightForWidth(btnParoEmergencia->sizePolicy().hasHeightForWidth());
         btnParoEmergencia->setSizePolicy(sizePolicy);
 
         horizontalLayout_3->addWidget(btnParoEmergencia);
 
-        verticalLayout_3 = new QVBoxLayout();
-        verticalLayout_3->setSpacing(6);
+        buttonsConnection_verLay = new QFrame(Connection_horLay);
+        buttonsConnection_verLay->setObjectName(QString::fromUtf8("buttonsConnection_verLay"));
+        buttonsConnection_verLay->setMinimumSize(QSize(0, 0));
+        verticalLayout_3 = new QVBoxLayout(buttonsConnection_verLay);
+        verticalLayout_3->setSpacing(2);
+        verticalLayout_3->setContentsMargins(11, 11, 11, 11);
         verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
-        btnConectar = new QPushButton(Edo_ConexionConfig_and_Error_vertWidget);
+        verticalLayout_3->setContentsMargins(3, 3, 3, 3);
+        btnConectar = new QPushButton(buttonsConnection_verLay);
         btnConectar->setObjectName(QString::fromUtf8("btnConectar"));
         btnConectar->setEnabled(true);
-        sizePolicy1.setHeightForWidth(btnConectar->sizePolicy().hasHeightForWidth());
-        btnConectar->setSizePolicy(sizePolicy1);
+        sizePolicy.setHeightForWidth(btnConectar->sizePolicy().hasHeightForWidth());
+        btnConectar->setSizePolicy(sizePolicy);
+        btnConectar->setMinimumSize(QSize(0, 25));
         QIcon icon;
         icon.addFile(QString::fromUtf8(":/images/connect.png"), QSize(), QIcon::Normal, QIcon::Off);
         btnConectar->setIcon(icon);
 
         verticalLayout_3->addWidget(btnConectar);
 
-        btnDesconectar = new QPushButton(Edo_ConexionConfig_and_Error_vertWidget);
+        btnDesconectar = new QPushButton(buttonsConnection_verLay);
         btnDesconectar->setObjectName(QString::fromUtf8("btnDesconectar"));
         btnDesconectar->setEnabled(false);
-        sizePolicy1.setHeightForWidth(btnDesconectar->sizePolicy().hasHeightForWidth());
-        btnDesconectar->setSizePolicy(sizePolicy1);
+        sizePolicy.setHeightForWidth(btnDesconectar->sizePolicy().hasHeightForWidth());
+        btnDesconectar->setSizePolicy(sizePolicy);
+        btnDesconectar->setMinimumSize(QSize(0, 25));
         QIcon icon1;
         icon1.addFile(QString::fromUtf8(":/images/disconnect.png"), QSize(), QIcon::Normal, QIcon::Off);
         btnDesconectar->setIcon(icon1);
@@ -1387,10 +1506,10 @@ public:
         verticalLayout_3->addWidget(btnDesconectar);
 
 
-        horizontalLayout_3->addLayout(verticalLayout_3);
+        horizontalLayout_3->addWidget(buttonsConnection_verLay);
 
 
-        verticalLayout_12->addLayout(horizontalLayout_3);
+        verticalLayout_12->addWidget(Connection_horLay);
 
 
         Valores_Widget->addWidget(Edo_ConexionConfig_and_Error_vertWidget);
@@ -1402,20 +1521,18 @@ public:
         SalidaConsola_Widget->setObjectName(QString::fromUtf8("SalidaConsola_Widget"));
         sizePolicy.setHeightForWidth(SalidaConsola_Widget->sizePolicy().hasHeightForWidth());
         SalidaConsola_Widget->setSizePolicy(sizePolicy);
-        SalidaConsola_Widget->setMinimumSize(QSize(0, 25));
+        SalidaConsola_Widget->setMinimumSize(QSize(0, 20));
         horizontalLayout_5 = new QHBoxLayout(SalidaConsola_Widget);
         horizontalLayout_5->setSpacing(6);
         horizontalLayout_5->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_5->setObjectName(QString::fromUtf8("horizontalLayout_5"));
+        horizontalLayout_5->setContentsMargins(3, 1, -1, 1);
         InfoSalida_txt = new QPlainTextEdit(SalidaConsola_Widget);
         InfoSalida_txt->setObjectName(QString::fromUtf8("InfoSalida_txt"));
         InfoSalida_txt->setEnabled(true);
-        QSizePolicy sizePolicy7(QSizePolicy::Expanding, QSizePolicy::Preferred);
-        sizePolicy7.setHorizontalStretch(0);
-        sizePolicy7.setVerticalStretch(0);
-        sizePolicy7.setHeightForWidth(InfoSalida_txt->sizePolicy().hasHeightForWidth());
-        InfoSalida_txt->setSizePolicy(sizePolicy7);
-        InfoSalida_txt->setMinimumSize(QSize(0, 84));
+        sizePolicy.setHeightForWidth(InfoSalida_txt->sizePolicy().hasHeightForWidth());
+        InfoSalida_txt->setSizePolicy(sizePolicy);
+        InfoSalida_txt->setMinimumSize(QSize(0, 40));
         InfoSalida_txt->setMaximumSize(QSize(16777215, 400));
 
         horizontalLayout_5->addWidget(InfoSalida_txt);
@@ -1426,17 +1543,14 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 1024, 22));
-        sizePolicy4.setHeightForWidth(menuBar->sizePolicy().hasHeightForWidth());
-        menuBar->setSizePolicy(sizePolicy4);
+        menuBar->setEnabled(false);
+        menuBar->setGeometry(QRect(0, 0, 1195, 22));
+        sizePolicy.setHeightForWidth(menuBar->sizePolicy().hasHeightForWidth());
+        menuBar->setSizePolicy(sizePolicy);
+        menuBar->setMinimumSize(QSize(0, 10));
         menuConfiguraci_n = new QMenu(menuBar);
         menuConfiguraci_n->setObjectName(QString::fromUtf8("menuConfiguraci_n"));
         MainWindow->setMenuBar(menuBar);
-        mainToolBar = new QToolBar(MainWindow);
-        mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
-        sizePolicy.setHeightForWidth(mainToolBar->sizePolicy().hasHeightForWidth());
-        mainToolBar->setSizePolicy(sizePolicy);
-        MainWindow->addToolBar(Qt::TopToolBarArea, mainToolBar);
 
         menuBar->addAction(menuConfiguraci_n->menuAction());
         menuConfiguraci_n->addAction(actionConfigurar);
@@ -1482,10 +1596,10 @@ public:
         label->setText(QApplication::translate("MainWindow", "Des:", nullptr));
         Freno_lblError->setText(QApplication::translate("MainWindow", "Error", nullptr));
         label_2->setText(QApplication::translate("MainWindow", "Ctrl", nullptr));
-        Freno_Inhibido_chk->setText(QString());
-        label_7->setText(QApplication::translate("MainWindow", "Inhibido", nullptr));
-        Freno_Activado_chk->setText(QString());
-        FrenoActivado_lbl->setText(QApplication::translate("MainWindow", "Activado", nullptr));
+        Freno_Inhibido_chk->setText(QApplication::translate("MainWindow", "Inhibido", nullptr));
+        label_7->setText(QString());
+        Freno_Activado_chk->setText(QApplication::translate("MainWindow", "Activado", nullptr));
+        FrenoActivado_lbl->setText(QString());
         chk_LED_Freno_OutR->setText(QApplication::translate("MainWindow", "OutRnge", nullptr));
         chk_LED_Freno_Desc->setText(QApplication::translate("MainWindow", "Desc", nullptr));
         label_26->setText(QApplication::translate("MainWindow", "Position Limits", nullptr));
@@ -1501,10 +1615,10 @@ public:
         Brake_Error_lbl->setText(QApplication::translate("MainWindow", "0", nullptr));
         brake_ShowInfo_rBtn->setText(QApplication::translate("MainWindow", "Show Info", nullptr));
         grp_Acelerador->setTitle(QApplication::translate("MainWindow", "Acelerador", nullptr));
-        Acel_Activado_lbl->setText(QApplication::translate("MainWindow", "Activado", nullptr));
-        Acel_Activado_chk->setText(QString());
-        Acel_Inhibido_lbl->setText(QApplication::translate("MainWindow", "Inhibido", nullptr));
-        Acel_Inhibido_chk->setText(QString());
+        Acel_Activado_lbl->setText(QString());
+        Acel_Activado_chk->setText(QApplication::translate("MainWindow", "Activado", nullptr));
+        Acel_Inhibido_lbl->setText(QString());
+        Acel_Inhibido_chk->setText(QApplication::translate("MainWindow", "Inhibido", nullptr));
         chk_LED_Acel_OutR->setText(QApplication::translate("MainWindow", "OutRnge", nullptr));
         valorAcelerador_lbl->setText(QApplication::translate("MainWindow", "Pos:", nullptr));
         label_3->setText(QApplication::translate("MainWindow", "Des:", nullptr));
@@ -1552,9 +1666,9 @@ public:
         label_33->setText(QApplication::translate("MainWindow", "T_min", nullptr));
         T_min_lbl->setText(QApplication::translate("MainWindow", "25", nullptr));
         normalDefines_chk->setText(QApplication::translate("MainWindow", "Normal Defines", nullptr));
+        logoOlin_lbl->setText(QString());
         lblEstadoSistema->setText(QApplication::translate("MainWindow", "Estado: ", nullptr));
         estadoSistema_lbl->setText(QApplication::translate("MainWindow", "E0: OK", nullptr));
-        label_6->setText(QString());
 #ifndef QT_NO_TOOLTIP
         label_21->setToolTip(QApplication::translate("MainWindow", "Limit/Kill Switch", nullptr));
 #endif // QT_NO_TOOLTIP

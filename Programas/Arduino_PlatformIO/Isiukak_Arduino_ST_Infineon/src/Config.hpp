@@ -29,7 +29,7 @@
 #define TESTING_FUNCTIONS 0  // Se activa para probar los unit testing directo en la tarjeta.
 
 // DEFINES PARA EMBEDDED TESTING
-#define TESTING_EMBEDDED 1 // Se activa para probar varias condiciones de operación directamente en el microcontrolador
+#define TESTING_EMBEDDED 0 // Se activa para probar varias condiciones de operación directamente en el microcontrolador
 
 #define JOYSTICK_VIRTUAL 0
 #define ENTRADAS_VIRTUALES 0

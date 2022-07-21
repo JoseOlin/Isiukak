@@ -98,13 +98,13 @@ uint8_t Testing_ActuadorFreno_FueraRango_Probado = false;
 uint8_t Testing_ActuadorAcelerador_FueraRango_Probado = false;
 uint8_t Testing_Actuadores_FueraRango_Probado = false; // Ambos
 
-//*** Variables para Messages ***//                        "1       10        20        30"
-char Testing_JoystickX_FueraRango_msg[40]                = "Joystick X Out of Range\0";
-char Testing_JoystickY_FueraRango_msg[40]                = "Joystick Y Out of Range\0";
-char Testing_Joystick_FueraRango_msg[40]                 = "Joystick Out of Range\0";
-char Testing_ActuadorAcelerador_FueraRango_msg[40]       = "15. Gas pot Out of Range\0";
-char Testing_ActuadorFreno_FueraRango_msg[40]            = "16. Brake pot Out of Range\0";
-char Testing_Actuadores_FueraRango_msg[40]               = "17. Actuators pots Out of Range\0";
+//*** Variables para Messages ***//                   "1       10        20        30        40"
+char Testing_JoystickY_FueraRango_msg[40]           = "12. Joystick Y Out of Range\0";
+char Testing_JoystickX_FueraRango_msg[40]           = "13. Joystick X Out of Range\0";
+char Testing_Joystick_FueraRango_msg[40]            = "14. Joystick both axis Out of Range\0";
+char Testing_ActuadorAcelerador_FueraRango_msg[40]  = "15. Accel pot Out of Range\0";
+char Testing_ActuadorFreno_FueraRango_msg[40]       = "16. Brake pot Out of Range\0";
+char Testing_Actuadores_FueraRango_msg[40]          = "17. Both Actuator pots Out of Range\0";
 
 
 ///* *///
@@ -188,7 +188,7 @@ void Testing_ActualizarContadorMsg(uint16_t &contadorIteraciones, uint16_t nIter
 {
     if(contadorIteraciones == 1) {
         //Serial.println("**Testing the system at normal behaviour (everything connected and in range)**");
-        Serial.print("**Testing ");  Serial.print(msg); Serial.println("**");
+        Serial.print("**");     Serial.print(msg);      Serial.println("**");
     }
 
     if(contadorIteraciones >= nIteraciones)
@@ -268,7 +268,7 @@ void EmbeddedTest_SetInputs_and_Status()
     }
 
     /// Normal behaviour checking
-    // 1 Activar el ACELERADOR A FULL durante n_a iteraciones
+    // 1. Activar el ACELERADOR A FULL durante n_a iteraciones
     if(contTesting <= Testing_aceleradorActivado_nIteraciones
                   && !Testing_Acelerador_Probado)
     {
@@ -370,7 +370,8 @@ void EmbeddedTest_SetInputs_and_Status()
         Testing_VerificacionSeguridad_SetValues(
                 joyst_X_Conectado = true,
                 joyst_Y_Conectado = false, //  <----------
-                acelerador_Conectado = true,  freno_Conectado = true,
+                acelerador_Conectado = true,
+                freno_Conectado = true,
 
                 joyst_X_EnRango = true,  joys_Y_EnRango = true,
                 acelerador_EnRango = true, freno_EnRango = true );
@@ -391,7 +392,8 @@ void EmbeddedTest_SetInputs_and_Status()
         Testing_VerificacionSeguridad_SetValues(
                 joyst_X_Conectado = false, // <----------
                 joyst_Y_Conectado = true,
-                acelerador_Conectado = true,  freno_Conectado = true,
+                acelerador_Conectado = true,
+                freno_Conectado = true,
 
                 joyst_X_EnRango = true,  joys_Y_EnRango = true,
                 acelerador_EnRango = true, freno_EnRango = true );
@@ -401,7 +403,7 @@ void EmbeddedTest_SetInputs_and_Status()
                                    Testing_JoystickX_Desconectado_Probado);
     }
 
-    // 8 Testing Joystick disconnected.
+    // 8. Testing Joystick both axis disconnected.
     else if(contTesting <= Testing_Joystick_Desconectado_nIteraciones
                        && !Testing_Joystick_Desconectado_Probado)
     {
@@ -413,7 +415,8 @@ void EmbeddedTest_SetInputs_and_Status()
         Testing_VerificacionSeguridad_SetValues(
                 joyst_X_Conectado = false, // <----------
                 joyst_Y_Conectado = false, // <----------
-                acelerador_Conectado = true,  freno_Conectado = true,
+                acelerador_Conectado = true,
+                freno_Conectado = true,
 
                 joyst_X_EnRango = true,  joys_Y_EnRango = true,
                 acelerador_EnRango = true, freno_EnRango = true );
@@ -422,7 +425,7 @@ void EmbeddedTest_SetInputs_and_Status()
                                                 Testing_Joystick_Desconectado_Probado);
     }
 
-    // 9  Testing Freno Desconectado.
+    // 9.  Testing Freno Desconectado.
     else if(contTesting <= Testing_ActuadorFreno_Desconectado_nIteraciones
                        && !Testing_ActuadorFreno_Desconectado_Probado)
     {
@@ -518,23 +521,22 @@ void EmbeddedTest_SetInputs_and_Status()
     else if(contTesting <= Testing_JoystickX_FueraRango_nIteraciones
                         && !Testing_JoystickX_FueraRango_Probado)
     {
-        if(contTesting == 1) {
-            Serial.println("**13. Joystick X Out of Range...**");
-        }
+        //if(contTesting == 1) { Serial.println("**13. Joystick X Out of Range...**");         }
         Testing_set_Virtual_Joystick_Pots(joyY_MinVal, joyX_MinVal-(joystick_UmbralFueraRango+10));
 
         Testing_VerificacionSeguridad_SetValues(
                     joyst_X_Conectado = true,  joyst_Y_Conectado = true,
                     acelerador_Conectado = true,  freno_Conectado = true,
 
-                    joyst_X_EnRango = false,    // <------
-                    joys_Y_EnRango = true,
-                    acelerador_EnRango = true,
-                    freno_EnRango = true );
+                    joyst_X_EnRango     = false,    // <------
+                    joys_Y_EnRango      = true,
+                    acelerador_EnRango  = true,
+                    freno_EnRango       = true );
 
         Testing_ActualizarContadorMsg(contTesting,
                                       Testing_JoystickX_FueraRango_nIteraciones,
                                       Testing_JoystickX_FueraRango_Probado,
+
                                       Testing_JoystickX_FueraRango_msg);
     }
 
@@ -542,9 +544,7 @@ void EmbeddedTest_SetInputs_and_Status()
     else if(contTesting <= Testing_Joystick_FueraRango_nIteraciones
                        && !Testing_Joystick_FueraRango_Probado)
     {
-        if(contTesting == 1) {
-            Serial.println("**14. Joystick both axis Out of Range...**");
-        }
+        //if(contTesting == 1) { Serial.println("**14. Joystick both axis Out of Range...**");         }
 
         Testing_set_Virtual_Joystick_Pots(joyY_MinVal-(joystick_UmbralFueraRango+10),
                                           joyX_MinVal-(joystick_UmbralFueraRango+10));
@@ -561,32 +561,33 @@ void EmbeddedTest_SetInputs_and_Status()
         Testing_ActualizarContadorMsg(contTesting,
                                       Testing_Joystick_FueraRango_nIteraciones,
                                       Testing_Joystick_FueraRango_Probado,
+
                                       Testing_Joystick_FueraRango_msg);
     }
 
+#if VALIDAR_LIMITES_ACTUADORES
     // 15  Testing Accel Pedal Out of Range.
     else if(contTesting <= Testing_ActuadorAcelerador_FueraRango_nIteraciones
                         & !Testing_ActuadorAcelerador_FueraRango_Probado)
     {
-        if(contTesting == 1) {
-            Serial.println("**15. Accel Pedal Out of Range...**");
-        }
-
 
         Testing_set_Virtual_Joystick_Pots(joyY_MinVal, joyX_MinVal);
 
         Testing_VerificacionSeguridad_SetValues(
-                    joyst_X_Conectado = true,  joyst_Y_Conectado = true,
-                    acelerador_Conectado = true,  freno_Conectado = true,
+                    joyst_X_Conectado = true,
+                    joyst_Y_Conectado = true,
+                    acelerador_Conectado = true,
+                    freno_Conectado = true,
 
                     joyst_X_EnRango = true,
                     joys_Y_EnRango = true,
-                    acelerador_EnRango = false,// <------
+                    acelerador_EnRango = false, // <------
                     freno_EnRango = true );
 
         Testing_ActualizarContadorMsg(contTesting,
                                       Testing_ActuadorAcelerador_FueraRango_nIteraciones,
                                       Testing_ActuadorAcelerador_FueraRango_Probado,
+
                                       Testing_ActuadorAcelerador_FueraRango_msg);
     }
 
@@ -594,8 +595,6 @@ void EmbeddedTest_SetInputs_and_Status()
     else if(contTesting <= Testing_ActuadorFreno_FueraRango_nIteraciones
                         && !Testing_ActuadorFreno_FueraRango_Probado)
     {
-
-
         Testing_set_Virtual_Joystick_Pots(joyY_MinVal, joyX_MinVal);
 
         Testing_VerificacionSeguridad_SetValues(
@@ -610,6 +609,7 @@ void EmbeddedTest_SetInputs_and_Status()
         Testing_ActualizarContadorMsg(contTesting,
                                       Testing_ActuadorFreno_FueraRango_nIteraciones,
                                       Testing_ActuadorFreno_FueraRango_Probado,
+
                                       Testing_ActuadorFreno_FueraRango_msg);
     }
 
@@ -623,16 +623,18 @@ void EmbeddedTest_SetInputs_and_Status()
                     joyst_X_Conectado = true,  joyst_Y_Conectado = true,
                     acelerador_Conectado = true,  freno_Conectado = true,
 
-                    joyst_X_EnRango = true,
-                    joys_Y_EnRango = true,
-                    acelerador_EnRango = false, // <------
-                    freno_EnRango = false );    // <------
+                    joyst_X_EnRango     = true,
+                    joys_Y_EnRango      = true,
+                    acelerador_EnRango  = false, // <------
+                    freno_EnRango       = false );    // <------
 
         Testing_ActualizarContadorMsg(contTesting,
                                       Testing_Actuadores_FueraRango_nIteraciones,
                                       Testing_Actuadores_FueraRango_Probado,
+
                                       Testing_Actuadores_FueraRango_msg);
     }
+#endif
 
     /// Testing Reiniciando prueba
     else if(contTesting <= Testing_ReiniciandoPrueba_nIteraciones

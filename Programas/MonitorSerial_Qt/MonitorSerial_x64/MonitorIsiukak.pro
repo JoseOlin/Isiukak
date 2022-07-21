@@ -13,10 +13,11 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = MonitorIsiukak
 TEMPLATE = app
 
+HEADERS  += logging.hpp \
+        mainwindow.h
+
 SOURCES += main.cpp\
         mainwindow.cpp
-
-HEADERS  += mainwindow.h
 
 FORMS    += mainwindow.ui
 

@@ -29,8 +29,8 @@ int ActuadorFreno_valorParoEmergencia = 800; // TODO: A. Buscar la extensión m�
 
 //** Valores de umbral para aplicar control.
 uint8_t ActuadorFreno_ComportamientoControlDirecto = true;
-int ActuadorFreno_umbralError_Ctrl = 9;
-int ActuadorFreno_umbralErrorArranque = ActuadorFreno_umbralError_Ctrl * 5;
+int ActuadorFreno_umbralError_Pos = 9;
+int ActuadorFreno_umbralErrorArranque = ActuadorFreno_umbralError_Pos * 5;
 int ActuadorFreno_tiempoLlegada = 1500;
 
 //int ActuadorFreno_umbralError_Rango = 20;
@@ -51,8 +51,8 @@ int ActuadorAcelerador_valorRetraido = 985; //Retraido. El acelerador esta inici
 /// Valores de umbral para aplicar control.
 uint8_t ActuadorAcelerador_ComportamientoControlDirecto = false;
 //uint8_t ActuadorAcelerador_ComportamientoControlDirecto = true;
-int Actuadores_umbralError;
-int ActuadorAcelerador_umbralError_Ctrl = 3; // Error aceptable en la posición de los actuadores de los pedales.
+int Actuadores_umbralError_Pos;
+int ActuadorAcelerador_umbralError_Pos = 4; // Error aceptable en la posición de los actuadores de los pedales.
 int ActuadorAcelerador_tiempoLlegada = 2000;
 // Umbral para evaluar si el actuador está en un rango válido
 int ActuadorAcelerador_umbralError_Rango = 20;
@@ -247,7 +247,7 @@ void moverActuador(TipoActuador tipoActuador, int ErrorPosicion)
         ComportamientoDirecto = ActuadorFreno_ComportamientoControlDirecto;
         Kp = ActuadorFreno_Kp;
         address = ActuatorBrake_Address;
-        Actuadores_umbralError = ActuadorFreno_umbralError_Ctrl;
+        Actuadores_umbralError_Pos = ActuadorFreno_umbralError_Pos;
 
     }
     else if(tipoActuador == TipoActuador::Acelerador)
@@ -255,7 +255,7 @@ void moverActuador(TipoActuador tipoActuador, int ErrorPosicion)
         ComportamientoDirecto = ActuadorAcelerador_ComportamientoControlDirecto;
         Kp = ActuadorAcelerador_Kp;
         address = ActuatorAccel_Address;
-        Actuadores_umbralError = ActuadorAcelerador_umbralError_Ctrl;
+        Actuadores_umbralError_Pos = ActuadorAcelerador_umbralError_Pos;
     }
 
     int control;
@@ -266,7 +266,7 @@ void moverActuador(TipoActuador tipoActuador, int ErrorPosicion)
         control = -(ErrorPosicion * Kp);
     }
 
-    if(abs(ErrorPosicion) < Actuadores_umbralError)
+    if(abs(ErrorPosicion) < Actuadores_umbralError_Pos)
     {
         control = 0;
     }
