@@ -1,0 +1,3 @@
+include:
+    # PlatformIO test
+    - "https://gitlab.com/nobodyinperson/ci-templates/raw/master/platformio.yml"
