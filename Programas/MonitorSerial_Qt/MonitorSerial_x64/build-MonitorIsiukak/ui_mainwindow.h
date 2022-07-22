@@ -248,6 +248,9 @@ public:
         sizePolicy.setHeightForWidth(MainWindow->sizePolicy().hasHeightForWidth());
         MainWindow->setSizePolicy(sizePolicy);
         MainWindow->setMinimumSize(QSize(1024, 600));
+        QIcon icon;
+        icon.addFile(QString::fromUtf8(":/images/Isotipo.png"), QSize(), QIcon::Normal, QIcon::Off);
+        MainWindow->setWindowIcon(icon);
         actionConfigurar = new QAction(MainWindow);
         actionConfigurar->setObjectName(QString::fromUtf8("actionConfigurar"));
         actionBuscar_puertos = new QAction(MainWindow);
@@ -1487,9 +1490,9 @@ public:
         sizePolicy.setHeightForWidth(btnConectar->sizePolicy().hasHeightForWidth());
         btnConectar->setSizePolicy(sizePolicy);
         btnConectar->setMinimumSize(QSize(0, 25));
-        QIcon icon;
-        icon.addFile(QString::fromUtf8(":/images/connect.png"), QSize(), QIcon::Normal, QIcon::Off);
-        btnConectar->setIcon(icon);
+        QIcon icon1;
+        icon1.addFile(QString::fromUtf8(":/images/connect.png"), QSize(), QIcon::Normal, QIcon::Off);
+        btnConectar->setIcon(icon1);
 
         verticalLayout_3->addWidget(btnConectar);
 
@@ -1499,9 +1502,9 @@ public:
         sizePolicy.setHeightForWidth(btnDesconectar->sizePolicy().hasHeightForWidth());
         btnDesconectar->setSizePolicy(sizePolicy);
         btnDesconectar->setMinimumSize(QSize(0, 25));
-        QIcon icon1;
-        icon1.addFile(QString::fromUtf8(":/images/disconnect.png"), QSize(), QIcon::Normal, QIcon::Off);
-        btnDesconectar->setIcon(icon1);
+        QIcon icon2;
+        icon2.addFile(QString::fromUtf8(":/images/disconnect.png"), QSize(), QIcon::Normal, QIcon::Off);
+        btnDesconectar->setIcon(icon2);
 
         verticalLayout_3->addWidget(btnDesconectar);
 

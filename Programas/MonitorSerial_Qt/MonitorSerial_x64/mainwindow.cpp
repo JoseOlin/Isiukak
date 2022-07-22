@@ -138,8 +138,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-///TODO: Revisar por qué el límite superior del Freno y Acelerador a
-/// veces supera 1023.
 
 void MainWindow::desplegarValores(QString renglonDatos)
 {
@@ -315,7 +313,7 @@ void MainWindow::driverMatrixValues_insert(vector<driverValuesRow>& driverMatrix
 void MainWindow::driverMatrixValues_gridLayoutDisplay(QGridLayout* grid,
                                                       vector<driverValuesRow> driverMatrix)
 {
-    //TODO: Optimizar considerando que la matrix puede tener menos de 5 renglones.
+    //TODO: C. Optimizar considerando que la matrix puede tener menos de 5 renglones.
     int row = 1; // The first row is for the headers.
     for(vector<driverValuesRow>::iterator it = driverMatrix.begin();
          it != driverMatrix.end();
@@ -343,7 +341,7 @@ void MainWindow::driverMatrixValues_gridLayoutDisplay(QGridLayout* grid,
 void MainWindow::driverMatrixErrors_gridLayoutDisplay(QGridLayout* grid,
                                                       vector<driverValuesRow> driverMatrix)
 {
-    //TODO: Optimizar considerando que la matrix puede tener menos de 5 renglones.
+    //TODO: C. Optimizar considerando que la matrix puede tener menos de 5 renglones.
     int row = 1; // The first row is for the headers.
     for(vector<driverValuesRow>::iterator it = driverMatrix.begin();
          it != driverMatrix.end();
@@ -564,7 +562,6 @@ bool MainWindow::Limits_update(int currentValue,    int& min,        int& max,
 void MainWindow::displayInfoJoystick(QString renglonDatos)
 {
     //** Joystick Y
-
     bool jy_Received = buscarExpresionRegular_returnNextInt("J_Y: (\\d+)", renglonDatos, valorJy);
 
     if(jy_Received)
@@ -584,8 +581,8 @@ void MainWindow::displayInfoJoystick(QString renglonDatos)
             qDebug() << "Renglón datos: " << renglonDatos;
         }
     }
+
     //** Joystick X
-    //int valorJx = buscarExpresionRegular_returnNextInt("J_X: (\\d+)", renglonDatos);
     bool Jx_received = buscarExpresionRegular_returnNextInt("J_X: (\\d+)", renglonDatos, valorJx);
     if(Jx_received)
     {
@@ -600,15 +597,16 @@ void MainWindow::displayInfoJoystick(QString renglonDatos)
             ui->erroresSalida_txt->insertPlainText(renglonDatos);
         }
     }
+
     //** Activado
     bool statusJoystickActivado_Received =
             buscarExpresionRegular_returnNextInt(cadJoystickActivado+ ": (-?(\\d+))",
                                          renglonDatos, Joystick_Activado);
-    if(statusJoystickActivado_Received)
-    {
+    //if(statusJoystickActivado_Received)
+    //{
         checkBoxBouncing(ui->joystick_Activado_chk, statusJoystickActivado_Received);
         checkBoxColor(ui->joystick_Activado_chk);
-    }
+    //}
 
     //** Desconectado
     QString cadJyDescFull = "(\\*\\*)(" + cadJy_Desc + ")(\\*\\*)";
@@ -1066,37 +1064,6 @@ void MainWindow::checkBoxBouncing_Errors(QCheckBox *chkBox, bool statusRcv)
 */
 }
 
-/*
-QStringList MainWindow::buscarPuertos()
-{
-    const auto serialPortInfos = QSerialPortInfo::availablePorts();
-
-    qDebug() << QObject::tr("Total number of ports available: ") << serialPortInfos.count() << endl;
-
-    const QString blankString = QObject::tr("N/A");
-    QString description;
-    QString manufacturer;
-    QString serialNumber;
-
-    for (const QSerialPortInfo &serialPortInfo : serialPortInfos) {
-        description = serialPortInfo.description();
-        manufacturer = serialPortInfo.manufacturer();
-        serialNumber = serialPortInfo.serialNumber();
-        qDebug() << endl
-            << QObject::tr("Port: ") << serialPortInfo.portName() << endl
-            << QObject::tr("Location: ") << serialPortInfo.systemLocation() << endl
-            << QObject::tr("Description: ") << (!description.isEmpty() ? description : blankString) << endl
-            << QObject::tr("Manufacturer: ") << (!manufacturer.isEmpty() ? manufacturer : blankString) << endl
-            << QObject::tr("Serial number: ") << (!serialNumber.isEmpty() ? serialNumber : blankString) << endl
-            << QObject::tr("Vendor Identifier: ") << (serialPortInfo.hasVendorIdentifier() ? QByteArray::number(serialPortInfo.vendorIdentifier(), 16) : blankString) << endl
-            << QObject::tr("Product Identifier: ") << (serialPortInfo.hasProductIdentifier() ? QByteArray::number(serialPortInfo.productIdentifier(), 16) : blankString) << endl
-            << QObject::tr("Busy: ") << (serialPortInfo.isBusy() ? QObject::tr("Yes") : QObject::tr("No")) << endl;
-    }
-
-    return QStringList({QString("1"),QString("2")});
-}
-*/
-
 
 /// Communication functions
 void MainWindow::on_btnConectar_pressed()
@@ -1165,7 +1132,8 @@ void MainWindow::on_btnDesconectar_pressed()
 
 void MainWindow::readData()
 {
-    if(!ui->btnConectar->isEnabled())
+    //if(!ui->btnConectar->isEnabled())
+    if(serial->isOpen()  &&  serial->isReadable())
     {
         QByteArray data = serial->readAll();
 
@@ -1204,7 +1172,7 @@ void MainWindow::readData()
     }
 }
 
-void MainWindow::escribir(/*QString datos*/ const char* datos)
+void MainWindow::escribir(const char* datos)
 {
     #if CERRAR_PUERTO_SERIAL
     serial->open(QIODevice::ReadWrite); //Ya debe estar abierto.
@@ -1215,14 +1183,17 @@ void MainWindow::escribir(/*QString datos*/ const char* datos)
         //serial->write(datos.toStdString().c_str());
         serial->write(datos);
 
-        if(serial->flush())
+        if(serial->flush()) {
             qDebug() << "ok";
+        }
         #if CERRAR_PUERTO_SERIAL
         serial->close(); //Probar sin cerrar.
         #endif
     }
     else
+    {
         qDebug() << "Error: Puerto cerrado.";
+    }
 }
 void MainWindow::escribirCadena(const QByteArray &datos)
 {

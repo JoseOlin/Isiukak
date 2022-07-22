@@ -1,8 +1,5 @@
 La carpeta **Arduino_(PlatformIO)** incluye el **código para el módulo de control**. Se utiliza **Qt Creator como IDE**, configurándolo para compilar el código con **PlatformIO**.
 
-Hay dos versiones:
-- **Isiukak_ArduinoUNO**: Recomendable sólo para probar el funcionamiento general del sistema.
-- **Isiukak_ArduinoSTM32**: Es la versión que se utiliza en las pruebas en el auto.
 
 
 

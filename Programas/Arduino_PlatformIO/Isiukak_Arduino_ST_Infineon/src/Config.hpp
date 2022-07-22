@@ -25,6 +25,7 @@
 
 #define VERIFICACION_ADC 0
 
+
 // DEFINES PARA TESTING
 #define TESTING_FUNCTIONS 0  // Se activa para probar los unit testing directo en la tarjeta.
 

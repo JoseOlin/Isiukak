@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[])
 {
-    qInstallMessageHandler(customMessageHandler);
+    qInstallMessageHandler(customMessageHandler); // To send qDebug, qInfo and qWarning Messages to Log.
 
     QApplication a(argc, argv);
     MainWindow w;

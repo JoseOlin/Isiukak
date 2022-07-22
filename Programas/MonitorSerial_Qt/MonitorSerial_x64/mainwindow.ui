@@ -28,6 +28,10 @@
   <property name="windowTitle">
    <string>Monitor Serial Isiukak</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="Resources.qrc">
+    <normaloff>:/images/Isotipo.png</normaloff>:/images/Isotipo.png</iconset>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <property name="spacing">
