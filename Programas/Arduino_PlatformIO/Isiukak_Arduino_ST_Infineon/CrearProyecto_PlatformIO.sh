@@ -1,0 +1,1 @@
+/media/Ext4/Recursos/Electronica/Plataformas/PlatformIO/CrearProyecto_PlatformIO.sh

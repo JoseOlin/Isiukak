@@ -1,0 +1,1 @@
+-fno-exceptions -fno-threadsafe-statics -fpermissive -mthumb -std=gnu++11 -Os -w -nostdlib -Wall -ffunction-sections -fdata-sections -mthumb -mcpu=cortex-m4

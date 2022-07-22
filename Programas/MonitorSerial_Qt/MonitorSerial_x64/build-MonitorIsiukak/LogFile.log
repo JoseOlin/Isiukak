@@ -1,0 +1,210 @@
+[21/07/2022 15:43:25] {Debug} 		 using qt5ct plugin
+[21/07/2022 15:43:25] {Debug} 		 D-Bus global menu: no
+[21/07/2022 15:43:25] {Debug} 		 Cantidad de puertos disponibles:  1
+[21/07/2022 15:43:25] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../mainwindow.cpp:87
+[21/07/2022 15:43:25] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
+[21/07/2022 15:43:25] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
+[21/07/2022 15:43:25] {Debug} 		 Port name:  "ttyACM0"
+[21/07/2022 15:43:25] {Debug} 		 BaudRate: 115200
+[21/07/2022 15:43:25] {Debug} 		 Ready... 
+
+[21/07/2022 15:43:25] {Debug} 		 ok 
+
+[21/07/2022 15:43:25] {Debug} 		        Inicio sesión Logging QDate("2022-07-21") ,  QTime("15:43:25.431")
+[21/07/2022 15:43:25] {Warning} 	 Prueba warning
+[21/07/2022 15:43:25] {Info} 		 Prueba Info
+[21/07/2022 16:43:13] {Debug} 		 using qt5ct plugin
+[21/07/2022 16:43:13] {Debug} 		 D-Bus global menu: no
+[21/07/2022 16:43:13] {Debug} 		 Cantidad de puertos disponibles:  1
+[21/07/2022 16:43:13] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../mainwindow.cpp:87
+[21/07/2022 16:43:13] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
+[21/07/2022 16:43:13] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
+[21/07/2022 16:43:13] {Debug} 		 Port name:  "ttyACM0"
+[21/07/2022 16:43:13] {Debug} 		 BaudRate: 115200
+[21/07/2022 16:43:13] {Debug} 		 Ready... 
+
+[21/07/2022 16:43:13] {Debug} 		 ok 
+
+[21/07/2022 16:43:13] {Debug} 		        Inicio sesión Logging QDate("2022-07-21") ,  QTime("16:43:13.807")
+[21/07/2022 16:43:13] {Warning} 	 Prueba warning
+[21/07/2022 16:43:13] {Info} 		 Prueba Info
+[21/07/2022 16:43:14] {Debug} 		 "Brake. Valor rcv fuera de valores lógicos (0, 1023)"
+[21/07/2022 16:43:14] {Debug} 		 Renglón datos:  "�I�\t\u0012}�� 0, B_inh: 0,\tA_ac: 1, A_p: 972,  A_t: 985,  A_e: 13,  A_c: -390, A_inh: 0,\tV_ac: 1, Vol_c: 0, V_m: 2, Shft_a: 1, edo: 3, nDef: 0,\tT:30 \r\n"
+[21/07/2022 16:49:18] {Debug} 		 using qt5ct plugin
+[21/07/2022 16:49:18] {Debug} 		 D-Bus global menu: no
+[21/07/2022 16:49:18] {Debug} 		 Cantidad de puertos disponibles:  1
+[21/07/2022 16:49:18] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../mainwindow.cpp:87
+[21/07/2022 16:49:18] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
+[21/07/2022 16:49:18] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
+[21/07/2022 16:49:18] {Debug} 		 Port name:  "ttyACM0"
+[21/07/2022 16:49:18] {Debug} 		 BaudRate: 115200
+[21/07/2022 16:49:18] {Debug} 		 Ready... 
+
+[21/07/2022 16:49:18] {Debug} 		 ok 
+
+[21/07/2022 16:49:18] {Debug} 		        Inicio sesión Logging QDate("2022-07-21") ,  QTime("16:49:18.438")
+[21/07/2022 16:49:18] {Warning} 	 Prueba warning
+[21/07/2022 16:49:18] {Info} 		 Prueba Info
+[21/07/2022 16:49:18] {Debug} 		 "Brake. Valor rcv fuera de valores lógicos (0, 1023)"
+[21/07/2022 16:49:18] {Debug} 		 Renglón datos:  "\u0001�\u0005 (��\u0004\tŝ��M1�\t\u0011A\u0014!�a)ia)ai�9Le!Q\u0001!!�\u0001a��)\"aq0Le�\u0011��a�a&�D)bi\u0011��Qi\u0011�\r0Le\u0015��%!da)iy�)`N�=L\u0002�YADa���)�~\u0001\u0001\u0001�\u001C!!\u0011\u0001\u0002!�\u0001-&�)\u0001"
+[21/07/2022 16:49:18] {Debug} 		 "Accel. Valor rcv fuera de valores lógicos (0, 1023)"
+[21/07/2022 16:49:18] {Debug} 		 Renglón datos:  "\u0001�\u0005 (��\u0004\tŝ��M1�\t\u0011A\u0014!�a)ia)ai�9Le!Q\u0001!!�\u0001a��)\"aq0Le�\u0011��a�a&�D)bi\u0011��Qi\u0011�\r0Le\u0015��%!da)iy�)`N�=L\u0002�YADa���)�~\u0001\u0001\u0001�\u001C!!\u0011\u0001\u0002!�\u0001-&�)\u0001"
+[21/07/2022 16:56:16] {Debug} 		 using qt5ct plugin
+[21/07/2022 16:56:16] {Debug} 		 D-Bus global menu: no
+[21/07/2022 16:56:16] {Debug} 		 Cantidad de puertos disponibles:  1
+[21/07/2022 16:56:16] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../mainwindow.cpp:87
+[21/07/2022 16:56:16] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
+[21/07/2022 16:56:16] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
+[21/07/2022 16:56:16] {Debug} 		 Port name:  "ttyACM0"
+[21/07/2022 16:56:16] {Debug} 		 BaudRate: 115200
+[21/07/2022 16:56:16] {Debug} 		 Ready... 
+
+[21/07/2022 16:56:16] {Debug} 		 ok 
+
+[21/07/2022 16:56:16] {Debug} 		        Inicio sesión Logging QDate("2022-07-21") ,  QTime("16:56:16.986")
+[21/07/2022 16:56:16] {Warning} 	 Prueba warning
+[21/07/2022 16:56:16] {Info} 		 Prueba Info
+[21/07/2022 17:38:39] {Debug} 		 using qt5ct plugin
+[21/07/2022 17:38:39] {Debug} 		 D-Bus global menu: no
+[21/07/2022 17:38:39] {Debug} 		 Cantidad de puertos disponibles:  1
+[21/07/2022 17:38:39] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../mainwindow.cpp:87
+[21/07/2022 17:38:39] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
+[21/07/2022 17:38:39] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
+[21/07/2022 17:38:39] {Debug} 		 Port name:  "ttyACM0"
+[21/07/2022 17:38:39] {Debug} 		 BaudRate: 115200
+[21/07/2022 17:38:39] {Debug} 		 Ready... 
+
+[21/07/2022 17:38:39] {Debug} 		 ok 
+
+[21/07/2022 17:38:39] {Debug} 		        Inicio sesión Logging QDate("2022-07-21") ,  QTime("17:38:39.594")
+[21/07/2022 17:38:39] {Warning} 	 Prueba warning
+[21/07/2022 17:38:39] {Info} 		 Prueba Info
+[21/07/2022 17:38:39] {Debug} 		 "Brake. Valor rcv fuera de valores lógicos (0, 1023)"
+[21/07/2022 17:38:39] {Debug} 		 Renglón datos:  "(�\u000E���b\u0002&��� 250, B_e: -10, B_c: -180, B_inh: 0,\tA_ac: 1, A_p: 984,  A_t: 985,  A_e: 1,  A_c: 0, A_inh: 0,\tV_ac: 1, Vol_c: 234, V_m: 2, Shft_a: 1, edo: 0, nDef: 1,\tT:30 \r\n"
+[21/07/2022 17:38:54] {Debug} 		 using qt5ct plugin
+[21/07/2022 17:38:54] {Debug} 		 D-Bus global menu: no
+[21/07/2022 17:38:54] {Debug} 		 Cantidad de puertos disponibles:  1
+[21/07/2022 17:38:54] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../mainwindow.cpp:87
+[21/07/2022 17:38:54] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
+[21/07/2022 17:38:54] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
+[21/07/2022 17:38:54] {Debug} 		 Port name:  "ttyACM0"
+[21/07/2022 17:38:54] {Debug} 		 BaudRate: 115200
+[21/07/2022 17:38:54] {Debug} 		 Ready... 
+
+[21/07/2022 17:38:54] {Debug} 		 ok 
+
+[21/07/2022 17:38:54] {Debug} 		        Inicio sesión Logging QDate("2022-07-21") ,  QTime("17:38:54.551")
+[21/07/2022 17:38:54] {Warning} 	 Prueba warning
+[21/07/2022 17:38:54] {Info} 		 Prueba Info
+[21/07/2022 17:38:54] {Debug} 		 "Brake. Valor rcv fuera de valores lógicos (0, 1023)"
+[21/07/2022 17:38:54] {Debug} 		 Renglón datos:  "��'5O�Q\u0002A!�Fa�\u0001\u0001\u0011i�5!\u0001\u0011��a����MC\u0001"
+[21/07/2022 17:38:54] {Debug} 		 "Accel. Valor rcv fuera de valores lógicos (0, 1023)"
+[21/07/2022 17:38:54] {Debug} 		 Renglón datos:  "��'5O�Q\u0002A!�Fa�\u0001\u0001\u0011i�5!\u0001\u0011��a����MC\u0001"
+[21/07/2022 17:39:47] {Debug} 		 using qt5ct plugin
+[21/07/2022 17:39:47] {Debug} 		 D-Bus global menu: no
+[21/07/2022 17:39:47] {Debug} 		 Cantidad de puertos disponibles:  1
+[21/07/2022 17:39:47] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../mainwindow.cpp:87
+[21/07/2022 17:39:47] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
+[21/07/2022 17:39:47] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
+[21/07/2022 17:39:47] {Debug} 		 Port name:  "ttyACM0"
+[21/07/2022 17:39:47] {Debug} 		 BaudRate: 115200
+[21/07/2022 17:39:47] {Debug} 		 Ready... 
+
+[21/07/2022 17:39:47] {Debug} 		 ok 
+
+[21/07/2022 17:39:47] {Debug} 		        Inicio sesión Logging QDate("2022-07-21") ,  QTime("17:39:47.774")
+[21/07/2022 17:39:47] {Warning} 	 Prueba warning
+[21/07/2022 17:39:47] {Info} 		 Prueba Info
+[21/07/2022 17:50:31] {Debug} 		 using qt5ct plugin
+[21/07/2022 17:50:31] {Debug} 		 D-Bus global menu: no
+[21/07/2022 17:50:31] {Debug} 		 Cantidad de puertos disponibles:  1
+[21/07/2022 17:50:31] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../mainwindow.cpp:87
+[21/07/2022 17:50:31] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
+[21/07/2022 17:50:31] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
+[21/07/2022 17:50:31] {Debug} 		 Port name:  "ttyACM0"
+[21/07/2022 17:50:31] {Debug} 		 BaudRate: 115200
+[21/07/2022 17:50:31] {Debug} 		 Ready... 
+
+[21/07/2022 17:50:31] {Debug} 		 ok 
+
+[21/07/2022 17:50:31] {Debug} 		        Inicio sesión Logging QDate("2022-07-21") ,  QTime("17:50:31.183")
+[21/07/2022 17:50:31] {Warning} 	 Prueba warning
+[21/07/2022 17:50:31] {Info} 		 Prueba Info
+[21/07/2022 17:50:31] {Debug} 		 "Brake. Valor rcv fuera de valores lógicos (0, 1023)"
+[21/07/2022 17:50:31] {Debug} 		 Renglón datos:  "��\u0001\n"
+[21/07/2022 17:50:31] {Debug} 		 "Accel. Valor rcv fuera de valores lógicos (0, 1023)"
+[21/07/2022 17:50:31] {Debug} 		 Renglón datos:  "��\u0001\n"
+[21/07/2022 17:50:31] {Debug} 		 "Brake. Valor rcv fuera de valores lógicos (0, 1023)"
+[21/07/2022 17:50:31] {Debug} 		 Renglón datos:  "}�� 0, A_inh: 0,\tV_ac: 1, Vol_c: 0, V_m: 2, Shft_a: 1, edo: 0, nDef: 1,\tT:30 \r\n"
+[21/07/2022 17:50:31] {Debug} 		 "Accel. Valor rcv fuera de valores lógicos (0, 1023)"
+[21/07/2022 17:50:31] {Debug} 		 Renglón datos:  "}�� 0, A_inh: 0,\tV_ac: 1, Vol_c: 0, V_m: 2, Shft_a: 1, edo: 0, nDef: 1,\tT:30 \r\n"
+[21/07/2022 17:52:00] {Debug} 		 using qt5ct plugin
+[21/07/2022 17:52:00] {Debug} 		 D-Bus global menu: no
+[21/07/2022 17:52:00] {Debug} 		 Cantidad de puertos disponibles:  1
+[21/07/2022 17:52:00] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../mainwindow.cpp:87
+[21/07/2022 17:52:00] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
+[21/07/2022 17:52:00] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
+[21/07/2022 17:52:00] {Debug} 		 Port name:  "ttyACM0"
+[21/07/2022 17:52:00] {Debug} 		 BaudRate: 115200
+[21/07/2022 17:52:00] {Debug} 		 Ready... 
+
+[21/07/2022 17:52:00] {Debug} 		 ok 
+
+[21/07/2022 17:52:00] {Debug} 		        Inicio sesión Logging QDate("2022-07-21") ,  QTime("17:52:00.401")
+[21/07/2022 17:52:00] {Warning} 	 Prueba warning
+[21/07/2022 17:52:00] {Info} 		 Prueba Info
+[21/07/2022 17:53:06] {Debug} 		 using qt5ct plugin
+[21/07/2022 17:53:07] {Debug} 		 D-Bus global menu: no
+[21/07/2022 17:53:07] {Debug} 		 Cantidad de puertos disponibles:  1
+[21/07/2022 17:53:07] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../mainwindow.cpp:87
+[21/07/2022 17:53:07] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
+[21/07/2022 17:53:07] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
+[21/07/2022 17:53:07] {Debug} 		 Port name:  "ttyACM0"
+[21/07/2022 17:53:07] {Debug} 		 BaudRate: 115200
+[21/07/2022 17:53:07] {Debug} 		 Ready... 
+
+[21/07/2022 17:53:07] {Debug} 		 ok 
+
+[21/07/2022 17:53:07] {Debug} 		        Inicio sesión Logging QDate("2022-07-21") ,  QTime("17:53:07.102")
+[21/07/2022 17:53:07] {Warning} 	 Prueba warning
+[21/07/2022 17:53:07] {Info} 		 Prueba Info
+[21/07/2022 17:53:07] {Debug} 		 "Brake. Valor rcv fuera de valores lógicos (0, 1023)"
+[21/07/2022 17:53:07] {Debug} 		 Renglón datos:  "\u0001\t'���b\u0002\u0012}�� 3, B_c: 0, B_inh: 0,\tA_ac: 1, A_p: 984,  A_t: 985,  A_e: 1,  A_c: 0, A_inh: 0,\tV_ac: 1, Vol_c: 0, V_m: 2, Shft_a: 1, edo: 0, nDef: 1,\tT:30 \r\n"
+[21/07/2022 17:55:36] {Debug} 		 using qt5ct plugin
+[21/07/2022 17:55:36] {Debug} 		 D-Bus global menu: no
+[21/07/2022 17:55:36] {Debug} 		 Cantidad de puertos disponibles:  1
+[21/07/2022 17:55:36] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../mainwindow.cpp:87
+[21/07/2022 17:55:36] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
+[21/07/2022 17:55:36] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
+[21/07/2022 17:55:36] {Debug} 		 Port name:  "ttyACM0"
+[21/07/2022 17:55:36] {Debug} 		 BaudRate: 115200
+[21/07/2022 17:55:36] {Debug} 		 Ready... 
+
+[21/07/2022 17:55:36] {Debug} 		 ok 
+
+[21/07/2022 17:55:36] {Debug} 		        Inicio sesión Logging QDate("2022-07-21") ,  QTime("17:55:36.599")
+[21/07/2022 17:55:36] {Warning} 	 Prueba warning
+[21/07/2022 17:55:36] {Info} 		 Prueba Info
+[21/07/2022 17:55:36] {Debug} 		 "Brake. Valor rcv fuera de valores lógicos (0, 1023)"
+[21/07/2022 17:55:36] {Debug} 		 Renglón datos:  "e�Q�}Q��� 298, V_Err: 0,\tV_ac: 1, Vol_c: 0, V_m: 2, Shft_a: 1, edo: 0, nDef: 1,\tT:30 \r\n"
+[21/07/2022 17:55:36] {Debug} 		 "Accel. Valor rcv fuera de valores lógicos (0, 1023)"
+[21/07/2022 17:55:36] {Debug} 		 Renglón datos:  "e�Q�}Q��� 298, V_Err: 0,\tV_ac: 1, Vol_c: 0, V_m: 2, Shft_a: 1, edo: 0, nDef: 1,\tT:30 \r\n"
+[21/07/2022 17:58:29] {Debug} 		 using qt5ct plugin
+[21/07/2022 17:58:29] {Debug} 		 D-Bus global menu: no
+[21/07/2022 17:58:29] {Debug} 		 Cantidad de puertos disponibles:  1
+[21/07/2022 17:58:29] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../mainwindow.cpp:87
+[21/07/2022 17:58:29] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
+[21/07/2022 17:58:29] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
+[21/07/2022 17:58:29] {Debug} 		 Port name:  "ttyACM0"
+[21/07/2022 17:58:29] {Debug} 		 BaudRate: 115200
+[21/07/2022 17:58:29] {Debug} 		 Ready... 
+
+[21/07/2022 17:58:29] {Debug} 		 ok 
+
+[21/07/2022 17:58:29] {Debug} 		        Inicio sesión Logging QDate("2022-07-21") ,  QTime("17:58:29.879")
+[21/07/2022 17:58:29] {Warning} 	 Prueba warning
+[21/07/2022 17:58:29] {Info} 		 Prueba Info
+[21/07/2022 17:58:29] {Debug} 		 "Brake. Valor rcv fuera de valores lógicos (0, 1023)"
+[21/07/2022 17:58:29] {Debug} 		 Renglón datos:  "\u0005L 985,  A_e: 1,  A_c: 0, A_inh: 0,\tV_ac: 1, Vol_c: 0, V_m: 2, Shft_a: 1, edo: 0, nDef: 1,\tT:30 \r\n"
+[21/07/2022 17:58:29] {Debug} 		 "Accel. Valor rcv fuera de valores lógicos (0, 1023)"
+[21/07/2022 17:58:29] {Debug} 		 Renglón datos:  "\u0005L 985,  A_e: 1,  A_c: 0, A_inh: 0,\tV_ac: 1, Vol_c: 0, V_m: 2, Shft_a: 1, edo: 0, nDef: 1,\tT:30 \r\n"
