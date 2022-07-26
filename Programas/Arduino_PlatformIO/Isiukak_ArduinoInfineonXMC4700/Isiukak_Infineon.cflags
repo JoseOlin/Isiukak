@@ -1,1 +1,0 @@
--MMD -std=gnu11 -Os -w -nostdlib -Wall -ffunction-sections -fdata-sections -mthumb -mcpu=cortex-m4

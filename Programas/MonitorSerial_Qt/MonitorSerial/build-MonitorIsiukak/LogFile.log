@@ -1,0 +1,15 @@
+[26/07/2022 14:21:10] {Debug} 		 using qt5ct plugin
+[26/07/2022 14:21:10] {Debug} 		 D-Bus global menu: no
+[26/07/2022 14:21:10] {Debug} 		 Cantidad de puertos disponibles:  0
+[26/07/2022 14:21:10] {Debug} 		 No se encontraron dispositivos conectados.
+[26/07/2022 14:21:10] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../mainwindow.cpp:87
+[26/07/2022 14:21:10] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
+[26/07/2022 14:21:10] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
+[26/07/2022 14:21:10] {Debug} 		 Port name:  ""
+[26/07/2022 14:21:10] {Debug} 		 BaudRate: 115200
+[26/07/2022 14:21:10] {Debug} 		 Was an error while creating the Serial Port. btnConectar_pressed()
+[26/07/2022 14:21:12] {Debug} 		 Cantidad de puertos disponibles:  0
+[26/07/2022 14:21:12] {Debug} 		 No se encontraron dispositivos conectados.
+[26/07/2022 14:21:12] {Debug} 		        Inicio sesión Logging QDate("2022-07-26") ,  QTime("14:21:12.053")
+[26/07/2022 14:21:12] {Warning} 	 Prueba warning
+[26/07/2022 14:21:12] {Info} 		 Prueba Info
