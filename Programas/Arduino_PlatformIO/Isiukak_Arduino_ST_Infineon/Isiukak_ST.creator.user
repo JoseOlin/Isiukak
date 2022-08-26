@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.11.0, 2022-07-21T19:58:58. -->
+<!-- Written by QtCreator 4.11.0, 2022-08-25T17:34:29. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -250,7 +250,7 @@
     </valuelist>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.CustomExecutableRunConfiguration.Executable">/media/Ext4/Proyectos/Autonomia/Isiukak_Sistema_Conduccion/Programas_SistemaConduccion/MonitorIsiukak</value>
+    <value type="QString" key="ProjectExplorer.CustomExecutableRunConfiguration.Executable">/media/Ext4/Proyectos/Autonomia/Isiukak_Sistema_Conduccion/Repositorio_Github_Isiukak/Programas/MonitorSerial_Qt/MonitorSerial/build-MonitorIsiukak/MonitorIsiukak</value>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">ProjectExplorer.CustomExecutableRunConfiguration</value>
     <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey"></value>
     <value type="QString" key="RunConfiguration.Arguments"></value>

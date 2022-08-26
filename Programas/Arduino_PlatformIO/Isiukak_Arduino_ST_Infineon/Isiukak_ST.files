@@ -2,6 +2,7 @@ Makefile
 platformio.ini
 .gitignore
 src/LecturaFeedback.hpp
+src/LecturaTemperatura.hpp
 src/Seguridad.hpp
 src/Microcontroller.hpp
 src/LecturaEncoder.hpp
@@ -13,9 +14,9 @@ src/ComunicacionSerial.hpp
 src/DigitalFilter.hpp
 src/ControlPedales.hpp
 src/Debug.hpp
-src/main_Isiukak_Infineon.cpp
 src/ControlPalanca.hpp
 src/main.hpp
 src/Testing.hpp
+src/main_Isiukak.cpp
 test/test.hpp
 test/test_functions.cpp

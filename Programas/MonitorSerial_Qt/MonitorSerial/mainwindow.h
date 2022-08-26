@@ -82,6 +82,7 @@ private:
     void displayInfoSteer(QString renglonDatos);
     void displaySystemInfo(QString renglonDatos);
     void displayInfoShiftGear(QString renglonDatos);
+    void displayTemperature(QString renglonDatos);
 
     void displayPotsErrors(QString renglonDatos);
 
@@ -103,7 +104,8 @@ private:
     void driverMatrixErrors_gridLayoutDisplay(QGridLayout* grid,
                                               vector<driverValuesRow> driverMatrix);
 
-    bool buscarExpresionRegular_returnNextInt(QString expReg, QString fuente, int& match_int);
+    bool buscarExpresionRegular_findNextInt(QString expReg, QString fuente, int& match_int);
+    bool buscarExpresionRegular_findNextFloat(QString cadHead, QString fuente, float &match_float);
     bool buscarExpresionRegular(QString expReg, QString fuente);
     bool buscarExpresionRegular_PotError(QString fuente, QString &matchString, int &match_int);
 

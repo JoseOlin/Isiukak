@@ -52,6 +52,10 @@ QString cadEstadoSistema = "edo";
 QString cadT = "T";
 QString cadNormalDefines = "nDef";
 
+QString cadTemp_uC = "Tm_uC";
+QString cadTemp_Therm1 = "Tm_Th1";
+QString cadTemp_Therm2 = "Tm_Th2";
+
 QString cadCompsReconnected = "Componentes Reconectados y en Rango Válido";
 QString cadParoEmergenciaManual = "Paro de Emergencia Manual.";
 QString cadRestartTesting = "Testing";
@@ -175,7 +179,8 @@ void MainWindow::desplegarValores(QString renglonDatos)
     ///* System status
     displaySystemInfo(renglonDatos);
 
-
+    ///* Temperature values
+    displayTemperature(renglonDatos);
 
     ///* Test restarting string when running embedded Testing
     bool testingRestartingReceived = buscarExpresionRegular("(\\*\\*)(" + cadRestartTesting + ")(\\*\\*)", renglonDatos);
@@ -429,7 +434,7 @@ QString MainWindow::driverMatrixValues_display(vector<driverValuesRow> driverMat
     return matrixString;
 }
 
-bool MainWindow::buscarExpresionRegular_returnNextInt(QString expReg, QString fuente, int& match_int)
+bool MainWindow::buscarExpresionRegular_findNextInt(QString expReg, QString fuente, int& match_int)
 {
 
     //QRegularExpression expRegInt_R("J_Y: (\\d+)");
@@ -443,6 +448,26 @@ bool MainWindow::buscarExpresionRegular_returnNextInt(QString expReg, QString fu
         QString match_s = RegExpMatch.captured(1);
         //int match_int = match_s.toInt();
         match_int = match_s.toInt();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool MainWindow::buscarExpresionRegular_findNextFloat(QString cadHead, QString fuente, float &match_float)
+{
+    QString expReg = cadHead + ": (-?(\\d+)*(\\.(\\d+))?)";
+    QRegularExpression RegExp(expReg);
+    QRegularExpressionMatch RegExpMatch = RegExp.match(fuente);
+    //int indiceJy_Fin
+    //int indiceJy_Ini = expRegInt.indexIn(renglonDatos_s);
+    if(RegExpMatch.hasMatch() )
+    {
+        QString match_s = RegExpMatch.captured(1);
+        //int match_int = match_s.toInt();
+        match_float = match_s.toFloat();
         return true;
     }
     else
@@ -562,7 +587,7 @@ bool MainWindow::Limits_update(int currentValue,    int& min,        int& max,
 void MainWindow::displayInfoJoystick(QString renglonDatos)
 {
     //** Joystick Y
-    bool jy_Received = buscarExpresionRegular_returnNextInt("J_Y: (\\d+)", renglonDatos, valorJy);
+    bool jy_Received = buscarExpresionRegular_findNextInt("J_Y: (\\d+)", renglonDatos, valorJy);
 
     if(jy_Received)
     {
@@ -583,7 +608,7 @@ void MainWindow::displayInfoJoystick(QString renglonDatos)
     }
 
     //** Joystick X
-    bool Jx_received = buscarExpresionRegular_returnNextInt("J_X: (\\d+)", renglonDatos, valorJx);
+    bool Jx_received = buscarExpresionRegular_findNextInt("J_X: (\\d+)", renglonDatos, valorJx);
     if(Jx_received)
     {
         ui->joystick_X_lcd->display(valorJx);
@@ -600,7 +625,7 @@ void MainWindow::displayInfoJoystick(QString renglonDatos)
 
     //** Activado
     bool statusJoystickActivado_Received =
-            buscarExpresionRegular_returnNextInt(cadJoystickActivado+ ": (-?(\\d+))",
+            buscarExpresionRegular_findNextInt(cadJoystickActivado+ ": (-?(\\d+))",
                                          renglonDatos, Joystick_Activado);
     //if(statusJoystickActivado_Received)
     //{
@@ -631,26 +656,26 @@ void MainWindow::displayInfoJoystick(QString renglonDatos)
 void MainWindow::displayInfoButtons(QString renglonDatos)
 {
     /// Fix Brake Position.
-    buscarExpresionRegular_returnNextInt("bFB: (-?(\\d+))",
+    buscarExpresionRegular_findNextInt("bFB: (-?(\\d+))",
                                         renglonDatos, statusFixFreno);
     checkBoxBouncing(ui->FixFreno_chk, statusFixFreno);
 
     /// Modo Carretera
-    buscarExpresionRegular_returnNextInt("bMC: (-?(\\d+))",
+    buscarExpresionRegular_findNextInt("bMC: (-?(\\d+))",
                                         renglonDatos, statusModoCarr);
     checkBoxBouncing(ui->RoadMode_chk, statusModoCarr );
 
-    buscarExpresionRegular_returnNextInt("bPU: (-?(\\d+))",
+    buscarExpresionRegular_findNextInt("bPU: (-?(\\d+))",
                                          renglonDatos, statusPalancaUp);
     checkBoxBouncing(ui->PalUp_chk, statusPalancaUp);
 
-    buscarExpresionRegular_returnNextInt("bPD: (-?(\\d+))",
+    buscarExpresionRegular_findNextInt("bPD: (-?(\\d+))",
                                          renglonDatos, statusPalancaDown);
     checkBoxBouncing(ui->PalDown_chk, statusPalancaDown);
 }
 void MainWindow::displayInfoBrake(QString renglonDatos)
 {
-    buscarExpresionRegular_returnNextInt("B_p: (-?(\\d+))", renglonDatos, B_pos);
+    buscarExpresionRegular_findNextInt("B_p: (-?(\\d+))", renglonDatos, B_pos);
     ui->frenoPos_lcd->display(B_pos);
 
     bool BPosValid = Limits_update(B_pos,
@@ -667,19 +692,19 @@ void MainWindow::displayInfoBrake(QString renglonDatos)
         qDebug() << "Renglón datos: " << renglonDatos;
     }
 
-    buscarExpresionRegular_returnNextInt("B_t: (-?(\\d+))", renglonDatos, B_tgt);
+    buscarExpresionRegular_findNextInt("B_t: (-?(\\d+))", renglonDatos, B_tgt);
     ui->frenoDes_lcd->display(B_tgt);
 
-    buscarExpresionRegular_returnNextInt("B_e: (-?(\\d+))", renglonDatos, B_Pos_Error);
+    buscarExpresionRegular_findNextInt("B_e: (-?(\\d+))", renglonDatos, B_Pos_Error);
     ui->Freno_lcdError->display(B_Pos_Error);
 
-    buscarExpresionRegular_returnNextInt("B_c: (-?(\\d+))", renglonDatos, B_Ctrl);
+    buscarExpresionRegular_findNextInt("B_c: (-?(\\d+))", renglonDatos, B_Ctrl);
     // -?(\\d+) = Uno o ningún signo menos, seguido de uno o más dígitos.
     ui->frenoControl_lcd->display(B_Ctrl);
     ui->FrenoControl_Slider->setValue(B_Ctrl);
 
     //** Brake Activado
-    bool flagB_Act = buscarExpresionRegular_returnNextInt(cadBrakeActivado + ": (-?(\\d+))",
+    bool flagB_Act = buscarExpresionRegular_findNextInt(cadBrakeActivado + ": (-?(\\d+))",
                                                 renglonDatos, B_Activado);
     checkBoxBouncing(ui->Freno_Activado_chk, flagB_Act);
     checkBoxColor(ui->Freno_Activado_chk);
@@ -690,7 +715,7 @@ void MainWindow::displayInfoBrake(QString renglonDatos)
     checkBoxColor_Error(ui->chk_LED_Freno_Desc);
 
     //** Brake Inhibido
-    buscarExpresionRegular_returnNextInt(cadBrakeInhibido + ": (-?(\\d+))",
+    buscarExpresionRegular_findNextInt(cadBrakeInhibido + ": (-?(\\d+))",
                                          renglonDatos, B_Inhibido);
     checkBoxBouncing(ui->Freno_Inhibido_chk, B_Inhibido);
     checkBoxColor_Error(ui->Freno_Inhibido_chk);
@@ -706,11 +731,11 @@ void MainWindow::displayInfoBrake(QString renglonDatos)
     //QStringList brake_errors_list;
 
 
-    bool B_Vin_found = buscarExpresionRegular_returnNextInt(cadBrake_VIN + ": (-?(\\d+))",
+    bool B_Vin_found = buscarExpresionRegular_findNextInt(cadBrake_VIN + ": (-?(\\d+))",
                                                             renglonDatos, B_Vin);
-    bool B_Temp_found = buscarExpresionRegular_returnNextInt(cadBrake_Temp  + ": (-?(\\d+))",
+    bool B_Temp_found = buscarExpresionRegular_findNextInt(cadBrake_Temp  + ": (-?(\\d+))",
                                                             renglonDatos, B_Temp);
-    bool B_Driver_Errors_found = buscarExpresionRegular_returnNextInt(cadBrake_Error + ": (-?(\\d+))",
+    bool B_Driver_Errors_found = buscarExpresionRegular_findNextInt(cadBrake_Error + ": (-?(\\d+))",
                                                             renglonDatos, B_Driver_Errors);
 
 
@@ -778,7 +803,7 @@ void MainWindow::displayInfoBrake(QString renglonDatos)
 void MainWindow::displayInfoAccel(QString renglonDatos)
 {
     //** Control info
-    buscarExpresionRegular_returnNextInt("A_p: (-?(\\d+))", renglonDatos, A_pos);
+    buscarExpresionRegular_findNextInt("A_p: (-?(\\d+))", renglonDatos, A_pos);
     ui->aceleradorPos_lcd->display(A_pos);
 
     bool AccPosValid = Limits_update(A_pos, Accel_pos_min, Accel_pos_max,
@@ -794,25 +819,25 @@ void MainWindow::displayInfoAccel(QString renglonDatos)
          qDebug() << "Renglón datos: " << renglonDatos;
      }
 
-    buscarExpresionRegular_returnNextInt("A_t: (-?(\\d+))", renglonDatos, A_tgt);
+    buscarExpresionRegular_findNextInt("A_t: (-?(\\d+))", renglonDatos, A_tgt);
     ui->aceleradorDes_lcd->display(A_tgt);
 
-    buscarExpresionRegular_returnNextInt("A_e: (-?(\\d+))", renglonDatos, A_Pos_Error);
+    buscarExpresionRegular_findNextInt("A_e: (-?(\\d+))", renglonDatos, A_Pos_Error);
     ui->Acelerador_lcdError->display(A_Pos_Error);
 
-    buscarExpresionRegular_returnNextInt("A_c: (-?(\\d+))", renglonDatos, A_Ctrl);
+    buscarExpresionRegular_findNextInt("A_c: (-?(\\d+))", renglonDatos, A_Ctrl);
     ui->aceleradorControl_lcd->display(A_Ctrl);
     ui->AceleradorControl_Slider->setValue(A_Ctrl);
 
     //** Accel Activated
-    bool flagAccelAct = buscarExpresionRegular_returnNextInt(cadAcelActivado + ": (-?(\\d+))",
+    bool flagAccelAct = buscarExpresionRegular_findNextInt(cadAcelActivado + ": (-?(\\d+))",
                                                 renglonDatos, A_Activado);
     //qDbg << "statusAcelActivado" << statusAcelActivado;
     checkBoxBouncing(ui->Acel_Activado_chk, flagAccelAct);
     checkBoxColor(ui->Acel_Activado_chk);
 
     //** Inhibido
-    buscarExpresionRegular_returnNextInt(cadAcelInhibido + ": (-?(\\d+))",
+    buscarExpresionRegular_findNextInt(cadAcelInhibido + ": (-?(\\d+))",
                                                  renglonDatos, A_Inhibido);
     checkBoxBouncing(ui->Acel_Inhibido_chk, A_Inhibido);
     checkBoxColor_Error(ui->Acel_Inhibido_chk);
@@ -831,11 +856,11 @@ void MainWindow::displayInfoAccel(QString renglonDatos)
     driverValuesRow accel_row;
     //QStringList accel_errors_list;
 
-    bool A_Vin_found = buscarExpresionRegular_returnNextInt(cadAccel_VIN + ": (-?(\\d+))",
+    bool A_Vin_found = buscarExpresionRegular_findNextInt(cadAccel_VIN + ": (-?(\\d+))",
                                                 renglonDatos, A_Vin);
-    bool A_Temp_found  = buscarExpresionRegular_returnNextInt(cadAccel_Temp  + ": (-?(\\d+))",
+    bool A_Temp_found  = buscarExpresionRegular_findNextInt(cadAccel_Temp  + ": (-?(\\d+))",
                                                 renglonDatos, A_Temp);
-    bool A_Driver_Errors_found = buscarExpresionRegular_returnNextInt(cadAccel_Error + ": (-?(\\d+))",
+    bool A_Driver_Errors_found = buscarExpresionRegular_findNextInt(cadAccel_Error + ": (-?(\\d+))",
                                                 renglonDatos, A_Driver_Errors);
 
     if(A_Vin_found)
@@ -875,19 +900,19 @@ void MainWindow::displayInfoAccel(QString renglonDatos)
 void MainWindow::displayInfoSteer(QString renglonDatos)
 {
 
-    buscarExpresionRegular_returnNextInt(cadVolanteControl + ": (-?(\\d+))",
+    buscarExpresionRegular_findNextInt(cadVolanteControl + ": (-?(\\d+))",
                                          renglonDatos, V_Ctrl);
     //qDebug() << "V_Ctrl: " << V_Ctrl;
     ui->volante_lcd->display(V_Ctrl);
     ui->VolanteControl_Dial->setValue(V_Ctrl);
 
 
-    bool V_cadActiv_found = buscarExpresionRegular_returnNextInt(cadVolanteActivado + ": (-?(\\d+))",
+    bool V_cadActiv_found = buscarExpresionRegular_findNextInt(cadVolanteActivado + ": (-?(\\d+))",
                                          renglonDatos, V_Activado);
     checkBoxBouncing(ui->volante_Activado_chk, V_cadActiv_found);
     checkBoxColor(ui->volante_Activado_chk);
 
-    buscarExpresionRegular_returnNextInt(cadVolanteModo + ": (-?(\\d+))",
+    buscarExpresionRegular_findNextInt(cadVolanteModo + ": (-?(\\d+))",
                                          renglonDatos, V_Mode);
     ui->VolanteModo_cmb->setCurrentIndex(V_Mode);
     if(V_Mode == 0)    { // Modo Inhibido.
@@ -901,11 +926,11 @@ void MainWindow::displayInfoSteer(QString renglonDatos)
     // **Info driver
     driverValuesRow steer_row;
 
-    bool V_Vin_found = buscarExpresionRegular_returnNextInt(cadSteer_VIN + ": (-?(\\d+))",
+    bool V_Vin_found = buscarExpresionRegular_findNextInt(cadSteer_VIN + ": (-?(\\d+))",
                                                     renglonDatos, V_Vin);
-    bool V_Temp_found = buscarExpresionRegular_returnNextInt(cadSteer_Temp  + ": (-?(\\d+))",
+    bool V_Temp_found = buscarExpresionRegular_findNextInt(cadSteer_Temp  + ": (-?(\\d+))",
                                                     renglonDatos, V_Temp);
-    bool V_Driver_Errors_found = buscarExpresionRegular_returnNextInt(cadSteer_Error + ": (-?(\\d+))",
+    bool V_Driver_Errors_found = buscarExpresionRegular_findNextInt(cadSteer_Error + ": (-?(\\d+))",
                                                     renglonDatos, V_Driver_Errors);
 
 
@@ -945,7 +970,7 @@ void MainWindow::displayInfoSteer(QString renglonDatos)
 
 void MainWindow::displayInfoShiftGear(QString renglonDatos)
 {
-    bool shiftAct = buscarExpresionRegular_returnNextInt(cadPalancaActivada + ": (-?(\\d+))",
+    bool shiftAct = buscarExpresionRegular_findNextInt(cadPalancaActivada + ": (-?(\\d+))",
                                             renglonDatos, ShiftGear_Activated);
 
     checkBoxBouncing(ui->palanca_Activada_chk, shiftAct);
@@ -957,7 +982,7 @@ void MainWindow::displaySystemInfo(QString renglonDatos)
 
     //** System Status
     bool systemStatusFound =
-            buscarExpresionRegular_returnNextInt("edo: (\\d+)", renglonDatos, SystemStatusNum);
+            buscarExpresionRegular_findNextInt("edo: (\\d+)", renglonDatos, SystemStatusNum);
     //qDebug() << "Edo Sistema: " << edoSistema;
     if(!systemStatusFound)
     {
@@ -972,7 +997,7 @@ void MainWindow::displaySystemInfo(QString renglonDatos)
     ui->estadoSistema_lbl->setText(edoSistema_str);
 
     //** T, T_min and T_max
-    bool T_found = buscarExpresionRegular_returnNextInt(cadT + ":(\\d+)", renglonDatos, T_sys);
+    bool T_found = buscarExpresionRegular_findNextInt(cadT + ":(\\d+)", renglonDatos, T_sys);
     ui->T_lbl->setText(QString::number(T_sys));
 
     if(T_found) {
@@ -981,12 +1006,43 @@ void MainWindow::displaySystemInfo(QString renglonDatos)
     }
 
     //** Normal Defines
-    buscarExpresionRegular_returnNextInt(cadNormalDefines + ": (\\d+)",
+    buscarExpresionRegular_findNextInt(cadNormalDefines + ": (\\d+)",
                                          renglonDatos, normalDefines);
 
     checkBoxBouncing(ui->normalDefines_chk, normalDefines);
     checkBoxColor(ui->normalDefines_chk);
 }
+
+
+void MainWindow::displayTemperature(QString renglonDatos)
+{
+    float Micro_TempC;
+    bool Micro_TempC_Found = buscarExpresionRegular_findNextFloat(cadTemp_uC, renglonDatos, Micro_TempC);
+    if(Micro_TempC_Found)
+    {
+        ui->Temp_uC_lbl->setText(QString::number(Micro_TempC));
+    }
+    else
+    {
+        qDebug() << "Tm_uC not found";
+    }
+
+    float Therm1_TempC;
+    float Therm1Temp_Found = buscarExpresionRegular_findNextFloat(cadTemp_Therm1, renglonDatos, Therm1_TempC);
+    if(Therm1Temp_Found)
+    {
+        ui->Temp_Therm1_lbl->setText(QString::number(Therm1_TempC));
+    }
+
+
+    float Therm2_TempC;
+    float Therm2Temp_Found = buscarExpresionRegular_findNextFloat(cadTemp_Therm2, renglonDatos, Therm2_TempC);
+    if(Therm2Temp_Found)
+    {
+        ui->Temp_Therm2_lbl->setText(QString::number(Therm2_TempC));
+    }
+}
+
 void MainWindow::displayPotsErrors(QString renglonDatos)
 {
     QString matchPotError;

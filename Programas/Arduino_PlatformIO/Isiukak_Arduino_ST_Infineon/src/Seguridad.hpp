@@ -15,6 +15,7 @@
 #include "ComunicacionSerial.hpp"
 #include "Debug.hpp"
 #include "LecturaFeedback.hpp" //Includes Testing.hpp
+#include "LecturaTemperatura.hpp"
 #include "ControlPedales.hpp"
 #include "ControlVolante.hpp"
 #include "ControlPalanca.hpp"

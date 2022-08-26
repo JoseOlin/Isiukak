@@ -13,3 +13,228 @@
 [26/07/2022 14:21:12] {Debug} 		        Inicio sesión Logging QDate("2022-07-26") ,  QTime("14:21:12.053")
 [26/07/2022 14:21:12] {Warning} 	 Prueba warning
 [26/07/2022 14:21:12] {Info} 		 Prueba Info
+[26/07/2022 17:01:35] {Debug} 		 using qt5ct plugin
+[26/07/2022 17:01:36] {Debug} 		 D-Bus global menu: no
+[26/07/2022 17:01:36] {Debug} 		 Cantidad de puertos disponibles:  0
+[26/07/2022 17:01:36] {Debug} 		 No se encontraron dispositivos conectados.
+[26/07/2022 17:01:36] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../mainwindow.cpp:87
+[26/07/2022 17:01:36] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
+[26/07/2022 17:01:36] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
+[26/07/2022 17:01:36] {Debug} 		 Port name:  ""
+[26/07/2022 17:01:36] {Debug} 		 BaudRate: 115200
+[26/07/2022 17:01:36] {Debug} 		 Was an error while creating the Serial Port. btnConectar_pressed()
+[26/07/2022 17:01:38] {Debug} 		 Cantidad de puertos disponibles:  0
+[26/07/2022 17:01:38] {Debug} 		 No se encontraron dispositivos conectados.
+[26/07/2022 17:01:38] {Debug} 		        Inicio sesión Logging QDate("2022-07-26") ,  QTime("17:01:38.256")
+[26/07/2022 17:01:38] {Warning} 	 Prueba warning
+[26/07/2022 17:01:38] {Info} 		 Prueba Info
+[25/08/2022 14:27:16] {Debug} 		 using qt5ct plugin
+[25/08/2022 14:27:16] {Debug} 		 D-Bus global menu: no
+[25/08/2022 14:27:16] {Debug} 		 Cantidad de puertos disponibles:  0
+[25/08/2022 14:27:16] {Debug} 		 No se encontraron dispositivos conectados.
+[25/08/2022 14:27:16] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../mainwindow.cpp:91
+[25/08/2022 14:27:16] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
+[25/08/2022 14:27:16] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
+[25/08/2022 14:27:16] {Debug} 		 Port name:  ""
+[25/08/2022 14:27:16] {Debug} 		 BaudRate: 115200
+[25/08/2022 14:27:16] {Debug} 		 Was an error while creating the Serial Port. btnConectar_pressed()
+[25/08/2022 14:27:17] {Debug} 		 Cantidad de puertos disponibles:  0
+[25/08/2022 14:27:17] {Debug} 		 No se encontraron dispositivos conectados.
+[25/08/2022 14:27:17] {Debug} 		        Inicio sesión Logging QDate("2022-08-25") ,  QTime("14:27:17.540")
+[25/08/2022 14:27:17] {Warning} 	 Prueba warning
+[25/08/2022 14:27:17] {Info} 		 Prueba Info
+[25/08/2022 16:51:30] {Debug} 		 using qt5ct plugin
+[25/08/2022 16:51:30] {Debug} 		 D-Bus global menu: no
+[25/08/2022 16:51:30] {Debug} 		 Cantidad de puertos disponibles:  1
+[25/08/2022 16:51:30] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../mainwindow.cpp:91
+[25/08/2022 16:51:30] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
+[25/08/2022 16:51:30] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
+[25/08/2022 16:51:30] {Debug} 		 Port name:  "ttyACM0"
+[25/08/2022 16:51:30] {Debug} 		 BaudRate: 115200
+[25/08/2022 16:51:30] {Debug} 		 Ready... 
+
+[25/08/2022 16:51:30] {Debug} 		 ok 
+
+[25/08/2022 16:51:30] {Debug} 		        Inicio sesión Logging QDate("2022-08-25") ,  QTime("16:51:30.478")
+[25/08/2022 16:51:30] {Warning} 	 Prueba warning
+[25/08/2022 16:51:30] {Info} 		 Prueba Info
+[25/08/2022 17:04:47] {Debug} 		 using qt5ct plugin
+[25/08/2022 17:04:47] {Debug} 		 D-Bus global menu: no
+[25/08/2022 17:04:47] {Debug} 		 Cantidad de puertos disponibles:  1
+[25/08/2022 17:04:47] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../mainwindow.cpp:91
+[25/08/2022 17:04:47] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
+[25/08/2022 17:04:47] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
+[25/08/2022 17:04:47] {Debug} 		 Port name:  "ttyACM0"
+[25/08/2022 17:04:47] {Debug} 		 BaudRate: 115200
+[25/08/2022 17:04:47] {Debug} 		 Ready... 
+
+[25/08/2022 17:04:47] {Debug} 		 ok 
+
+[25/08/2022 17:04:47] {Debug} 		        Inicio sesión Logging QDate("2022-08-25") ,  QTime("17:04:47.641")
+[25/08/2022 17:04:47] {Warning} 	 Prueba warning
+[25/08/2022 17:04:47] {Info} 		 Prueba Info
+[25/08/2022 17:04:47] {Debug} 		 "Brake. Valor rcv fuera de valores lógicos (0, 1023)"
+[25/08/2022 17:04:47] {Debug} 		 Renglón datos:  ",���1Dbj!1\u0011\u0001!!�\u0003-F�)��1D�����\u0001�P\u0001! �N)�aAa\u0011]q9L4b\u0001\u0011*��� 6, nDef: 1,\tT:30 \r\n"
+[25/08/2022 17:04:47] {Debug} 		 "Accel. Valor rcv fuera de valores lógicos (0, 1023)"
+[25/08/2022 17:04:47] {Debug} 		 Renglón datos:  ",���1Dbj!1\u0011\u0001!!�\u0003-F�)��1D�����\u0001�P\u0001! �N)�aAa\u0011]q9L4b\u0001\u0011*��� 6, nDef: 1,\tT:30 \r\n"
+[25/08/2022 17:04:47] {Debug} 		 Tm_uC not found
+[25/08/2022 17:05:34] {Debug} 		 using qt5ct plugin
+[25/08/2022 17:05:34] {Debug} 		 D-Bus global menu: no
+[25/08/2022 17:05:34] {Debug} 		 Cantidad de puertos disponibles:  1
+[25/08/2022 17:05:34] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../mainwindow.cpp:91
+[25/08/2022 17:05:34] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
+[25/08/2022 17:05:34] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
+[25/08/2022 17:05:34] {Debug} 		 Port name:  "ttyACM0"
+[25/08/2022 17:05:34] {Debug} 		 BaudRate: 115200
+[25/08/2022 17:05:34] {Debug} 		 Ready... 
+
+[25/08/2022 17:05:34] {Debug} 		 ok 
+
+[25/08/2022 17:05:34] {Debug} 		        Inicio sesión Logging QDate("2022-08-25") ,  QTime("17:05:34.484")
+[25/08/2022 17:05:34] {Warning} 	 Prueba warning
+[25/08/2022 17:05:34] {Info} 		 Prueba Info
+[25/08/2022 17:06:29] {Debug} 		 using qt5ct plugin
+[25/08/2022 17:06:29] {Debug} 		 D-Bus global menu: no
+[25/08/2022 17:06:29] {Debug} 		 Cantidad de puertos disponibles:  1
+[25/08/2022 17:06:29] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../mainwindow.cpp:91
+[25/08/2022 17:06:29] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
+[25/08/2022 17:06:29] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
+[25/08/2022 17:06:29] {Debug} 		 Port name:  "ttyACM0"
+[25/08/2022 17:06:29] {Debug} 		 BaudRate: 115200
+[25/08/2022 17:06:29] {Debug} 		 Ready... 
+
+[25/08/2022 17:06:29] {Debug} 		 ok 
+
+[25/08/2022 17:06:29] {Debug} 		        Inicio sesión Logging QDate("2022-08-25") ,  QTime("17:06:29.490")
+[25/08/2022 17:06:29] {Warning} 	 Prueba warning
+[25/08/2022 17:06:29] {Info} 		 Prueba Info
+[25/08/2022 17:06:29] {Debug} 		 "Brake. Valor rcv fuera de valores lógicos (0, 1023)"
+[25/08/2022 17:06:29] {Debug} 		 Renglón datos:  "QՕr��b\u0002*��� 6, nDef: 1,\tT:30 \r\n"
+[25/08/2022 17:06:29] {Debug} 		 "Accel. Valor rcv fuera de valores lógicos (0, 1023)"
+[25/08/2022 17:06:29] {Debug} 		 Renglón datos:  "QՕr��b\u0002*��� 6, nDef: 1,\tT:30 \r\n"
+[25/08/2022 17:06:29] {Debug} 		 Tm_uC not found
+[25/08/2022 17:07:48] {Debug} 		 using qt5ct plugin
+[25/08/2022 17:07:48] {Debug} 		 D-Bus global menu: no
+[25/08/2022 17:07:48] {Debug} 		 Cantidad de puertos disponibles:  1
+[25/08/2022 17:07:48] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../mainwindow.cpp:91
+[25/08/2022 17:07:48] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
+[25/08/2022 17:07:48] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
+[25/08/2022 17:07:48] {Debug} 		 Port name:  "ttyACM0"
+[25/08/2022 17:07:48] {Debug} 		 BaudRate: 115200
+[25/08/2022 17:07:48] {Debug} 		 Ready... 
+
+[25/08/2022 17:07:48] {Debug} 		 ok 
+
+[25/08/2022 17:07:48] {Debug} 		        Inicio sesión Logging QDate("2022-08-25") ,  QTime("17:07:48.865")
+[25/08/2022 17:07:48] {Warning} 	 Prueba warning
+[25/08/2022 17:07:48] {Info} 		 Prueba Info
+[25/08/2022 17:07:49] {Debug} 		 "Brake. Valor rcv fuera de valores lógicos (0, 1023)"
+[25/08/2022 17:07:49] {Debug} 		 Renglón datos:  "m_Th2: -0.55, edo: 6, nDef: 1,\tT:30 \r\n"
+[25/08/2022 17:07:49] {Debug} 		 "Accel. Valor rcv fuera de valores lógicos (0, 1023)"
+[25/08/2022 17:07:49] {Debug} 		 Renglón datos:  "m_Th2: -0.55, edo: 6, nDef: 1,\tT:30 \r\n"
+[25/08/2022 17:07:49] {Debug} 		 Tm_uC not found
+[25/08/2022 17:08:57] {Debug} 		 Tm_uC not found
+[25/08/2022 17:08:57] {Debug} 		 Tm_uC not found
+[25/08/2022 17:08:57] {Debug} 		 Tm_uC not found
+[25/08/2022 17:08:58] {Debug} 		 Tm_uC not found
+[25/08/2022 17:08:58] {Debug} 		 Tm_uC not found
+[25/08/2022 17:08:58] {Debug} 		 Tm_uC not found
+[25/08/2022 17:08:58] {Debug} 		 Tm_uC not found
+[25/08/2022 17:08:58] {Debug} 		 Tm_uC not found
+[25/08/2022 17:19:40] {Debug} 		 Tm_uC not found
+[25/08/2022 17:19:40] {Debug} 		 Tm_uC not found
+[25/08/2022 17:19:40] {Debug} 		 Tm_uC not found
+[25/08/2022 17:19:40] {Debug} 		 Tm_uC not found
+[25/08/2022 17:19:40] {Debug} 		 Tm_uC not found
+[25/08/2022 17:19:40] {Debug} 		 Tm_uC not found
+[25/08/2022 17:19:40] {Debug} 		 Tm_uC not found
+[25/08/2022 17:19:40] {Debug} 		 Tm_uC not found
+[25/08/2022 17:19:40] {Debug} 		 Tm_uC not found
+[25/08/2022 17:19:40] {Debug} 		 Tm_uC not found
+[25/08/2022 17:19:40] {Debug} 		 Tm_uC not found
+[25/08/2022 17:19:40] {Debug} 		 Tm_uC not found
+[25/08/2022 17:19:40] {Debug} 		 Tm_uC not found
+[25/08/2022 17:19:40] {Debug} 		 Tm_uC not found
+[25/08/2022 17:19:40] {Debug} 		 Tm_uC not found
+[25/08/2022 17:19:41] {Debug} 		 Tm_uC not found
+[25/08/2022 17:19:41] {Debug} 		 Tm_uC not found
+[25/08/2022 17:20:07] {Debug} 		 using qt5ct plugin
+[25/08/2022 17:20:07] {Debug} 		 D-Bus global menu: no
+[25/08/2022 17:20:07] {Debug} 		 Cantidad de puertos disponibles:  1
+[25/08/2022 17:20:07] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../mainwindow.cpp:91
+[25/08/2022 17:20:07] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
+[25/08/2022 17:20:07] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
+[25/08/2022 17:20:07] {Debug} 		 Port name:  "ttyACM0"
+[25/08/2022 17:20:07] {Debug} 		 BaudRate: 115200
+[25/08/2022 17:20:07] {Debug} 		 Ready... 
+
+[25/08/2022 17:20:07] {Debug} 		 ok 
+
+[25/08/2022 17:20:07] {Debug} 		        Inicio sesión Logging QDate("2022-08-25") ,  QTime("17:20:07.728")
+[25/08/2022 17:20:07] {Warning} 	 Prueba warning
+[25/08/2022 17:20:07] {Info} 		 Prueba Info
+[25/08/2022 17:20:07] {Debug} 		 "Brake. Valor rcv fuera de valores lógicos (0, 1023)"
+[25/08/2022 17:20:07] {Debug} 		 Renglón datos:  "p: 299, B_t5� 0, V_m: 0, Shft_a: 1, Tm_uC: 48.61, edo: 6, nDef: 1,\tT:30 \r\n"
+[25/08/2022 17:20:07] {Debug} 		 "Accel. Valor rcv fuera de valores lógicos (0, 1023)"
+[25/08/2022 17:20:07] {Debug} 		 Renglón datos:  "p: 299, B_t5� 0, V_m: 0, Shft_a: 1, Tm_uC: 48.61, edo: 6, nDef: 1,\tT:30 \r\n"
+[25/08/2022 17:34:33] {Debug} 		 using qt5ct plugin
+[25/08/2022 17:34:34] {Debug} 		 D-Bus global menu: no
+[25/08/2022 17:34:34] {Debug} 		 Cantidad de puertos disponibles:  1
+[25/08/2022 17:34:34] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../mainwindow.cpp:91
+[25/08/2022 17:34:34] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
+[25/08/2022 17:34:34] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
+[25/08/2022 17:34:34] {Debug} 		 Port name:  "ttyACM0"
+[25/08/2022 17:34:34] {Debug} 		 BaudRate: 115200
+[25/08/2022 17:34:34] {Debug} 		 Ready... 
+
+[25/08/2022 17:34:34] {Debug} 		 ok 
+
+[25/08/2022 17:34:34] {Debug} 		        Inicio sesión Logging QDate("2022-08-25") ,  QTime("17:34:34.038")
+[25/08/2022 17:34:34] {Warning} 	 Prueba warning
+[25/08/2022 17:34:34] {Info} 		 Prueba Info
+[25/08/2022 17:34:34] {Debug} 		 "Brake. Valor rcv fuera de valores lógicos (0, 1023)"
+[25/08/2022 17:34:34] {Debug} 		 Renglón datos:  "J_Y: ePE� 64,  A_e: 553,  A_c: -16590, A_inh: 1,\tV_ac: 1, Vol_c: 0, V_m: 0, Shft_a: 1, Tm_uC: 24.70, edo: 6, nDef: 1,\tT:30 \r\n"
+[25/08/2022 17:34:34] {Debug} 		 "Accel. Valor rcv fuera de valores lógicos (0, 1023)"
+[25/08/2022 17:34:34] {Debug} 		 Renglón datos:  "J_Y: ePE� 64,  A_e: 553,  A_c: -16590, A_inh: 1,\tV_ac: 1, Vol_c: 0, V_m: 0, Shft_a: 1, Tm_uC: 24.70, edo: 6, nDef: 1,\tT:30 \r\n"
+[25/08/2022 17:34:41] {Debug} 		 Tm_uC not found
+[25/08/2022 17:34:41] {Debug} 		 Tm_uC not found
+[25/08/2022 17:34:42] {Debug} 		 Tm_uC not found
+[25/08/2022 17:34:42] {Debug} 		 Tm_uC not found
+[25/08/2022 17:36:18] {Debug} 		 Tm_uC not found
+[25/08/2022 17:36:19] {Debug} 		 Tm_uC not found
+[25/08/2022 17:36:19] {Debug} 		 Tm_uC not found
+[25/08/2022 17:57:38] {Debug} 		 using qt5ct plugin
+[25/08/2022 17:57:38] {Debug} 		 D-Bus global menu: no
+[25/08/2022 17:57:38] {Debug} 		 Cantidad de puertos disponibles:  1
+[25/08/2022 17:57:38] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../mainwindow.cpp:91
+[25/08/2022 17:57:38] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
+[25/08/2022 17:57:38] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
+[25/08/2022 17:57:38] {Debug} 		 Port name:  "ttyACM0"
+[25/08/2022 17:57:38] {Debug} 		 BaudRate: 115200
+[25/08/2022 17:57:38] {Debug} 		 Ready... 
+
+[25/08/2022 17:57:38] {Debug} 		 ok 
+
+[25/08/2022 17:57:38] {Debug} 		        Inicio sesión Logging QDate("2022-08-25") ,  QTime("17:57:38.869")
+[25/08/2022 17:57:38] {Warning} 	 Prueba warning
+[25/08/2022 17:57:38] {Info} 		 Prueba Info
+[25/08/2022 17:57:38] {Debug} 		 "Brake. Valor rcv fuera de valores lógicos (0, 1023)"
+[25/08/2022 17:57:38] {Debug} 		 Renglón datos:  " 1, Tm_uC: 1\u0002��}�\r�\u0006\u0016��r��b\u0002*��� 6, nDef: 1,\tT:30 \r\n"
+[25/08/2022 17:57:38] {Debug} 		 "Accel. Valor rcv fuera de valores lógicos (0, 1023)"
+[25/08/2022 17:57:38] {Debug} 		 Renglón datos:  " 1, Tm_uC: 1\u0002��}�\r�\u0006\u0016��r��b\u0002*��� 6, nDef: 1,\tT:30 \r\n"
+[25/08/2022 17:59:27] {Debug} 		 Tm_uC not found
+[25/08/2022 17:59:27] {Debug} 		 Tm_uC not found
+[25/08/2022 17:59:27] {Debug} 		 Tm_uC not found
+[25/08/2022 17:59:27] {Debug} 		 Tm_uC not found
+[25/08/2022 17:59:27] {Debug} 		 Tm_uC not found
+[25/08/2022 17:59:27] {Debug} 		 Tm_uC not found
+[25/08/2022 17:59:27] {Debug} 		 Tm_uC not found
+[25/08/2022 17:59:27] {Debug} 		 Tm_uC not found
+[25/08/2022 17:59:27] {Debug} 		 Tm_uC not found
+[25/08/2022 17:59:27] {Debug} 		 Tm_uC not found
+[25/08/2022 17:59:27] {Debug} 		 Tm_uC not found
+[25/08/2022 17:59:27] {Debug} 		 Tm_uC not found
+[25/08/2022 17:59:27] {Debug} 		 Tm_uC not found
+[25/08/2022 17:59:27] {Debug} 		 Tm_uC not found
+[25/08/2022 17:59:27] {Debug} 		 Tm_uC not found
+[25/08/2022 17:59:27] {Debug} 		 Tm_uC not found

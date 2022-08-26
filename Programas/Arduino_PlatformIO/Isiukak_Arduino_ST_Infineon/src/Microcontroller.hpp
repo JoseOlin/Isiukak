@@ -26,19 +26,26 @@
 
 //#define pinD14 (Lo que esté conectado a A4)
 //#define pinD15 (Lo que esté conectado a A5)
-
+// TODO: Cambiar a PH1 y PH0, ya que PC2 y PC3 son analógicos.
 const int pinD16 = PC2;  //          pinModoCarretera
 const int pinD17 = PC3;  //          pinSubirPalanca
+
+const int pinD18 = ATEMP;  // Internal sensor Temp on the STM32. //TODO: Check if this is the one.
+//const int pinD18 = ADC_CHANNEL_TEMPSENSOR;
 
 //#define pinD18 PC3 // CN7->37
 //#define pinD19 PC2 // CN7->35
 
 
-#define pinA0 A0 //PA0
-#define pinA1 A1 //PA1
-#define pinA2 A2 //PA4
-#define pinA3 A3 //PB0
+#define pinA0 A0 // PA0 ADC1/0
+#define pinA1 A1 // PA1 ADC1/1
+#define pinA2 A2 // PA4 ADC1/4
+#define pinA3 A3 // PB0 ADC1/8
+#define pinA4 A4 // PC1 ADC1/11  // Actualmente usados como pines digitales
+#define pinA5 A5 // PC0 ADC1/10  // Actualmente usados como pines digitales
 
+#define pinA6 PB1  // ADC1/9
+#define pinA7 PC4  // ADC1/14
 //#define USART6_rxPin PA_12
 //#define USART6_txPin PA_11
 
@@ -225,8 +232,14 @@ int pinModoCarretera = pinD16;
 int pinOutput_PalancaSubir = pinD5;
 int pinOutput_PalancaBajar = pinD4;
 
+int pinBoardTemperature = pinD18;
+int pinThermistor1 = pinA6;
+int pinThermistor2 = pinA7;
+
 #define smcRxPin pinD2 //  TODO: C. Check qué pines para UART1 en Infineon
 #define smcTxPin pinD8
+
+
 
 
 #endif // MICROCONTROLLER_HPP

@@ -14,6 +14,7 @@ TARGET = MonitorIsiukak
 TEMPLATE = app
 
 HEADERS  += logging.hpp \
+        RegExp_Search.hpp \
         mainwindow.h
 
 SOURCES += main.cpp\

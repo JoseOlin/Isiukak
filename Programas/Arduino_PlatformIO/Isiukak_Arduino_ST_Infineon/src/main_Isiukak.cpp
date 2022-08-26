@@ -85,7 +85,7 @@ void loop()
         if(!BotonParoEmergenciaPulsado)
         {
         #if JOYSTICK_VIRTUAL
-            // Asignación virtual sólo de valores para los pots y botones del joystick.
+            // Asignación de valores sólo para los pots y botones del joystick.
         #elif TESTING_EMBEDDED
             EmbeddedTest_SetInputs_and_Status();
             //Testing_VerificacionSeguridad_SetValues(); //Se hace dedntro de EmbeddedTest_SetInputs()
@@ -100,8 +100,9 @@ void loop()
 
             verificacionSeguridad_Constante(Potenciometros_EnRangoValido); // Invoca Potenciometros_EstanEnRango
             verificacionSeguridad_Periodica(Potenciometros_Conectados);    // VerificarConexionPotenciometros
-        #endif
 
+        #endif
+            readTemperatures();
             aplicarRutinasSeguridad(
                 Joystick_X_Conectado, Joystick_Y_Conectado,
                 ActuadorAcelerador_Conectado, ActuadorFreno_Conectado,

@@ -43,6 +43,8 @@ public:
     QAction *actionConfigurar;
     QAction *actionBuscar_puertos;
     QAction *actionGuardar_rangos;
+    QAction *actionModo_Testing;
+    QAction *actionModo_Driving;
     QWidget *centralWidget;
     QVBoxLayout *verticalLayout;
     QWidget *SensorsInfo_Errors_and_Conn_Widget;
@@ -75,12 +77,23 @@ public:
     QGridLayout *gridLayout_2;
     QSlider *joystickVertical_sld;
     QSlider *joystickHorizontal_Sld;
+    QGroupBox *groupBox;
+    QVBoxLayout *verticalLayout_8;
     QGroupBox *Buttons_gBox_verLay;
     QVBoxLayout *verticalLayout_9;
     QCheckBox *FixFreno_chk;
     QCheckBox *PalUp_chk;
     QCheckBox *PalDown_chk;
     QCheckBox *RoadMode_chk;
+    QGroupBox *temps_gBox;
+    QVBoxLayout *verticalLayout_11;
+    QFormLayout *formLayout;
+    QLabel *label_6;
+    QLabel *label_42;
+    QLabel *label_43;
+    QLabel *Temp_uC_lbl;
+    QLabel *Temp_Therm1_lbl;
+    QLabel *Temp_Therm2_lbl;
     QGroupBox *BrakeValues_gBox_verLay;
     QVBoxLayout *verticalLayout_2;
     QFrame *frame_5;
@@ -233,6 +246,7 @@ public:
     QPlainTextEdit *InfoSalida_txt;
     QMenuBar *menuBar;
     QMenu *menuConfiguraci_n;
+    QMenu *menuModo;
     QButtonGroup *driversShowInfoSelect;
 
     void setupUi(QMainWindow *MainWindow)
@@ -256,6 +270,10 @@ public:
         actionBuscar_puertos->setObjectName(QString::fromUtf8("actionBuscar_puertos"));
         actionGuardar_rangos = new QAction(MainWindow);
         actionGuardar_rangos->setObjectName(QString::fromUtf8("actionGuardar_rangos"));
+        actionModo_Testing = new QAction(MainWindow);
+        actionModo_Testing->setObjectName(QString::fromUtf8("actionModo_Testing"));
+        actionModo_Driving = new QAction(MainWindow);
+        actionModo_Driving->setObjectName(QString::fromUtf8("actionModo_Driving"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         verticalLayout = new QVBoxLayout(centralWidget);
@@ -488,12 +506,20 @@ public:
 
         SensorsInfo_horLayout->addWidget(JoystickValues_gBox_verLay);
 
-        Buttons_gBox_verLay = new QGroupBox(Joystick_and_Actuators_hotLayout);
+        groupBox = new QGroupBox(Joystick_and_Actuators_hotLayout);
+        groupBox->setObjectName(QString::fromUtf8("groupBox"));
+        groupBox->setMinimumSize(QSize(60, 0));
+        verticalLayout_8 = new QVBoxLayout(groupBox);
+        verticalLayout_8->setSpacing(6);
+        verticalLayout_8->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_8->setObjectName(QString::fromUtf8("verticalLayout_8"));
+        verticalLayout_8->setContentsMargins(-1, 1, -1, 1);
+        Buttons_gBox_verLay = new QGroupBox(groupBox);
         Buttons_gBox_verLay->setObjectName(QString::fromUtf8("Buttons_gBox_verLay"));
         sizePolicy.setHeightForWidth(Buttons_gBox_verLay->sizePolicy().hasHeightForWidth());
         Buttons_gBox_verLay->setSizePolicy(sizePolicy);
-        Buttons_gBox_verLay->setMinimumSize(QSize(70, 0));
-        Buttons_gBox_verLay->setMaximumSize(QSize(104, 256));
+        Buttons_gBox_verLay->setMinimumSize(QSize(55, 0));
+        Buttons_gBox_verLay->setMaximumSize(QSize(105, 525));
         Buttons_gBox_verLay->setAutoFillBackground(true);
         verticalLayout_9 = new QVBoxLayout(Buttons_gBox_verLay);
         verticalLayout_9->setSpacing(4);
@@ -533,7 +559,63 @@ public:
         verticalLayout_9->addWidget(RoadMode_chk);
 
 
-        SensorsInfo_horLayout->addWidget(Buttons_gBox_verLay);
+        verticalLayout_8->addWidget(Buttons_gBox_verLay);
+
+        temps_gBox = new QGroupBox(groupBox);
+        temps_gBox->setObjectName(QString::fromUtf8("temps_gBox"));
+        verticalLayout_11 = new QVBoxLayout(temps_gBox);
+        verticalLayout_11->setSpacing(6);
+        verticalLayout_11->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_11->setObjectName(QString::fromUtf8("verticalLayout_11"));
+        verticalLayout_11->setContentsMargins(0, -1, 1, -1);
+        formLayout = new QFormLayout();
+        formLayout->setSpacing(6);
+        formLayout->setObjectName(QString::fromUtf8("formLayout"));
+        formLayout->setHorizontalSpacing(3);
+        formLayout->setVerticalSpacing(12);
+        formLayout->setContentsMargins(0, -1, -1, -1);
+        label_6 = new QLabel(temps_gBox);
+        label_6->setObjectName(QString::fromUtf8("label_6"));
+
+        formLayout->setWidget(0, QFormLayout::LabelRole, label_6);
+
+        label_42 = new QLabel(temps_gBox);
+        label_42->setObjectName(QString::fromUtf8("label_42"));
+
+        formLayout->setWidget(1, QFormLayout::LabelRole, label_42);
+
+        label_43 = new QLabel(temps_gBox);
+        label_43->setObjectName(QString::fromUtf8("label_43"));
+
+        formLayout->setWidget(2, QFormLayout::LabelRole, label_43);
+
+        Temp_uC_lbl = new QLabel(temps_gBox);
+        Temp_uC_lbl->setObjectName(QString::fromUtf8("Temp_uC_lbl"));
+        Temp_uC_lbl->setFont(font);
+        Temp_uC_lbl->setTextFormat(Qt::AutoText);
+
+        formLayout->setWidget(0, QFormLayout::FieldRole, Temp_uC_lbl);
+
+        Temp_Therm1_lbl = new QLabel(temps_gBox);
+        Temp_Therm1_lbl->setObjectName(QString::fromUtf8("Temp_Therm1_lbl"));
+        Temp_Therm1_lbl->setFont(font);
+
+        formLayout->setWidget(1, QFormLayout::FieldRole, Temp_Therm1_lbl);
+
+        Temp_Therm2_lbl = new QLabel(temps_gBox);
+        Temp_Therm2_lbl->setObjectName(QString::fromUtf8("Temp_Therm2_lbl"));
+        Temp_Therm2_lbl->setFont(font);
+
+        formLayout->setWidget(2, QFormLayout::FieldRole, Temp_Therm2_lbl);
+
+
+        verticalLayout_11->addLayout(formLayout);
+
+
+        verticalLayout_8->addWidget(temps_gBox);
+
+
+        SensorsInfo_horLayout->addWidget(groupBox);
 
         BrakeValues_gBox_verLay = new QGroupBox(Joystick_and_Actuators_hotLayout);
         BrakeValues_gBox_verLay->setObjectName(QString::fromUtf8("BrakeValues_gBox_verLay"));
@@ -1545,13 +1627,18 @@ public:
         menuBar->setMinimumSize(QSize(0, 10));
         menuConfiguraci_n = new QMenu(menuBar);
         menuConfiguraci_n->setObjectName(QString::fromUtf8("menuConfiguraci_n"));
+        menuModo = new QMenu(menuBar);
+        menuModo->setObjectName(QString::fromUtf8("menuModo"));
         MainWindow->setMenuBar(menuBar);
 
         menuBar->addAction(menuConfiguraci_n->menuAction());
+        menuBar->addAction(menuModo->menuAction());
         menuConfiguraci_n->addAction(actionConfigurar);
         menuConfiguraci_n->addAction(actionBuscar_puertos);
         menuConfiguraci_n->addSeparator();
         menuConfiguraci_n->addAction(actionGuardar_rangos);
+        menuModo->addAction(actionModo_Testing);
+        menuModo->addAction(actionModo_Driving);
 
         retranslateUi(MainWindow);
 
@@ -1568,6 +1655,8 @@ public:
         actionConfigurar->setText(QApplication::translate("MainWindow", "Configurar", nullptr));
         actionBuscar_puertos->setText(QApplication::translate("MainWindow", "Buscar puertos", nullptr));
         actionGuardar_rangos->setText(QApplication::translate("MainWindow", "Guardar rangos", nullptr));
+        actionModo_Testing->setText(QApplication::translate("MainWindow", "Modo Testing", nullptr));
+        actionModo_Driving->setText(QApplication::translate("MainWindow", "Modo Driving", nullptr));
         JoystickValues_gBox_verLay->setTitle(QApplication::translate("MainWindow", "Joystick", nullptr));
         joystick_Activado_chk->setText(QApplication::translate("MainWindow", "Activado ", nullptr));
         chk_LED_Joy_Y_Desc->setText(QApplication::translate("MainWindow", "JY_Desc", nullptr));
@@ -1589,6 +1678,13 @@ public:
         PalUp_chk->setText(QApplication::translate("MainWindow", "Pal Up", nullptr));
         PalDown_chk->setText(QApplication::translate("MainWindow", "Pal Down", nullptr));
         RoadMode_chk->setText(QApplication::translate("MainWindow", "Modo Road", nullptr));
+        temps_gBox->setTitle(QApplication::translate("MainWindow", "Temperatura", nullptr));
+        label_6->setText(QApplication::translate("MainWindow", "uC: ", nullptr));
+        label_42->setText(QApplication::translate("MainWindow", "Th1:", nullptr));
+        label_43->setText(QApplication::translate("MainWindow", "Th2: ", nullptr));
+        Temp_uC_lbl->setText(QApplication::translate("MainWindow", "0", nullptr));
+        Temp_Therm1_lbl->setText(QApplication::translate("MainWindow", "0", nullptr));
+        Temp_Therm2_lbl->setText(QApplication::translate("MainWindow", "0", nullptr));
         BrakeValues_gBox_verLay->setTitle(QApplication::translate("MainWindow", "Freno", nullptr));
         valorFreno_lbl->setText(QApplication::translate("MainWindow", "Pos:", nullptr));
         label->setText(QApplication::translate("MainWindow", "Des:", nullptr));
@@ -1723,6 +1819,7 @@ public:
         btnDesconectar->setText(QString());
         InfoSalida_txt->setPlainText(QString());
         menuConfiguraci_n->setTitle(QApplication::translate("MainWindow", "Configuraci\303\263n", nullptr));
+        menuModo->setTitle(QApplication::translate("MainWindow", "Modo", nullptr));
     } // retranslateUi
 
 };

@@ -155,6 +155,7 @@ void configurarPines()
     //pinMode(pinActFreno, INPUT_ANALOG);     //A2; //PA4
     //pinMode(pinActAcel, INPUT_ANALOG);      //A3; //PB0
 
+    analogReadResolution(10);
 
     pinMode(pinVDDVirtual, OUTPUT);         //D3; //PB3;
     pinMode(pinGNDVirtual, OUTPUT);         //D7; //PA8;
@@ -206,6 +207,7 @@ void displayInfo()
     desplegarInfoVolante();
     desplegarInfoPalanca(ActuadorFreno_Posicion);
 
+    displayTemperatureInfo();
 
     desplegarInfoEstadoSistema();
 }
