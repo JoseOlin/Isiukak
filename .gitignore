@@ -1,3 +1,7 @@
+# build directories
+build-MonitorIsiukak-Desktop/
+build-MonitorIsiukak-Desktop-Dbg/
+
 # Prerequisites
 *.d
 

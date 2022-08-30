@@ -126,6 +126,7 @@ private:
 
     //* Variables globales
     Ui::MainWindow *ui;
+
     //QGraphicsScene *escena;
     QSerialPort* serial;
 

@@ -692,16 +692,18 @@ void MainWindow::displayInfoBrake(QString renglonDatos)
         qDebug() << "Renglón datos: " << renglonDatos;
     }
 
-    buscarExpresionRegular_findNextInt("B_t: (-?(\\d+))", renglonDatos, B_tgt);
-    ui->frenoDes_lcd->display(B_tgt);
+    bool B_tgt_Flag = buscarExpresionRegular_findNextInt("B_t: (-?(\\d+))", renglonDatos, B_tgt);
+    if(B_tgt_Flag)   ui->frenoDes_lcd->display(B_tgt);
 
-    buscarExpresionRegular_findNextInt("B_e: (-?(\\d+))", renglonDatos, B_Pos_Error);
-    ui->Freno_lcdError->display(B_Pos_Error);
+    bool B_e_Flag = buscarExpresionRegular_findNextInt("B_e: (-?(\\d+))", renglonDatos, B_Pos_Error);
+    if(B_e_Flag)    ui->Freno_lcdError->display(B_Pos_Error);
 
-    buscarExpresionRegular_findNextInt("B_c: (-?(\\d+))", renglonDatos, B_Ctrl);
+    bool B_c_Flag =  buscarExpresionRegular_findNextInt("B_c: (-?(\\d+))", renglonDatos, B_Ctrl);
     // -?(\\d+) = Uno o ningún signo menos, seguido de uno o más dígitos.
-    ui->frenoControl_lcd->display(B_Ctrl);
-    ui->FrenoControl_Slider->setValue(B_Ctrl);
+    if(B_c_Flag) {
+        ui->frenoControl_lcd->display(B_Ctrl);
+        ui->FrenoControl_Slider->setValue(B_Ctrl);
+    }
 
     //** Brake Activado
     bool flagB_Act = buscarExpresionRegular_findNextInt(cadBrakeActivado + ": (-?(\\d+))",

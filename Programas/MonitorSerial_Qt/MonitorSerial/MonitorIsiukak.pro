@@ -23,8 +23,8 @@ SOURCES += main.cpp\
 FORMS    += mainwindow.ui
 
 RESOURCES += \
-    #build-LecturaValores/resources.qrc \
     Resources.qrc
+    #build-LecturaValores/resources.qrc \
 
 
 BITSIZE = $$system(getconf LONG_BIT)

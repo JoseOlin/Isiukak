@@ -1,77 +1,15 @@
-[22/07/2022 14:21:41] {Debug} 		 using qt5ct plugin
-[22/07/2022 14:21:42] {Debug} 		 D-Bus global menu: no
-[22/07/2022 14:21:42] {Debug} 		 Cantidad de puertos disponibles:  0
-[22/07/2022 14:21:42] {Debug} 		 No se encontraron dispositivos conectados.
-[22/07/2022 14:21:42] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../MonitorSerial_x64/mainwindow.cpp:87
-[22/07/2022 14:21:42] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
-[22/07/2022 14:21:42] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
-[22/07/2022 14:21:42] {Debug} 		 Port name:  ""
-[22/07/2022 14:21:42] {Debug} 		 BaudRate: 115200
-[22/07/2022 14:21:42] {Debug} 		 Was an error while creating the Serial Port. btnConectar_pressed()
-[22/07/2022 14:22:19] {Debug} 		 Cantidad de puertos disponibles:  0
-[22/07/2022 14:22:19] {Debug} 		 No se encontraron dispositivos conectados.
-[22/07/2022 14:22:19] {Debug} 		        Inicio sesión Logging QDate("2022-07-22") ,  QTime("14:22:19.920")
-[22/07/2022 14:22:19] {Warning} 	 Prueba warning
-[22/07/2022 14:22:19] {Info} 		 Prueba Info
-[22/07/2022 14:24:29] {Debug} 		 Port name:  ""
-[22/07/2022 14:24:29] {Debug} 		 BaudRate: 115200
-[22/07/2022 14:24:29] {Debug} 		 Was an error while creating the Serial Port. btnConectar_pressed()
-[22/07/2022 14:24:32] {Debug} 		 Cantidad de puertos disponibles:  1
-[22/07/2022 14:24:34] {Debug} 		 Port name:  "ttyACM0"
-[22/07/2022 14:24:34] {Debug} 		 BaudRate: 115200
-[22/07/2022 14:24:34] {Debug} 		 Ready... 
+[30/08/2022 16:27:29] {Debug} 		 using qt5ct plugin
+[30/08/2022 16:27:29] {Debug} 		 D-Bus global menu: no
+[30/08/2022 16:27:29] {Debug} 		 Cantidad de puertos disponibles:  1
+[30/08/2022 16:27:29] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../MonitorSerial/mainwindow.cpp:91
+[30/08/2022 16:27:29] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
+[30/08/2022 16:27:29] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
+[30/08/2022 16:27:29] {Debug} 		 Port name:  "ttyACM0"
+[30/08/2022 16:27:29] {Debug} 		 BaudRate: 115200
+[30/08/2022 16:27:29] {Debug} 		 Ready... 
 
-[22/07/2022 14:24:34] {Debug} 		 ok 
+[30/08/2022 16:27:29] {Debug} 		 ok 
 
-[22/07/2022 14:24:37] {Debug} 		 Port name:  "ttyACM0"
-[22/07/2022 14:24:37] {Debug} 		 BaudRate: 115200
-[22/07/2022 14:24:37] {Debug} 		 Ready... 
-
-[22/07/2022 14:24:37] {Debug} 		 ok 
-
-[22/07/2022 14:28:00] {Debug} 		 Port name:  "ttyACM0"
-[22/07/2022 14:28:00] {Debug} 		 BaudRate: 115200
-[22/07/2022 14:28:00] {Debug} 		 Was an error while creating the Serial Port. btnConectar_pressed()
-[22/07/2022 14:28:04] {Debug} 		 Cantidad de puertos disponibles:  0
-[22/07/2022 14:28:04] {Debug} 		 No se encontraron dispositivos conectados.
-[22/07/2022 14:31:11] {Debug} 		 using qt5ct plugin
-[22/07/2022 14:31:13] {Debug} 		 D-Bus global menu: no
-[22/07/2022 14:31:13] {Debug} 		 Cantidad de puertos disponibles:  0
-[22/07/2022 14:31:13] {Debug} 		 No se encontraron dispositivos conectados.
-[22/07/2022 14:31:13] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../MonitorSerial_x64/mainwindow.cpp:87
-[22/07/2022 14:31:13] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
-[22/07/2022 14:31:13] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
-[22/07/2022 14:32:07] {Debug} 		 using qt5ct plugin
-[22/07/2022 14:32:09] {Debug} 		 D-Bus global menu: no
-[22/07/2022 14:32:09] {Debug} 		 Cantidad de puertos disponibles:  1
-[22/07/2022 14:32:09] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../MonitorSerial_x64/mainwindow.cpp:87
-[22/07/2022 14:32:09] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
-[22/07/2022 14:32:09] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
-[22/07/2022 14:32:47] {Debug} 		 Port name:  "ttyACM0"
-[22/07/2022 14:32:55] {Debug} 		 BaudRate: 115200
-[22/07/2022 14:32:58] {Debug} 		 Ready... 
-
-[22/07/2022 14:32:58] {Debug} 		 ok 
-
-[22/07/2022 14:32:58] {Debug} 		        Inicio sesión Logging QDate("2022-07-22") ,  QTime("14:32:58.062")
-[22/07/2022 14:32:58] {Warning} 	 Prueba warning
-[22/07/2022 14:32:58] {Info} 		 Prueba Info
-[22/07/2022 14:32:59] {Debug} 		 "Accel. Valor rcv fuera de valores lógicos (0, 1023)"
-[22/07/2022 14:32:59] {Debug} 		 Renglón datos:  "���\u0013�!1 ���\u000B��O�)'j�"
-[22/07/2022 14:48:10] {Debug} 		 using qt5ct plugin
-[22/07/2022 14:48:10] {Debug} 		 D-Bus global menu: no
-[22/07/2022 14:48:10] {Debug} 		 Cantidad de puertos disponibles:  1
-[22/07/2022 14:48:10] {Warning} 	 QObject::connect: No such slot MainWindow::showPortInfo(int) in ../MonitorSerial_x64/mainwindow.cpp:87
-[22/07/2022 14:48:10] {Warning} 	 QObject::connect:  (sender name:   'cmbSerialPortSelector')
-[22/07/2022 14:48:10] {Warning} 	 QObject::connect:  (receiver name: 'MainWindow')
-[22/07/2022 14:48:10] {Debug} 		 Port name:  "ttyACM0"
-[22/07/2022 14:48:10] {Debug} 		 BaudRate: 115200
-[22/07/2022 14:48:10] {Debug} 		 Ready... 
-
-[22/07/2022 14:48:10] {Debug} 		 ok 
-
-[22/07/2022 14:48:10] {Debug} 		        Inicio sesión Logging QDate("2022-07-22") ,  QTime("14:48:10.812")
-[22/07/2022 14:48:10] {Warning} 	 Prueba warning
-[22/07/2022 14:48:10] {Info} 		 Prueba Info
-[22/07/2022 14:48:11] {Debug} 		 "Accel. Valor rcv fuera de valores lógicos (0, 1023)"
-[22/07/2022 14:48:11] {Debug} 		 Renglón datos:  "268,  A_t: 76,  A_e: 553,  A_c: -16590, A_inh: 1,\tV_ac: 1, Vol_c: 0, V_m: 0, Shft_a: 1, edo: 6, nDef: 1,\tT:30 \r\n"
+[30/08/2022 16:27:29] {Debug} 		        Inicio sesión Logging QDate("2022-08-30") ,  QTime("16:27:29.270")
+[30/08/2022 16:27:29] {Warning} 	 Prueba warning
+[30/08/2022 16:27:29] {Info} 		 Prueba Info
